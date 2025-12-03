@@ -52,27 +52,7 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* Categories Filter */}
-      <div className="bg-white shadow-lg">
-        <div className="container py-6">
-          <div className="flex items-center gap-4 overflow-x-auto pb-2">
-            <Grid3x3 className="w-5 h-5 text-gray-600 flex-shrink-0" />
-            <div className="flex gap-2">
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition-colors">
-                All Categories
-              </button>
-              {allCategories.map((category) => (
-                <button
-                  key={category}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors"
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
       {/* Gallery Grid */}
       <div id="galleries" className="container py-16">
