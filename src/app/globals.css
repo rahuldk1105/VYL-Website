@@ -1,26 +1,34 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Color Palette */
+  --color-primary-dark: #0a1628;
+  --color-secondary-dark: #1a237e;
+  --color-background: #ffffff;
+  --color-off-white: #fafafa;
+  --color-gold: #FFA000;
+  --color-blue: #1976D2;
+  --color-green: #388E3C;
+  --color-gray-text: #212121;
+  --color-light-gray-text: #757575;
+
+  /* Typography - Linking to the Next.js font variable */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Global Resets */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-gray-text);
+  font-family: var(--font-sans);
+}
+
+/* FIX: Force containers to center on the screen */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1280px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }

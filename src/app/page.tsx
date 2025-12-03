@@ -1,65 +1,86 @@
-import Image from "next/image";
+import HeroCarousel from '@/components/HeroCarousel'
+import MissionSection from '@/components/MissionSection'
+import EventsCarousel from '@/components/EventsCarousel'
 
 export default function Home() {
+  // Mock data for demonstration
+  const mockSlides = [
+    {
+      image: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6',
+      title: 'India’s Premier Youth Football',
+      subtitle: 'Organizing year-round VYL tournaments across India',
+      ctaText: 'Find Tournament',
+      ctaLink: '/find-a-tournament'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
+      title: 'Veeran Youth League (VYL)',
+      subtitle: 'A CP Sports division based in Chennai, Tamil Nadu',
+      ctaText: 'Learn More',
+      ctaLink: '/about'
+    }
+  ]
+
+  const mockMissionText = `We are dedicated to creating exceptional football experiences that bring athletes, families, and communities together across India. Our mission is to organize world-class youth tournaments that inspire excellence, foster sportsmanship, and create lasting memories.
+
+Through our tiered competition system (Lions, Tigers, Panthers), athletes of all skill levels find the perfect environment to grow and excel.`
+
+  const mockMissionImages = [
+    'https://images.unsplash.com/photo-1518091043644-c1d4457512c6',
+    'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
+    'https://images.unsplash.com/photo-1518837695005-2083093ee35b'
+  ]
+
+  const mockEvents = [
+    {
+      _id: '1',
+      title: 'Summer Championship',
+      slug: 'summer-championship',
+      heroImage: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6',
+      logo: '/veeran_logo.png',
+      startDate: '2024-06-15',
+      endDate: '2024-06-17',
+      location: 'Chennai, Tamil Nadu',
+      tier: 'lions',
+      tagline: 'Premier summer sports competition'
+    },
+    {
+      _id: '2',
+      title: 'Youth Invitational',
+      slug: 'youth-invitational',
+      heroImage: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
+      logo: '/veeran_logo.png',
+      startDate: '2024-07-20',
+      endDate: '2024-07-22',
+      location: 'Bengaluru, Karnataka',
+      tier: 'tigers',
+      tagline: 'Young athletes showcase their talent'
+    },
+    {
+      _id: '3',
+      title: 'Regional Finals',
+      slug: 'regional-finals',
+      heroImage: 'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
+      logo: '/veeran_logo.png',
+      startDate: '2024-08-10',
+      endDate: '2024-08-12',
+      location: 'Mumbai, Maharashtra',
+      tier: 'panthers',
+      tagline: 'Elite competition for top athletes'
+    }
+  ]
+
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="min-h-screen">
+      <HeroCarousel slides={mockSlides} />
+      
+      <MissionSection 
+        missionText={mockMissionText}
+        missionImages={mockMissionImages}
+      />
+      
+      <EventsCarousel events={mockEvents} />
     </div>
-  );
+  )
 }
