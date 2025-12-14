@@ -38,7 +38,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-white/80">
               <li>
                 <strong className="block text-white">General Inquiries:</strong>
-                <a href="mailto:admin@cpsports.in" className="hover:text-gold block">admin@cpsports.in</a>
+                <a href="mailto:admin@veerancup.in" className="hover:text-gold block">admin@veerancup.in</a>
               </li>
               <li>
                 <strong className="block text-white">Call Us:</strong>
@@ -60,7 +60,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-12 border-t border-white/30 pt-6 text-center">
-          <p className="text-white/80">© Veeran Youth League · CP Sports</p>
+          <p className="text-white/80">© Veeran Youth League</p>
         </div>
       </div>
     </footer>

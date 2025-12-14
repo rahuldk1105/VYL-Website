@@ -59,12 +59,14 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
               {event.description}
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link
-                href="#register"
-                className="px-8 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
-              >
-                Register Now
-              </Link>
+              {new Date(event.endDate) >= new Date() && (
+                <Link
+                  href="#register"
+                  className="px-8 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+                >
+                  Register Now
+                </Link>
+              )}
               <Link
                 href="#details"
                 className="px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-primary-dark transition-colors"
@@ -288,7 +290,14 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
                 </div>
               </div>
 
-              {event.registrationUrl ? (
+              {new Date(event.endDate) < new Date() ? (
+                <button
+                  disabled
+                  className="w-full px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg cursor-not-allowed mb-3"
+                >
+                  Event has ended already
+                </button>
+              ) : event.registrationUrl ? (
                 <a
                   href={event.registrationUrl}
                   target="_blank"
@@ -312,7 +321,7 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Need Help?</h3>
               <div className="space-y-3 text-sm text-gray-600">
-                <p>📧 admin@cpsports.in</p>
+                <p>📧 admin@veerancup.in</p>
                 <p>📞 +91 7904441579</p>
                 <p>💬 Live Chat Available</p>
               </div>

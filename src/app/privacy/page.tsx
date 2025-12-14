@@ -158,7 +158,7 @@ export default function PrivacyPage() {
                 <p><strong>Phone:</strong> +91 98765 43210</p>
                 <p><strong>Address:</strong></p>
                 <p className="ml-4">
-                  CP Sports (VYL Division)<br />
+                  Veeran Youth League<br />
                   Chennai, Tamil Nadu<br />
                   India
                 </p>

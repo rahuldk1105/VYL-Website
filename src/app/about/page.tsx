@@ -64,7 +64,7 @@ export default function AboutPage() {
               About Veeran Youth League (VYL)
             </h1>
             <p className="text-xl text-gray-200 mb-8">
-              A CP Sports division based in Chennai, leading youth football tournaments across India since 2015.
+              Based in Chennai, leading youth football tournaments across India since 2015.
             </p>
           </div>
         </div>

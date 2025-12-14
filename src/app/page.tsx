@@ -68,7 +68,7 @@ These are our roots. This is Veeran Football.`
       endDate: '2024-07-03',
       location: 'Chennai, Tamil Nadu',
 
-      tagline: 'July 2024'
+      tagline: 'Completed'
     },
     {
       _id: '2',
@@ -80,7 +80,7 @@ These are our roots. This is Veeran Football.`
       endDate: '2025-07-03',
       location: 'Chennai, Tamil Nadu',
 
-      tagline: 'July 2025'
+      tagline: 'Completed'
     },
     {
       _id: '3',
@@ -92,7 +92,7 @@ These are our roots. This is Veeran Football.`
       endDate: '2025-09-03',
       location: 'Chennai, Tamil Nadu',
 
-      tagline: 'September 2025'
+      tagline: 'Completed'
     }
   ]
 

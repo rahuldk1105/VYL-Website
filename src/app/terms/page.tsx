@@ -113,7 +113,7 @@ export default function TermsPage() {
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Content Ownership</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
                 All content on our website and related to our services, including text, graphics, logos, images, and software,
-                is the property of Veeran Youth League (VYL) and CP Sports or our licensors and is protected by intellectual property laws.
+                is the property of Veeran Youth League (VYL) or our licensors and is protected by intellectual property laws.
               </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Limited License</h3>
@@ -185,7 +185,7 @@ export default function TermsPage() {
                 <p><strong>Phone:</strong> +91 98765 43210</p>
                 <p><strong>Address:</strong></p>
                 <p className="ml-4">
-                  CP Sports (VYL Division)<br />
+                  Veeran Youth League<br />
                   Chennai, Tamil Nadu<br />
                   India
                 </p>

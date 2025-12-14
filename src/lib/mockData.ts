@@ -99,7 +99,6 @@ export const mockEvents: Event[] = [
     tagline: 'Two days. Endless energy. Pure football.',
     features: [
       'Championship Trophy',
-      'Cash Prizes',
       'Professional Scouts',
       'Live Streaming on YouTube',
       'Winter Festival Atmosphere'

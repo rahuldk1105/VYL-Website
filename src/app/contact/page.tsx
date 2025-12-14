@@ -29,7 +29,7 @@ export default function ContactPage() {
           <div className="space-y-6">
             <h2 className="font-black uppercase text-2xl">Contact Details</h2>
             <div className="space-y-2 text-white/90">
-              <p>Email: admin@cpsports.in</p>
+              <p>Email: admin@veerancup.in</p>
               <p>Phone: +91 7904441579</p>
               <p>Address: PallavaramChennai, Tamil Nadu, India</p>
             </div>

@@ -52,7 +52,7 @@ export default function TournamentGrid({ events }: TournamentGridProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {filteredEvents.map((event) => {
         const isRegistrationClosed = new Date() > new Date(event.registrationDeadline)
-        const isEventPassed = new Date() > new Date(event.startDate)
+        const isEventPassed = new Date() > new Date(event.endDate)
 
         return (
           <Link
@@ -69,7 +69,13 @@ export default function TournamentGrid({ events }: TournamentGridProps) {
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 fallback="/window.svg"
               />
-              {isRegistrationClosed && (
+              {isEventPassed ? (
+                <div className="absolute top-4 right-4">
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-600 text-white">
+                    Completed
+                  </span>
+                </div>
+              ) : isRegistrationClosed && (
                 <div className="absolute top-4 right-4">
                   <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-900 text-white">
                     Registrations Closed
@@ -109,7 +115,9 @@ export default function TournamentGrid({ events }: TournamentGridProps) {
               {/* Footer */}
               <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                 <div className="flex items-center text-sm">
-                  {isRegistrationClosed ? (
+                  {isEventPassed ? (
+                    <span className="text-gray-500 font-medium">Event Ended</span>
+                  ) : isRegistrationClosed ? (
                     <span className="text-red-500 font-medium">Closed</span>
                   ) : (
                     <div className="flex items-center text-green-600 font-medium">
