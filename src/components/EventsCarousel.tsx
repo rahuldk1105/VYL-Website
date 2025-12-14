@@ -15,7 +15,6 @@ interface Event {
   startDate: string
   endDate: string
   location: string
-  tier: string
   tagline: string
 }
 
@@ -25,18 +24,7 @@ interface EventsCarouselProps {
 
 const EventsCarousel = ({ events }: EventsCarouselProps) => {
 
-  const getTierColor = (tier: string) => {
-    switch (tier.toLowerCase()) {
-      case 'lions':
-        return 'bg-gold text-black'
-      case 'tigers':
-        return 'bg-orange-500 text-white'
-      case 'panthers':
-        return 'bg-purple-600 text-white'
-      default:
-        return 'bg-gray-500 text-white'
-    }
-  }
+
 
   if (!events || events.length === 0) {
     return null
@@ -72,7 +60,7 @@ const EventsCarousel = ({ events }: EventsCarouselProps) => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Link href={`/${event.slug}`} className="group block">
+                <Link href={`/tournaments/${event.slug}`} className="group block">
                   <div className="relative h-64 overflow-hidden mb-6">
                     <SafeImage
                       src={event.heroImage}

@@ -1,123 +1,91 @@
-import SafeImage from '@/components/SafeImage'
-import Link from 'next/link'
-import { Calendar, MapPin, Camera, Grid3x3 } from 'lucide-react'
-import { mockGalleries } from '@/lib/galleryData'
+'use client'
+
+import React from 'react'
+import { motion } from 'framer-motion'
+import { Camera, Download, Zap } from 'lucide-react'
 
 export default function GalleryPage() {
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
-    })
-  }
-
-  const allCategories = Array.from(
-    new Set(mockGalleries.flatMap(gallery => gallery.categories))
-  )
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative h-[60vh] bg-gradient-to-br from-primary-dark to-blue-900">
-        <div className="absolute inset-0 bg-black bg-opacity-30" />
-        <div className="relative z-10 container h-full flex items-center">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-3 mb-4">
-              <Camera className="w-8 h-8 text-gold" />
-              <span className="text-gold font-semibold text-lg">Photo Gallery</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Event Photography
-            </h1>
-            <p className="text-xl text-gray-200 mb-8">
-              Relive the excitement through our professional event photography.
-              Browse galleries from VYL tournaments across India.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="#galleries"
-                className="px-8 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
-              >
-                Browse Galleries
-              </Link>
-              <Link
-                href="/"
-                className="px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-primary-dark transition-colors"
-              >
-                Back to Events
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-black text-white flex items-center justify-center overflow-hidden relative">
+      {/* Background Ambience */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black z-0" />
+      <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent opacity-30 animate-pulse-slow z-0" />
 
-      
-
-      {/* Gallery Grid */}
-      <div id="galleries" className="container py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {mockGalleries.map((gallery) => (
-            <Link
-              key={gallery._id}
-              href={`/gallery/${gallery.slug.current}`}
-              className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+      <div className="container relative z-10 px-4 md:px-0 flex flex-col items-center text-center">
+        {/* Animated Icon Container */}
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 20, duration: 1.5 }}
+          className="relative mb-8"
+        >
+          <div className="absolute inset-0 bg-gold blur-2xl opacity-20" />
+          <div className="relative bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-sm">
+            <Camera className="w-16 h-16 md:w-24 md:h-24 text-gold drop-shadow-lg" />
+            <motion.div
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
+              className="absolute top-4 right-4"
             >
-              {/* Image */}
-              <div className="relative h-64 overflow-hidden rounded-t-lg">
-                <SafeImage
-                  src={gallery.thumbnail}
-                  alt={gallery.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  fallback="/window.svg"
-                />
-                <div className="absolute top-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  {gallery.images.length} photos
-                </div>
-              </div>
+              <Zap className="w-6 h-6 text-white fill-white" />
+            </motion.div>
+          </div>
+        </motion.div>
 
-              {/* Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                  {gallery.title}
-                </h3>
-                
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {gallery.description}
-                </p>
+        {/* Text Content */}
+        <motion.div
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="max-w-3xl mx-auto"
+        >
+          <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase mb-6 bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent">
+            Coming Soon
+          </h1>
 
-                {/* Event Details */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Calendar className="w-4 h-4 mr-2 text-gray-400" />
-                    <span>{formatDate(gallery.date)}</span>
-                  </div>
-                  
-                  <div className="flex items-center text-sm text-gray-600">
-                    <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-                    <span>{gallery.location}</span>
-                  </div>
-                </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="space-y-6"
+          >
+            <p className="text-xl md:text-2xl text-gray-300 font-light leading-relaxed">
+              Get ready for a <span className="text-gold font-bold">seamless</span> digital experience.
+            </p>
 
-                {/* Categories */}
-                <div className="flex flex-wrap gap-2">
-                  {gallery.categories.map((category) => (
-                    <span
-                      key={category}
-                      className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
-                    >
-                      {category}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </Link>
+            <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
+              Soon, all players will be able to access and <span className="text-white border-b border-gold/50 pb-0.5">download all their high-quality match photos</span> instantly after every tournament.
+            </p>
+          </motion.div>
+        </motion.div>
+
+        {/* Feature Highlights */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
+          className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl"
+        >
+          {[
+            { icon: Camera, text: "Professional Coverage" },
+            { icon: Zap, text: "Instant Access" },
+            { icon: Download, text: "Free Downloads" }
+          ].map((item, idx) => (
+            <div key={idx} className="flex flex-col items-center p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+              <item.icon className="w-8 h-8 text-gold mb-3" />
+              <span className="text-sm font-medium uppercase tracking-wider text-gray-300">{item.text}</span>
+            </div>
           ))}
-        </div>
-      </div>
+        </motion.div>
 
-      {/* Stats Section removed as requested */}
+        {/* Loading Indicator */}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: "100px" }}
+          transition={{ duration: 1.5, delay: 0.2, ease: "easeInOut" }}
+          className="mt-16 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-50"
+        />
+      </div>
     </div>
   )
 }

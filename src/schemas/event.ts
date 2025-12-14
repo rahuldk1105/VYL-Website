@@ -46,18 +46,7 @@ export default {
       type: 'string',
       title: 'Location'
     },
-    {
-      name: 'tier',
-      type: 'string',
-      title: 'Competition Tier',
-      options: {
-        list: [
-          { title: 'Lions', value: 'lions' },
-          { title: 'Tigers', value: 'tigers' },
-          { title: 'Panthers', value: 'panthers' }
-        ]
-      }
-    },
+
     {
       name: 'tagline',
       type: 'string',

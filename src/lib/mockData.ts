@@ -3,17 +3,17 @@ import { Event } from './types'
 export const mockEvents: Event[] = [
   {
     _id: '1',
-    title: 'Elite Football Championship 2024',
-    description: 'Premier football tournament featuring top teams from across Asia. Compete for the championship title and showcase your talent.',
+    title: 'VYL Season 1',
+    description: 'The inaugural season of the Veeran Youth League, setting the standard for youth football in Tamil Nadu. A resounding success with top teams competing for the first-ever VYL trophy.',
     sport: 'Football',
-    tier: 'Lions',
-    startDate: '2024-03-15',
-    endDate: '2024-03-17',
+
+    startDate: '2023-08-10',
+    endDate: '2023-08-12',
     location: 'Chennai, Tamil Nadu',
-    maxTeams: 32,
-    registrationDeadline: '2024-02-28',
-    image: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6',
-    slug: { current: 'elite-football-championship-2024' },
+    maxTeams: 16,
+    registrationDeadline: '2023-07-25',
+    image: '/images/tournaments/vyl-season-1.png',
+    slug: { current: 'vyl-season-1' },
     features: [
       'Professional referees',
       'Live streaming',
@@ -22,145 +22,136 @@ export const mockEvents: Event[] = [
       'Medical support'
     ],
     matchFormats: [
-      { name: 'Group Stage', description: 'Round-robin format with 8 groups of 4 teams' },
-      { name: 'Knockout Stage', description: 'Single elimination from quarterfinals to final' }
+      { name: 'Group Stage', description: 'Round-robin format' },
+      { name: 'Knockout Stage', description: 'Semi-finals and Final' }
     ],
     price: 1500,
     currency: 'INR'
   },
   {
     _id: '2',
-    title: 'Basketball Premier League',
-    description: 'High-intensity basketball tournament for elite teams. Experience professional-level competition and facilities.',
+    title: 'VYL Season 2',
+    description: 'Building on the success of Season 1, VYL Season 2 brought even more intensity and skill. An unforgettable tournament that showcased the rising stars of football.',
     sport: 'Football',
-    tier: 'Tigers',
-    startDate: '2024-04-20',
-    endDate: '2024-04-22',
-    location: 'Bengaluru, Karnataka',
-    maxTeams: 24,
-    registrationDeadline: '2024-04-05',
-    image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
-    slug: { current: 'basketball-premier-league' },
+
+    startDate: '2024-01-20',
+    endDate: '2024-01-22',
+    location: 'Chennai, Tamil Nadu',
+    maxTeams: 20,
+    registrationDeadline: '2024-01-05',
+    image: '/images/tournaments/vyl-season-2.jpg',
+    slug: { current: 'vyl-season-2' },
     features: [
-      'Professional courts',
-      'Electronic scoring',
-      'Video analysis',
-      'Coaching clinics',
-      'Player statistics'
+      'Expanded bracket',
+      'Scouting opportunities',
+      'Enhanced media coverage',
+      'Skill challenges',
+      'Gala awards night'
     ],
     matchFormats: [
-      { name: 'Preliminary Round', description: 'Pool play with 6 groups of 4 teams' },
-      { name: 'Championship Bracket', description: 'Single elimination tournament' }
+      { name: 'League Phase', description: 'Groups of 4 teams' },
+      { name: 'Championship Bracket', description: 'Top 2 from each group advance' }
     ],
-    price: 1200,
+    price: 1500,
     currency: 'INR'
   },
   {
     _id: '3',
-    title: 'Youth Tennis Open',
-    description: 'Developmental tennis tournament for young athletes. Perfect platform to gain competitive experience.',
+    title: 'Veeran Juniors League',
+    description: 'A dedicated league for our younger talents to shine. The Veeran Juniors League focused on grassroots development and the pure joy of the game.',
     sport: 'Football',
-    tier: 'Panthers',
-    startDate: '2024-05-10',
-    endDate: '2024-05-12',
-    location: 'New Delhi, Delhi',
-    maxTeams: 16,
-    registrationDeadline: '2024-04-25',
-    image: 'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
-    slug: { current: 'youth-tennis-open' },
+
+    startDate: '2024-05-15',
+    endDate: '2024-05-17',
+    location: 'Chennai, Tamil Nadu',
+    maxTeams: 12,
+    registrationDeadline: '2024-05-01',
+    image: '/images/tournaments/juniors-league.jpg',
+    slug: { current: 'veeran-juniors-league' },
     features: [
-      'Professional coaching',
-      'Skill development',
-      'Parent workshops',
-      'Equipment support',
-      'Progress tracking'
+      'Age-appropriate coaching',
+      'Focus on fundamentals',
+      'Participation medals',
+      'Family fun zone',
+      'Development workshops'
     ],
     matchFormats: [
-      { name: 'Round Robin', description: 'Guaranteed matches for all participants' },
-      { name: 'Consolation Draw', description: 'Additional matches for eliminated players' }
-    ],
-    price: 800,
-    currency: 'INR'
-  },
-  {
-    _id: '4',
-    title: 'Volleyball Beach Championship',
-    description: 'Exciting beach volleyball tournament on pristine sands. Team up and compete in a tropical paradise.',
-    sport: 'Football',
-    tier: 'Tigers',
-    startDate: '2024-06-15',
-    endDate: '2024-06-17',
-    location: 'Hyderabad, Telangana',
-    maxTeams: 20,
-    registrationDeadline: '2024-05-31',
-    image: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6',
-    slug: { current: 'volleyball-beach-championship' },
-    features: [
-      'Beach facilities',
-      'Professional setup',
-      'Beach activities',
-      'Team bonding',
-      'Sunset events'
-    ],
-    matchFormats: [
-      { name: 'Pool Play', description: 'Round-robin within pools' },
-      { name: 'Knockout', description: 'Single elimination finals' }
+      { name: 'Friendlies', description: 'Emphasis on playing time' },
+      { name: 'Mini-Tournament', description: 'Short format matches' }
     ],
     price: 1000,
     currency: 'INR'
   },
   {
-    _id: '5',
-    title: 'Badminton Masters Cup',
-    description: 'Prestigious badminton tournament for competitive players. Showcase your skills on the international stage.',
+    _id: '4',
+    title: 'Veeran Winter Cup',
+    description: 'The upcoming prestigious winter tournament. Join us for the Veeran Winter Cup and compete against the best. Registrations are now OPEN!',
     sport: 'Football',
-    tier: 'Lions',
-    startDate: '2024-07-08',
-    endDate: '2024-07-10',
-    location: 'Kolkata, West Bengal',
-    maxTeams: 28,
-    registrationDeadline: '2024-06-23',
-    image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
-    slug: { current: 'badminton-masters-cup' },
+
+    startDate: '2025-12-27',
+    endDate: '2025-12-28',
+    location: 'HAL Stadium, Bangalore',
+    maxTeams: 32,
+    registrationDeadline: '2025-12-15',
+    image: '/images/tournaments/winter-cup-2025.jpg',
+    slug: { current: 'veeran-winter-cup' },
+    organizer: 'Veeran Football League',
+    tagline: 'Two days. Endless energy. Pure football.',
     features: [
-      'Olympic-standard courts',
-      'Professional umpires',
-      'Live streaming',
-      'Player lounge',
-      'Equipment testing'
+      'Championship Trophy',
+      'Cash Prizes',
+      'Professional Scouts',
+      'Live Streaming on YouTube',
+      'Winter Festival Atmosphere'
     ],
+    ageGroups: {
+      boys: [
+        { category: 'U-7', bornOnOrAfter: '2018-01-01' },
+        { category: 'U-9', bornOnOrAfter: '2016-01-01' },
+        { category: 'U-11', bornOnOrAfter: '2014-01-01' },
+        { category: 'U-13', bornOnOrAfter: '2012-01-01' },
+        { category: 'U-15', bornOnOrAfter: '2010-01-01' },
+        { category: 'U-17', bornOnOrAfter: '2008-01-01' }
+      ],
+      girls: [
+        { category: 'U-15 Girls', bornOnOrAfter: '2010-01-01' },
+        { category: 'U-17 Girls', bornOnOrAfter: '2008-01-01' },
+        { category: 'Senior Girls', bornOnOrAfter: 'Open' }
+      ]
+    },
+    matchRules: {
+      general: [
+        'Player ID verification (Aadhaar or valid ID) is mandatory',
+        'Verification marking must be worn throughout the tournament',
+        'Organizer reserves the right to amend rules if required'
+      ],
+      standbyTime: 30
+    },
+    matchSpecifications: [
+      { category: 'U-7', ballSize: 3, time: '10-2-10', subs: 'Rolling', players: '5+3' },
+      { category: 'U-9', ballSize: 4, time: '10-2-10', subs: 'Rolling', players: '5+3' },
+      { category: 'U-11', ballSize: 4, time: '10-2-10', subs: 'Rolling', players: '7+5' },
+      { category: 'U-13', ballSize: 5, time: '10-2-10', subs: 'Rolling', players: '7+5' },
+      { category: 'U-15', ballSize: 5, time: '10-2-10', subs: 'Rolling', players: '7+5' },
+      { category: 'U-17', ballSize: 5, time: '10-2-10', subs: 'Rolling', players: '7+5' },
+      { category: 'Senior Girls', ballSize: 5, time: '10-2-10', subs: 'Rolling', players: '7+5' }
+    ],
+    merchandise: {
+      players: [
+        'Official participation medal',
+        'Team jersey',
+        'Premium kit bag',
+        'Professional team photoshoot'
+      ],
+      champions: [
+        'Championship trophy awarded on final celebration day'
+      ]
+    },
     matchFormats: [
-      { name: 'Qualifying Rounds', description: 'Preliminary elimination matches' },
-      { name: 'Main Draw', description: 'Single elimination tournament' }
+      { name: 'League-cum-Knockout', description: 'Minimum 5 matches per team guaranteed' }
     ],
-    price: 1300,
-    currency: 'INR'
-  },
-  {
-    _id: '6',
-    title: 'Swimming Elite Meet',
-    description: 'Competitive swimming meet for elite athletes. Set personal bests and compete for medals.',
-    sport: 'Football',
-    tier: 'Tigers',
-    startDate: '2024-08-12',
-    endDate: '2024-08-14',
-    location: 'Ahmedabad, Gujarat',
-    maxTeams: 15,
-    registrationDeadline: '2024-07-28',
-    image: 'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
-    slug: { current: 'swimming-elite-meet' },
-    features: [
-      'Olympic pool',
-      'Electronic timing',
-      'Medal ceremony',
-      'Coaching analysis',
-      'Recovery facilities'
-    ],
-    matchFormats: [
-      { name: 'Heats', description: 'Qualifying races by event' },
-      { name: 'Finals', description: 'Championship races for qualifiers' }
-    ],
-    price: 900,
-    currency: 'INR'
+    price: 2000,
+    currency: 'INR',
+    registrationUrl: 'https://forms.zoho.com'
   }
 ]
