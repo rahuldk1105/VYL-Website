@@ -1,4 +1,4 @@
-export default {
+const event = {
   name: 'event',
   title: 'Event',
   type: 'document',
@@ -7,6 +7,7 @@ export default {
       name: 'title',
       type: 'string',
       title: 'Event Title',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       validation: (Rule: any) => Rule.required()
     },
     {
@@ -92,3 +93,5 @@ export default {
     }
   ]
 }
+
+export default event

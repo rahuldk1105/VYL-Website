@@ -96,7 +96,7 @@ export default function AboutPage() {
               These principles guide everything we do and help us deliver exceptional experiences.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div key={index} className="text-center">
@@ -119,7 +119,7 @@ export default function AboutPage() {
             Numbers that reflect our commitment to excellence in sports event management.
           </p>
         </div>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {achievements.map((achievement, index) => (
             <div key={index} className="text-center">
@@ -141,7 +141,7 @@ export default function AboutPage() {
               Passionate professionals dedicated to making every event a success.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (
               <div key={index} className="text-center">
@@ -167,7 +167,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Partner with Us?</h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Let's work together to create an unforgettable sports event that exceeds your expectations.
+            Let&apos;s work together to create an unforgettable sports event that exceeds your expectations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="px-8 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors">

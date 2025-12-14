@@ -1,0 +1,35 @@
+
+> sports-events-site@0.1.0 lint
+> eslint
+
+
+/Users/Hp/Desktop/VYL-Website/src/app/about/page.tsx
+    2:38  warning  'Award' is defined but never used                                @typescript-eslint/no-unused-vars
+    2:45  warning  'Target' is defined but never used                               @typescript-eslint/no-unused-vars
+  170:16  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/Hp/Desktop/VYL-Website/src/app/contact/page.tsx
+  2:8  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/Hp/Desktop/VYL-Website/src/app/page.tsx
+   2:8  warning  'MissionSection' is defined but never used              @typescript-eslint/no-unused-vars
+  38:9  warning  'mockMissionText' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  42:9  warning  'mockMissionImages' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/Hp/Desktop/VYL-Website/src/app/tournaments/[slug]/page.tsx
+  3:43  warning  'Clock' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/Hp/Desktop/VYL-Website/src/components/ClientContactForm.tsx
+  39:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/Hp/Desktop/VYL-Website/src/components/Footer.tsx
+  1:8  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/Hp/Desktop/VYL-Website/src/components/TournamentFilter.tsx
+  20:9  warning  'createQueryString' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/Hp/Desktop/VYL-Website/src/components/TournamentGrid.tsx
+  55:15  warning  'isEventPassed' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 12 problems (1 error, 11 warnings)
+
