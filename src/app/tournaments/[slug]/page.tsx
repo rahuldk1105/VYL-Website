@@ -111,13 +111,7 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3">
-                  <DollarSign className="w-6 h-6 text-blue-600 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Entry Fee</h3>
-                    <p className="text-gray-600">{formatINR(event.price)}</p>
-                  </div>
-                </div>
+
               </div>
             </div>
 
@@ -274,10 +268,7 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
               <h3 className="text-xl font-bold text-gray-900 mb-4">Registration</h3>
 
               <div className="space-y-4 mb-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Entry Fee:</span>
-                  <span className="font-bold text-gray-900">{formatINR(event.price)}</span>
-                </div>
+
 
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Registration Deadline:</span>
@@ -297,19 +288,36 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
                 >
                   Event has ended already
                 </button>
-              ) : event.registrationUrl ? (
-                <a
-                  href={event.registrationUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full text-center px-6 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors mb-3"
-                >
-                  Register Now !
-                </a>
               ) : (
-                <button className="w-full px-6 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors mb-3">
-                  Register Your Team
-                </button>
+                <>
+                  {event.registrationUrlTeam && (
+                    <a
+                      href={event.registrationUrlTeam}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full text-center px-6 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors mb-3"
+                    >
+                      Register as Team
+                    </a>
+                  )}
+
+                  {event.registrationUrlIndividual && (
+                    <a
+                      href={event.registrationUrlIndividual}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full text-center px-6 py-3 border-2 border-primary-dark text-primary-dark font-semibold rounded-lg hover:bg-primary-dark hover:text-white transition-colors mb-3"
+                    >
+                      Register as Individual Player
+                    </a>
+                  )}
+
+                  {!event.registrationUrlTeam && !event.registrationUrlIndividual && (
+                    <button className="w-full px-6 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors mb-3">
+                      Register Your Team
+                    </button>
+                  )}
+                </>
               )}
 
               <p className="text-xs text-gray-500 text-center">

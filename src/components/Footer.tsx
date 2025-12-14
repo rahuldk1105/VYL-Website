@@ -42,8 +42,8 @@ const Footer = () => {
               </li>
               <li>
                 <strong className="block text-white">Call Us:</strong>
-                <span className="block">Priya: +91 79044 41579</span>
-                <span className="block">Lokesh: +91 89255 15619</span>
+                <span className="block">+91 79044 41579</span>
+                <span className="block">+91 89255 15619</span>
               </li>
             </ul>
           </div>
