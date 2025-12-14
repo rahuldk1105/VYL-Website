@@ -151,7 +151,6 @@ export const mockEvents: Event[] = [
     ],
     price: 2000,
     currency: 'INR',
-    registrationUrlTeam: 'https://forms.zoho.com/team-registration',
-    registrationUrlIndividual: 'https://forms.zoho.com/individual-registration'
+    registrationUrl: '/register/team'
   }
 ]

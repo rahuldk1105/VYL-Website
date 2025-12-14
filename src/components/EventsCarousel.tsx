@@ -20,9 +20,11 @@ interface Event {
 
 interface EventsCarouselProps {
   events: Event[]
+  title?: string
+  description?: string
 }
 
-const EventsCarousel = ({ events }: EventsCarouselProps) => {
+const EventsCarousel = ({ events, title = "Upcoming Events", description = "Discover our next tournaments for 5–18 year olds across India" }: EventsCarouselProps) => {
 
 
 
@@ -40,10 +42,10 @@ const EventsCarousel = ({ events }: EventsCarouselProps) => {
           className="text-center mb-12"
         >
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">
-            Upcoming Events
+            {title}
           </h2>
           <p className="text-base md:text-lg max-w-2xl mx-auto">
-            Discover our next tournaments for 5–18 year olds across India
+            {description}
           </p>
         </motion.div>
 

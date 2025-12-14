@@ -288,36 +288,17 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
                 >
                   Event has ended already
                 </button>
+              ) : event.registrationUrl ? (
+                <Link
+                  href={event.registrationUrl}
+                  className="block w-full text-center px-6 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors mb-3"
+                >
+                  Register Now !
+                </Link>
               ) : (
-                <>
-                  {event.registrationUrlTeam && (
-                    <a
-                      href={event.registrationUrlTeam}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block w-full text-center px-6 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors mb-3"
-                    >
-                      Register as Team
-                    </a>
-                  )}
-
-                  {event.registrationUrlIndividual && (
-                    <a
-                      href={event.registrationUrlIndividual}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block w-full text-center px-6 py-3 border-2 border-primary-dark text-primary-dark font-semibold rounded-lg hover:bg-primary-dark hover:text-white transition-colors mb-3"
-                    >
-                      Register as Individual Player
-                    </a>
-                  )}
-
-                  {!event.registrationUrlTeam && !event.registrationUrlIndividual && (
-                    <button className="w-full px-6 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors mb-3">
-                      Register Your Team
-                    </button>
-                  )}
-                </>
+                <button className="w-full px-6 py-3 bg-gold text-primary-dark font-semibold rounded-lg hover:bg-yellow-400 transition-colors mb-3">
+                  Register Your Team
+                </button>
               )}
 
               <p className="text-xs text-gray-500 text-center">

@@ -19,8 +19,7 @@ export interface Event {
   }[]
   price: number
   currency: string
-  registrationUrlTeam?: string
-  registrationUrlIndividual?: string
+  registrationUrl?: string
   organizer?: string
   tagline?: string
   ageGroups?: {

@@ -97,6 +97,9 @@ These are our roots. This is Veeran Football.`
   ]
 
 
+  const upcomingEvents = mockEvents.filter(e => e.slug === 'veeran-winter-cup')
+  const pastEvents = mockEvents.filter(e => e.slug !== 'veeran-winter-cup')
+
   return (
     <div className="min-h-screen">
       <HeroCarousel slides={mockSlides} />
@@ -106,7 +109,17 @@ These are our roots. This is Veeran Football.`
         missionImages={mockMissionImages}
       /> */}
 
-      <EventsCarousel events={mockEvents} />
+      <EventsCarousel
+        events={upcomingEvents}
+        title="Upcoming Events"
+        description="Discover our next tournaments for 5–18 year olds across India"
+      />
+
+      <EventsCarousel
+        events={pastEvents}
+        title="Past Events"
+        description="Check out our previously completed tournaments and leagues"
+      />
     </div>
   )
 }
