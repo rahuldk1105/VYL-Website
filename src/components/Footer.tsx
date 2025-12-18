@@ -38,7 +38,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-white/80">
               <li>
                 <strong className="block text-white">General Inquiries:</strong>
-                <a href="mailto:admin@veerancup.in" className="hover:text-gold block">contact@veerancup.in</a>
+                <a href="mailto:contact@veerancup.in" className="hover:text-gold block">contact@veerancup.in</a>
               </li>
               <li>
                 <strong className="block text-white">Call Us:</strong>
