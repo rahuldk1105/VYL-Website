@@ -47,7 +47,7 @@ export default function TournamentsPage() {
                         </div>
                     ))}
                 </div>}>
-                    <TournamentGrid events={mockEvents} />
+                    <TournamentGrid events={[...mockEvents].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())} />
                 </Suspense>
             </div>
         </div>
