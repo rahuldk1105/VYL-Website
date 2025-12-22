@@ -152,5 +152,47 @@ export const mockEvents: Event[] = [
     price: 2000,
     currency: 'INR',
     registrationUrl: '/register/team'
+  },
+  {
+    _id: '5',
+    title: 'Veeran Development League',
+    description: 'A dedicated Youth Football League designed for development. Featuring a double league format and a minimum of 10 matches per team.',
+    sport: 'Football',
+
+    startDate: '2025-02-01',
+    endDate: '2025-02-28',
+    location: 'CP Sports Academy @ VELS, Old Pallavaram, Chennai - 600117',
+    maxTeams: 32, // Placeholder
+    registrationDeadline: '2025-01-31',
+    image: '/images/tournaments/veeran-development-league.png',
+    slug: { current: 'veeran-development-league' },
+    organizer: 'Veeran Football League',
+    tagline: 'Development First. Competition Second.',
+    features: [
+      'Minimum 10 matches guaranteed',
+      'Double League Format',
+      'Age-appropriate formats (3v3 to 7v7)',
+      'Professional venue'
+    ],
+    ageGroups: {
+      boys: [
+        { category: 'U-7', bornOnOrAfter: 'TBD' },
+        { category: 'U-9', bornOnOrAfter: 'TBD' },
+        { category: 'U-10', bornOnOrAfter: 'TBD' },
+        { category: 'U-12', bornOnOrAfter: 'TBD' }
+      ]
+    },
+    matchSpecifications: [
+      { category: 'U-7', ballSize: 3, time: 'Coming Soon', subs: 'Rolling', players: '3-a-side' },
+      { category: 'U-9', ballSize: 4, time: 'Coming Soon', subs: 'Rolling', players: '5-a-side' },
+      { category: 'U-10', ballSize: 4, time: 'Coming Soon', subs: 'Rolling', players: '5-a-side' },
+      { category: 'U-12', ballSize: 5, time: 'Coming Soon', subs: 'Rolling', players: '7-a-side' }
+    ],
+    matchFormats: [
+      { name: 'Double League', description: 'Minimum 10 matches per team' }
+    ],
+    price: 0, // Coming Soon
+    currency: 'INR',
+    registrationUrl: '/register/team'
   }
 ]

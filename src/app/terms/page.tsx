@@ -181,7 +181,7 @@ export default function TermsPage() {
                 If you have any questions about these Terms of Service, please contact us:
               </p>
               <div className="text-gray-600 space-y-2">
-                <p><strong>Email:</strong> legal@vylleague.com</p>
+                <p><strong>Email:</strong> contact@veerancup.in</p>
                 <p><strong>Phone:</strong> +91 98765 43210</p>
                 <p><strong>Address:</strong></p>
                 <p className="ml-4">

@@ -310,7 +310,7 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Need Help?</h3>
               <div className="space-y-3 text-sm text-gray-600">
-                <p>📧 admin@veerancup.in</p>
+                <p>📧 contact@veerancup.in</p>
                 <p>📞 +91 7904441579</p>
                 <p>💬 Live Chat Available</p>
               </div>

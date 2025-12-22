@@ -154,7 +154,7 @@ export default function PrivacyPage() {
                 If you have any questions about this Privacy Policy or our privacy practices, please contact us:
               </p>
               <div className="text-gray-600 space-y-2">
-                <p><strong>Email:</strong> privacy@vylleague.com</p>
+                <p><strong>Email:</strong> contact@veerancup.in</p>
                 <p><strong>Phone:</strong> +91 98765 43210</p>
                 <p><strong>Address:</strong></p>
                 <p className="ml-4">
@@ -164,7 +164,7 @@ export default function PrivacyPage() {
                 </p>
               </div>
               <p className="text-gray-600 leading-relaxed mt-4">
-                For privacy-related inquiries, you may also contact our Data Protection Officer at <strong>dpo@vylleague.com</strong>.
+                For privacy-related inquiries, you may also contact our Data Protection Officer at <strong>contact@veerancup.in</strong>.
               </p>
             </section>
           </div>
