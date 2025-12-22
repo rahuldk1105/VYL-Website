@@ -202,6 +202,6 @@ export const mockEvents: Event[] = [
     ],
     price: 0, // Coming Soon
     currency: 'INR',
-    registrationUrl: '/register/team'
+    registrationUrl: '/register/development-league'
   }
 ]
