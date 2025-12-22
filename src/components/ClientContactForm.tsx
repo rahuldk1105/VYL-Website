@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import type { FormEvent, ChangeEvent } from "react"
 
 export default function ClientContactForm() {
   const [name, setName] = useState('')
@@ -10,7 +11,7 @@ export default function ClientContactForm() {
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<null | { ok: boolean; text: string }>(null)
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
     setStatus(null)
@@ -51,20 +52,20 @@ export default function ClientContactForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-semibold mb-2">Name</label>
-          <input value={name} onChange={(e) => setName(e.target.value)} required type="text" className="w-full border rounded-md px-3 py-2" placeholder="Your name" />
+          <input value={name} onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} required type="text" className="w-full border rounded-md px-3 py-2" placeholder="Your name" />
         </div>
         <div>
           <label className="block text-sm font-semibold mb-2">Email</label>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" className="w-full border rounded-md px-3 py-2" placeholder="you@example.com" />
+          <input value={email} onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required type="email" className="w-full border rounded-md px-3 py-2" placeholder="you@example.com" />
         </div>
       </div>
       <div>
         <label className="block text-sm font-semibold mb-2">Subject</label>
-        <input value={subject} onChange={(e) => setSubject(e.target.value)} required type="text" className="w-full border rounded-md px-3 py-2" placeholder="How can we help?" />
+        <input value={subject} onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value)} required type="text" className="w-full border rounded-md px-3 py-2" placeholder="How can we help?" />
       </div>
       <div>
         <label className="block text-sm font-semibold mb-2">Message</label>
-        <textarea value={message} onChange={(e) => setMessage(e.target.value)} required rows={6} className="w-full border rounded-md px-3 py-2" placeholder="Tell us more" />
+        <textarea value={message} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)} required rows={6} className="w-full border rounded-md px-3 py-2" placeholder="Tell us more" />
       </div>
       <button disabled={loading} type="submit" className="bg-black text-white font-black uppercase text-sm px-6 py-3 rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60">
         {loading ? 'Sending...' : 'Send Message'}
