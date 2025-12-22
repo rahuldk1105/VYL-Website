@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "Veeran Youth League (VYL) - Chennai",
   description: "Official site of Veeran Youth League (VYL), based in Chennai, organizing football tournaments year-round.",
   keywords: "veeran youth league, vyl, football, chennai",
+  icons: {
+    icon: '/VYL-favicon.png',
+  },
 }
 
 export default function RootLayout({
