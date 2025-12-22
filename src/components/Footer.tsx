@@ -32,32 +32,35 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Links */}
+          {/* Contact */}
           <div>
-            <h4 className="font-black uppercase mb-4">Links</h4>
-            <ul className="space-y-2">
-              <li><Link href="/events" className="hover:underline">Events</Link></li>
-              <li><Link href="/about" className="hover:underline">About Us</Link></li>
-              <li><Link href="/gallery" className="hover:underline">Galleries</Link></li>
-              <li><Link href="/contact" className="hover:underline">Contact Us</Link></li>
-              <li><Link href="/privacy" className="hover:underline">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:underline">Code of Conduct</Link></li>
+            <h4 className="font-black uppercase mb-4">Contact Us</h4>
+            <ul className="space-y-3 text-sm text-white/80">
+              <li>
+                <strong className="block text-white">General Inquiries:</strong>
+                <a href="mailto:contact@veerancup.in" className="hover:text-gold block">contact@veerancup.in</a>
+              </li>
+              <li>
+                <strong className="block text-white">Call Us:</strong>
+                <span className="block">+91 79044 41579</span>
+                <span className="block">+91 89255 15619</span>
+              </li>
             </ul>
           </div>
 
           {/* Social */}
           <div>
-            <h4 className="font-black uppercase mb-4">Social</h4>
+            <h4 className="font-black uppercase mb-4">Follow Us</h4>
             <div className="flex items-center gap-4">
-              <a aria-label="Instagram" href="#" className="hover:opacity-80"><Instagram className="h-6 w-6" /></a>
-              <a aria-label="Facebook" href="#" className="hover:opacity-80"><Facebook className="h-6 w-6" /></a>
-              <a aria-label="YouTube" href="#" className="hover:opacity-80"><Youtube className="h-6 w-6" /></a>
+              <a aria-label="Instagram" href="https://instagram.com/veeran_youth_league" target="_blank" className="bg-white/10 p-2 rounded-full hover:bg-gold hover:text-black transition-colors"><Instagram className="h-5 w-5" /></a>
+              <a aria-label="Facebook" href="https://facebook.com/veeran_youth_league" target="_blank" className="bg-white/10 p-2 rounded-full hover:bg-gold hover:text-black transition-colors"><Facebook className="h-5 w-5" /></a>
+              <a aria-label="YouTube" href="https://youtube.com" target="_blank" className="bg-white/10 p-2 rounded-full hover:red-600 hover:text-white transition-colors"><Youtube className="h-5 w-5" /></a>
             </div>
           </div>
         </div>
 
         <div className="mt-12 border-t border-white/30 pt-6 text-center">
-          <p className="text-white/80">© Veeran Youth League · CP Sports</p>
+          <p className="text-white/80">© Veeran Youth League</p>
         </div>
       </div>
     </footer>

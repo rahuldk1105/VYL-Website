@@ -1,4 +1,4 @@
-export default {
+const gallery = {
   name: 'gallery',
   title: 'Gallery',
   type: 'document',
@@ -69,3 +69,5 @@ export default {
     }
   ]
 }
+
+export default gallery

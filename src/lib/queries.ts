@@ -24,7 +24,7 @@ export const eventsQuery = groq`
     startDate,
     endDate,
     location,
-    tier,
+
     tagline,
     formats[]
   }
@@ -40,7 +40,7 @@ export const eventBySlugQuery = groq`
     startDate,
     endDate,
     location,
-    tier,
+
     tagline,
     description,
     formats[]

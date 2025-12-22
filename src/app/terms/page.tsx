@@ -1,4 +1,4 @@
-import Link from 'next/link'
+
 
 export default function TermsPage() {
   return (
@@ -23,11 +23,11 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                By accessing and using the Veeran Youth League (VYL) website and services, you agree to be bound by these Terms of Service. 
+                By accessing and using the Veeran Youth League (VYL) website and services, you agree to be bound by these Terms of Service.
                 If you do not agree to these terms, please do not use our website or services.
               </p>
               <p className="text-gray-600 leading-relaxed">
-                We reserve the right to modify these terms at any time. Your continued use of our services after any changes 
+                We reserve the right to modify these terms at any time. Your continued use of our services after any changes
                 constitutes your acceptance of the updated terms.
               </p>
             </section>
@@ -36,13 +36,13 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Use of Services</h2>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Eligibility</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                You must be at least 18 years old or have parental consent to use our services. By using our services, 
+                You must be at least 18 years old or have parental consent to use our services. By using our services,
                 you represent and warrant that you meet these eligibility requirements.
               </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mb-3">User Account</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                You are responsible for maintaining the confidentiality of your account credentials and for all activities 
+                You are responsible for maintaining the confidentiality of your account credentials and for all activities
                 that occur under your account. You agree to notify us immediately of any unauthorized use of your account.
               </p>
 
@@ -91,19 +91,19 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Payment Terms</h2>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Fees and Charges</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                All fees are stated in the currency specified for each event. You are responsible for any applicable taxes, 
+                All fees are stated in the currency specified for each event. You are responsible for any applicable taxes,
                 currency conversion fees, or bank charges.
               </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Payment Processing</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                We use secure third-party payment processors. By providing payment information, you authorize us and our 
+                We use secure third-party payment processors. By providing payment information, you authorize us and our
                 payment processors to charge the specified amounts.
               </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Late Payments</h3>
               <p className="text-gray-600 leading-relaxed">
-                Late payments may result in registration cancellation and additional fees. We reserve the right to 
+                Late payments may result in registration cancellation and additional fees. We reserve the right to
                 suspend or terminate accounts with outstanding balances.
               </p>
             </section>
@@ -112,19 +112,19 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Intellectual Property</h2>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Content Ownership</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                All content on our website and related to our services, including text, graphics, logos, images, and software, 
-                is the property of Veeran Youth League (VYL) and CP Sports or our licensors and is protected by intellectual property laws.
+                All content on our website and related to our services, including text, graphics, logos, images, and software,
+                is the property of Veeran Youth League (VYL) or our licensors and is protected by intellectual property laws.
               </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Limited License</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                We grant you a limited, non-exclusive, non-transferable license to access and use our services for personal, 
+                We grant you a limited, non-exclusive, non-transferable license to access and use our services for personal,
                 non-commercial purposes. You may not reproduce, distribute, modify, or create derivative works without our express written permission.
               </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mb-3">User Content</h3>
               <p className="text-gray-600 leading-relaxed">
-                By submitting content to our services, you grant us a worldwide, royalty-free license to use, reproduce, 
+                By submitting content to our services, you grant us a worldwide, royalty-free license to use, reproduce,
                 modify, and display such content for promotional and operational purposes.
               </p>
             </section>
@@ -133,19 +133,19 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Disclaimers and Limitation of Liability</h2>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Service Disclaimers</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                Our services are provided "as is" and "as available" without warranties of any kind. We do not guarantee 
+                Our services are provided &quot;as is&quot; and &quot;as available&quot; without warranties of any kind. We do not guarantee
                 that our services will be uninterrupted, error-free, or secure.
               </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Event Disclaimers</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                Participation in sports events involves inherent risks. You acknowledge and assume all risks associated 
+                Participation in sports events involves inherent risks. You acknowledge and assume all risks associated
                 with event participation. We are not responsible for injuries, damages, or losses resulting from event participation.
               </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Limitation of Liability</h3>
               <p className="text-gray-600 leading-relaxed">
-                To the maximum extent permitted by law, Veeran Youth League (VYL) shall not be liable for any indirect, incidental, 
+                To the maximum extent permitted by law, Veeran Youth League (VYL) shall not be liable for any indirect, incidental,
                 special, consequential, or punitive damages arising from your use of our services.
               </p>
             </section>
@@ -153,8 +153,8 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Indemnification</h2>
               <p className="text-gray-600 leading-relaxed">
-                You agree to indemnify and hold Veeran Youth League (VYL), its affiliates, officers, agents, and employees harmless 
-                from any claims, demands, losses, liabilities, and expenses (including attorneys' fees) arising from your 
+                You agree to indemnify and hold Veeran Youth League (VYL), its affiliates, officers, agents, and employees harmless
+                from any claims, demands, losses, liabilities, and expenses (including attorneys&apos; fees) arising from your
                 use of our services, violation of these terms, or infringement of any rights of another.
               </p>
             </section>
@@ -162,7 +162,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Termination</h2>
               <p className="text-gray-600 leading-relaxed">
-                We may terminate or suspend your access to our services at any time, with or without cause, 
+                We may terminate or suspend your access to our services at any time, with or without cause,
                 and without prior notice. Upon termination, your right to use our services will immediately cease.
               </p>
             </section>
@@ -185,7 +185,7 @@ export default function TermsPage() {
                 <p><strong>Phone:</strong> +91 98765 43210</p>
                 <p><strong>Address:</strong></p>
                 <p className="ml-4">
-                  CP Sports (VYL Division)<br />
+                  Veeran Youth League<br />
                   Chennai, Tamil Nadu<br />
                   India
                 </p>

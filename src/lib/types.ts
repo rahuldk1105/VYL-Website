@@ -3,7 +3,6 @@ export interface Event {
   title: string
   description: string
   sport: string
-  tier: 'Lions' | 'Tigers' | 'Panthers'
   startDate: string
   endDate: string
   location: string
@@ -20,6 +19,28 @@ export interface Event {
   }[]
   price: number
   currency: string
+  registrationUrl?: string
+  organizer?: string
+  tagline?: string
+  ageGroups?: {
+    boys?: { category: string; bornOnOrAfter: string }[]
+    girls?: { category: string; bornOnOrAfter: string }[]
+  }
+  matchRules?: {
+    general: string[]
+    standbyTime: number
+  }
+  matchSpecifications?: {
+    category: string
+    ballSize: number
+    time: string
+    subs: string
+    players: string
+  }[]
+  merchandise?: {
+    players: string[]
+    champions: string[]
+  }
 }
 
 export interface Gallery {

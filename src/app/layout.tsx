@@ -12,8 +12,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Veeran Youth League (VYL) - Chennai",
-  description: "Official site of Veeran Youth League (VYL), a CP Sports division based in Chennai, organizing football tournaments year-round.",
-  keywords: "veeran youth league, vyl, football, chennai, cp sports",
+  description: "Official site of Veeran Youth League (VYL), based in Chennai, organizing football tournaments year-round.",
+  keywords: "veeran youth league, vyl, football, chennai",
 }
 
 export default function RootLayout({
@@ -23,9 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
         <Navigation />
-        <main className="min-h-screen pt-16">
+        <main className="min-h-screen">
           {children}
         </main>
         <ContactCTA />

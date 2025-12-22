@@ -1,4 +1,4 @@
-export default {
+const homepage = {
   name: 'homepage',
   title: 'Homepage',
   type: 'document',
@@ -95,3 +95,5 @@ export default {
     }
   ]
 }
+
+export default homepage

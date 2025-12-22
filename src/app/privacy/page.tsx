@@ -1,4 +1,4 @@
-import Link from 'next/link'
+
 
 export default function PrivacyPage() {
   return (
@@ -23,11 +23,11 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                At Veeran Youth League (VYL), we are committed to protecting your privacy and ensuring the security of your personal information. 
+                At Veeran Youth League (VYL), we are committed to protecting your privacy and ensuring the security of your personal information.
                 This Privacy Policy outlines how we collect, use, disclose, and protect your information when you use our website and services.
               </p>
               <p className="text-gray-600 leading-relaxed">
-                By accessing or using our website, you agree to the terms of this Privacy Policy. If you do not agree with any part of this policy, 
+                By accessing or using our website, you agree to the terms of this Privacy Policy. If you do not agree with any part of this policy,
                 please do not use our website or services.
               </p>
             </section>
@@ -94,7 +94,7 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Data Security</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, 
+                We implement appropriate technical and organizational measures to protect your personal information against unauthorized access,
                 alteration, disclosure, or destruction. These measures include:
               </p>
               <ul className="list-disc list-inside text-gray-600 space-y-2">
@@ -132,9 +132,9 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Children's Privacy</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Children&apos;s Privacy</h2>
               <p className="text-gray-600 leading-relaxed">
-                Our services are not directed to children under 13 years of age. We do not knowingly collect personal information 
+                Our services are not directed to children under 13 years of age. We do not knowingly collect personal information
                 from children under 13. If you believe we have collected information from a child under 13, please contact us immediately.
               </p>
             </section>
@@ -142,8 +142,8 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Changes to This Policy</h2>
               <p className="text-gray-600 leading-relaxed">
-                We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting 
-                the new policy on this page and updating the "Last updated" date. Your continued use of our services after 
+                We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting
+                the new policy on this page and updating the &quot;Last updated&quot; date. Your continued use of our services after
                 any changes constitutes your acceptance of the updated policy.
               </p>
             </section>
@@ -158,7 +158,7 @@ export default function PrivacyPage() {
                 <p><strong>Phone:</strong> +91 98765 43210</p>
                 <p><strong>Address:</strong></p>
                 <p className="ml-4">
-                  CP Sports (VYL Division)<br />
+                  Veeran Youth League<br />
                   Chennai, Tamil Nadu<br />
                   India
                 </p>
