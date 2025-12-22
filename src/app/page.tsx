@@ -2,6 +2,8 @@ import HeroCarousel from '@/components/HeroCarousel'
 import MissionSection from '@/components/MissionSection'
 import EventsCarousel from '@/components/EventsCarousel'
 
+import { mockEvents as sharedMockEvents } from '@/lib/mockData'
+
 export default function Home() {
   // Mock data for demonstration
   const mockSlides = [
@@ -45,60 +47,21 @@ These are our roots. This is Veeran Football.`
     'https://images.unsplash.com/photo-1518837695005-2083093ee35b'
   ]
 
-  const mockEvents = [
-    {
-      _id: '4',
-      title: 'Veeran Winter Cup 2025',
-      slug: 'veeran-winter-cup',
-      heroImage: '/images/tournaments/winter-cup-2025.jpg',
-      logo: '/veeran_logo.png',
-      startDate: '2025-12-27',
-      endDate: '2025-12-28',
-      location: 'HAL Stadium, Bangalore',
+  // Transform shared events to the format expected by EventsCarousel
+  const displayEvents = sharedMockEvents.map(event => ({
+    _id: event._id,
+    title: event.title,
+    slug: event.slug.current,
+    heroImage: event.image,
+    logo: '/veeran_logo.png', // Default logo
+    startDate: event.startDate,
+    endDate: event.endDate,
+    location: event.location,
+    tagline: event.tagline || (new Date(event.endDate) < new Date() ? 'Completed' : 'Registrations Open')
+  }))
 
-      tagline: 'Registrations Open Now!'
-    },
-    {
-      _id: '1',
-      title: 'VYL Season 1',
-      slug: 'vyl-season-1',
-      heroImage: '/images/tournaments/vyl-season-1.png',
-      logo: '/veeran_logo.png',
-      startDate: '2024-07-01',
-      endDate: '2024-07-03',
-      location: 'Chennai, Tamil Nadu',
-
-      tagline: 'Completed'
-    },
-    {
-      _id: '2',
-      title: 'VYL Season 2',
-      slug: 'vyl-season-2',
-      heroImage: '/images/tournaments/vyl-season-2.jpg',
-      logo: '/veeran_logo.png',
-      startDate: '2025-07-01',
-      endDate: '2025-07-03',
-      location: 'Chennai, Tamil Nadu',
-
-      tagline: 'Completed'
-    },
-    {
-      _id: '3',
-      title: 'VYL Junior League',
-      slug: 'veeran-juniors-league',
-      heroImage: '/images/tournaments/juniors-league.jpg',
-      logo: '/veeran_logo.png',
-      startDate: '2025-09-01',
-      endDate: '2025-09-03',
-      location: 'Chennai, Tamil Nadu',
-
-      tagline: 'Completed'
-    }
-  ]
-
-
-  const upcomingEvents = mockEvents.filter(e => e.slug === 'veeran-winter-cup')
-  const pastEvents = mockEvents.filter(e => e.slug !== 'veeran-winter-cup')
+  const upcomingEvents = displayEvents.filter(e => new Date(e.endDate) >= new Date())
+  const pastEvents = displayEvents.filter(e => new Date(e.endDate) < new Date())
 
   return (
     <div className="min-h-screen">

@@ -92,7 +92,7 @@ export const mockEvents: Event[] = [
     endDate: '2025-12-28',
     location: 'HAL Stadium, Bangalore',
     maxTeams: 32,
-    registrationDeadline: '2025-12-15',
+    registrationDeadline: '2025-12-25',
     image: '/images/tournaments/winter-cup-2025.jpg',
     slug: { current: 'veeran-winter-cup' },
     organizer: 'Veeran Football League',
@@ -159,11 +159,11 @@ export const mockEvents: Event[] = [
     description: 'A dedicated Youth Football League designed for development. Featuring a double league format and a minimum of 10 matches per team.',
     sport: 'Football',
 
-    startDate: '2025-02-01',
-    endDate: '2025-02-28',
+    startDate: '2026-02-01',
+    endDate: '2026-02-28',
     location: 'CP Sports Academy @ VELS, Old Pallavaram, Chennai - 600117',
     maxTeams: 32, // Placeholder
-    registrationDeadline: '2025-01-31',
+    registrationDeadline: '2026-01-31',
     image: '/images/tournaments/veeran-development-league.png',
     slug: { current: 'veeran-development-league' },
     organizer: 'Veeran Football League',
