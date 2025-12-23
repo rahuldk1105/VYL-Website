@@ -1,5 +1,13 @@
 import Image from 'next/image'
+import { Metadata } from 'next'
 import { Trophy, Users, Globe, Star, Award, Target } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: "About Us - Grassroot Football Development",
+  description: "Learn about Veeran Youth League's mission to develop grassroots football in India. We organize premium leagues and tournaments to foster young talent.",
+  keywords: ["grassroots football india", "football development chennai", "youth sports mission", "football event organizers", "sports management india"],
+}
+
 
 export default function AboutPage() {
   const teamMembers = [

@@ -1,8 +1,15 @@
+import { Metadata } from 'next'
 import { Suspense } from 'react'
 import TournamentFilter from '@/components/TournamentFilter'
 import TournamentGrid from '@/components/TournamentGrid'
 import { mockEvents } from '@/lib/mockData'
 import SafeImage from '@/components/SafeImage'
+
+export const metadata: Metadata = {
+    title: "Find Football Tournaments",
+    description: "Browse upcoming football tournaments and leagues across India. Register your team for Veeran Youth League events today.",
+    keywords: ["find football tournament", "upcoming football events", "register for football league", "VYL tournaments", "chennai football matches"],
+}
 
 export default function TournamentsPage() {
     return (

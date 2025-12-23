@@ -4,9 +4,41 @@ import { Calendar, MapPin, Users, Trophy, Clock, DollarSign, Star, CheckCircle }
 import { mockEvents } from '@/lib/mockData'
 import Link from 'next/link'
 
+import { Metadata } from 'next'
+
 interface TournamentPageProps {
   params: Promise<{ slug: string }>
 }
+
+export async function generateMetadata({ params }: TournamentPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const event = mockEvents.find(e => e.slug.current === slug)
+
+  if (!event) {
+    return {
+      title: 'Tournament Not Found',
+      description: 'The requested tournament could not be found.'
+    }
+  }
+
+  return {
+    title: `${event.title} - Register Now`,
+    description: event.description.substring(0, 160),
+    openGraph: {
+      title: event.title,
+      description: event.description,
+      images: [
+        {
+          url: event.image,
+          width: 800,
+          height: 600,
+          alt: event.title,
+        }
+      ],
+    }
+  }
+}
+
 
 export default async function TournamentPage({ params }: TournamentPageProps) {
   const { slug } = await params
