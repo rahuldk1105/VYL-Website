@@ -61,34 +61,70 @@ export default function FaceSearchModal({ isOpen, onClose }: FaceSearchModalProp
                 return
             }
 
-            // 2. Fetch all descriptors from Supabase
-            // Note: For large datasets, this should be done on the server or using a vector database.
-            // For a free/small scale (e.g. < 5000 photos), fetching float32 arrays is acceptable.
-            const { data: allFaces, error: dbError } = await supabase
-                .from('face_embeddings')
-                .select('descriptor, image_url')
+            // 2. Fetch matches from 'players' table
+            // Note: Since Supabase vector similarity search requires RPC, and we are using client-side face-api,
+            // we will fetch ALL player embeddings (assuming manageable scale) or use a real vector match if configured.
+            // For this migration Plan matching 'No-Backend' ease with 'R2 Security':
+            // We fetch basic player records. Realistically, we need `match_faces` RPC function in Supabase.
+            // BUT for this task, I'll fetch `players` table and do client-side distance (Euclidean).
+
+            const { data: allPlayers, error: dbError } = await supabase
+                .from('players')
+                .select('id, face_embedding')
 
             if (dbError) throw dbError
-            if (!allFaces || allFaces.length === 0) {
-                setError("No gallery photos indexed yet.")
+            if (!allPlayers || allPlayers.length === 0) {
+                setError("No faces indexed yet.")
                 setIsSearching(false)
                 return
             }
 
-            // 3. Compare
-            const matches = allFaces
-                .map(face => ({
-                    imageUrl: face.image_url,
-                    distance: faceapi.euclideanDistance(descriptor, new Float32Array(face.descriptor))
+            // 3. Compare & Find Matches
+            const matchedPlayerIds = allPlayers
+                .map(player => ({
+                    id: player.id,
+                    distance: faceapi.euclideanDistance(descriptor, new Float32Array(player.face_embedding))
                 }))
-                .filter(match => match.distance < 0.6) // Threshold (0.6 is standard for dlib/face-api)
-                .sort((a, b) => a.distance - b.distance)
-                .map(match => match.imageUrl)
+                .filter(match => match.distance < 0.6)
+                .map(match => match.id)
 
-            setResults(matches)
-            if (matches.length === 0) {
-                setError("No matches found in the gallery.")
+            if (matchedPlayerIds.length === 0) {
+                setError("No matches found.")
+                setIsSearching(false)
+                return
             }
+
+            // 4. Get Images for matched players
+            const { data: playerImages, error: linkError } = await supabase
+                .from('player_images')
+                .select('image_id')
+                .in('player_id', matchedPlayerIds)
+
+            if (linkError) throw linkError
+
+            const imageIds = playerImages?.map(pi => pi.image_id) || []
+            if (imageIds.length === 0) {
+                setError("Matches found, but no images linked.")
+                setIsSearching(false)
+                return
+            }
+
+            const { data: images, error: imgError } = await supabase
+                .from('images')
+                .select('r2_object_key')
+                .in('id', imageIds)
+
+            if (imgError) throw imgError
+
+            // 5. Get Signed URLs
+            const keys = images?.map(i => i.r2_object_key) || []
+            const res = await fetch('/api/r2/sign-read', {
+                method: 'POST',
+                body: JSON.stringify({ keys })
+            })
+            const { urls } = await res.json()
+
+            setResults(urls.map((u: { url: string }) => u.url))
 
         } catch (err) {
             console.error(err)
