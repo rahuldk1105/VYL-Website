@@ -156,23 +156,23 @@ export const mockEvents: Event[] = [
   {
     _id: '5',
     title: 'Veeran Development League',
-    description: 'A dedicated Youth Football League designed for development. Featuring a double league format and a minimum of 10 matches per team.',
+    description: 'Join the Veeran Development League for a comprehensive youth football experience. Featuring a double league format with a minimum of 10 matches per team, live streaming, and awards for every game!',
     sport: 'Football',
-
     startDate: '2026-02-01',
-    endDate: '2026-02-28',
-    location: 'CP Sports Academy @ VELS, Old Pallavaram, Chennai - 600117',
-    maxTeams: 24, // 4 categories * 6 teams
-    registrationDeadline: '2026-01-31',
-    image: '/images/tournaments/veeran-development-league.png',
+    endDate: '2026-02-22',
+    location: 'CP Sports Academy @ Vels, Old Pallavaram, Chennai-600117',
+    maxTeams: 24,
+    registrationDeadline: '2026-01-20',
+    image: '/images/development-league-flyer.png',
     slug: { current: 'veeran-development-league' },
-    organizer: 'Veeran Football League',
-    tagline: 'Development First. Competition Second.',
+    organizer: 'Veeran Football Academy',
+    tagline: 'Double League | Minimum 10 Matches | Live Streaming',
     features: [
       'Minimum 10 matches guaranteed',
       'Double League Format',
-      'Age-appropriate formats (3v3 to 7v7)',
-      'Professional venue'
+      'Live streaming',
+      'Weekend-only matches',
+      'Player of the Match award in every game'
     ],
     ageGroups: {
       boys: [
@@ -183,15 +183,15 @@ export const mockEvents: Event[] = [
       ]
     },
     matchSpecifications: [
-      { category: 'U-7', ballSize: 3, time: 'Coming Soon', subs: '2 Subs', players: '3-a-side' },
-      { category: 'U-9', ballSize: 4, time: 'Coming Soon', subs: 'Rolling', players: '5-a-side' },
-      { category: 'U-10', ballSize: 4, time: 'Coming Soon', subs: 'Rolling', players: '5-a-side' },
-      { category: 'U-12', ballSize: 5, time: 'Coming Soon', subs: 'Rolling', players: '7-a-side' }
+      { category: 'U-7', ballSize: 3, time: '4 x 5 mins', subs: 'Rolling (3+3 player squad)', players: '3-a-side' },
+      { category: 'U-9', ballSize: 4, time: '15 mins each half', subs: 'Rolling (5+3 player squad)', players: '5-a-side' },
+      { category: 'U-10', ballSize: 4, time: '15 mins each half', subs: 'Rolling (5+3 player squad)', players: '5-a-side' },
+      { category: 'U-12', ballSize: 5, time: '15 mins each half', subs: 'Rolling (7+5 player squad)', players: '7-a-side' }
     ],
     matchFormats: [
       { name: 'Double League', description: 'Minimum 10 matches per team' }
     ],
-    price: 0, // Coming Soon
+    price: 8000,
     currency: 'INR',
     registrationUrl: '/register/development-league'
   }
