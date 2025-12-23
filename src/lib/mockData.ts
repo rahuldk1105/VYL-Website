@@ -162,7 +162,7 @@ export const mockEvents: Event[] = [
     startDate: '2026-02-01',
     endDate: '2026-02-28',
     location: 'CP Sports Academy @ VELS, Old Pallavaram, Chennai - 600117',
-    maxTeams: 54, // 9 categories * 6 teams
+    maxTeams: 24, // 4 categories * 6 teams
     registrationDeadline: '2026-01-31',
     image: '/images/tournaments/veeran-development-league.png',
     slug: { current: 'veeran-development-league' },
@@ -178,24 +178,15 @@ export const mockEvents: Event[] = [
       boys: [
         { category: 'U-7', bornOnOrAfter: '2018-01-01' },
         { category: 'U-9', bornOnOrAfter: '2016-01-01' },
-        { category: 'U-11', bornOnOrAfter: '2014-01-01' },
-        { category: 'U-13', bornOnOrAfter: '2012-01-01' },
-        { category: 'U-15', bornOnOrAfter: '2010-01-01' },
-        { category: 'U-17', bornOnOrAfter: '2008-01-01' }
-      ],
-      girls: [
-        { category: 'U-15 Girls', bornOnOrAfter: '2010-01-01' },
-        { category: 'U-17 Girls', bornOnOrAfter: '2008-01-01' },
-        { category: 'Senior Girls', bornOnOrAfter: 'Open' }
+        { category: 'U-10', bornOnOrAfter: '2015-01-01' },
+        { category: 'U-12', bornOnOrAfter: '2013-01-01' }
       ]
     },
     matchSpecifications: [
       { category: 'U-7', ballSize: 3, time: 'Coming Soon', subs: '2 Subs', players: '3-a-side' },
       { category: 'U-9', ballSize: 4, time: 'Coming Soon', subs: 'Rolling', players: '5-a-side' },
-      { category: 'U-11', ballSize: 4, time: 'Coming Soon', subs: 'Rolling', players: '5-a-side' },
-      { category: 'U-13', ballSize: 5, time: 'Coming Soon', subs: 'Rolling', players: '7-a-side' },
-      { category: 'U-15', ballSize: 5, time: 'Coming Soon', subs: 'Rolling', players: '7-a-side' },
-      { category: 'U-17', ballSize: 5, time: 'Coming Soon', subs: 'Rolling', players: '7-a-side' }
+      { category: 'U-10', ballSize: 4, time: 'Coming Soon', subs: 'Rolling', players: '5-a-side' },
+      { category: 'U-12', ballSize: 5, time: 'Coming Soon', subs: 'Rolling', players: '7-a-side' }
     ],
     matchFormats: [
       { name: 'Double League', description: 'Minimum 10 matches per team' }
