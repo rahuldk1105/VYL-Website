@@ -176,10 +176,10 @@ export const mockEvents: Event[] = [
     ],
     ageGroups: {
       boys: [
-        { category: 'U-7', bornOnOrAfter: '2018-01-01' },
-        { category: 'U-9', bornOnOrAfter: '2016-01-01' },
-        { category: 'U-10', bornOnOrAfter: '2015-01-01' },
-        { category: 'U-12', bornOnOrAfter: '2013-01-01' }
+        { category: 'U-7', bornOnOrAfter: '2019-01-01' },
+        { category: 'U-9', bornOnOrAfter: '2017-01-01' },
+        { category: 'U-10', bornOnOrAfter: '2016-01-01' },
+        { category: 'U-12', bornOnOrAfter: '2014-01-01' }
       ]
     },
     matchSpecifications: [
