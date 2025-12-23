@@ -1,10 +1,13 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Camera, Download, Zap } from 'lucide-react'
+import { Camera, Download, Zap, Search } from 'lucide-react'
+import FaceSearchModal from '@/components/FaceSearchModal'
 
 export default function GalleryPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center overflow-hidden relative">
       {/* Background Ambience */}
@@ -40,7 +43,7 @@ export default function GalleryPage() {
           className="max-w-3xl mx-auto"
         >
           <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase mb-6 bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent">
-            Coming Soon
+            AI Powered Gallery
           </h1>
 
           <motion.div
@@ -50,12 +53,18 @@ export default function GalleryPage() {
             className="space-y-6"
           >
             <p className="text-xl md:text-2xl text-gray-300 font-light leading-relaxed">
-              Get ready for a <span className="text-gold font-bold">seamless</span> digital experience.
+              Find your photos instantly with our <span className="text-gold font-bold">Face Search</span> technology.
             </p>
 
-            <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
-              Soon, all players will be able to access and <span className="text-white border-b border-gold/50 pb-0.5">download all their high-quality match photos</span> instantly after every tournament.
-            </p>
+            <div className="flex justify-center pt-4">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gold text-black font-black text-lg uppercase tracking-wide rounded-full hover:bg-white transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+              >
+                <Search className="w-6 h-6" />
+                Find My Photos
+              </button>
+            </div>
           </motion.div>
         </motion.div>
 
@@ -67,8 +76,8 @@ export default function GalleryPage() {
           className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl"
         >
           {[
-            { icon: Camera, text: "Professional Coverage" },
-            { icon: Zap, text: "Instant Access" },
+            { icon: Camera, text: "Upload Selfie" },
+            { icon: Zap, text: "Instant Match" },
             { icon: Download, text: "Free Downloads" }
           ].map((item, idx) => (
             <div key={idx} className="flex flex-col items-center p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
@@ -77,15 +86,9 @@ export default function GalleryPage() {
             </div>
           ))}
         </motion.div>
-
-        {/* Loading Indicator */}
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: "100px" }}
-          transition={{ duration: 1.5, delay: 0.2, ease: "easeInOut" }}
-          className="mt-16 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-50"
-        />
       </div>
+
+      <FaceSearchModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   )
 }
