@@ -2,19 +2,9 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname
-  const authToken = request.cookies.get('auth-token')?.value
+  // Only add security headers - NO auth redirects here
+  // Auth is handled client-side to avoid cookie timing issues
 
-  // Protect admin routes
-  if (path.startsWith('/admin')) {
-    if (!authToken || authToken !== 'sb-session-active') {
-      const loginUrl = new URL('/login', request.url)
-      loginUrl.searchParams.set('from', path)
-      return NextResponse.redirect(loginUrl)
-    }
-  }
-
-  // Add security headers to all responses
   const response = NextResponse.next()
 
   response.headers.set(
