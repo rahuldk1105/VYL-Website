@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     siteName: 'Veeran Youth League',
     images: [
       {
-        url: '/VYL-favicon.png', // We'll want to replace this with a proper OG image later if available
+        url: '/veeran_logo.png', // We'll want to replace this with a proper OG image later if available
         width: 800,
         height: 600,
         alt: 'Veeran Youth League Logo',
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Veeran Youth League (VYL)",
     description: "Premium youth football tournaments and development leagues in India.",
-    images: ['/VYL-favicon.png'], // consistent with OG
+    images: ['/veeran_logo.png'], // consistent with OG
   },
   robots: {
     index: true,
@@ -66,9 +66,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/VYL-favicon.png',
-    shortcut: '/VYL-favicon.png',
-    apple: '/VYL-favicon.png',
+    icon: '/veeran_logo.png',
+    shortcut: '/veeran_logo.png',
+    apple: '/veeran_logo.png',
   },
 }
 
