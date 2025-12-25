@@ -12,14 +12,39 @@ export default function EventGalleryPage() {
   const params = useParams()
   const slug = params.slug as string
 
-  const [images, setImages] = useState<{ url: string; key: string }[]>([])
+  const [images, setImages] = useState<{ thumbnailUrl: string; key: string }[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [eventTitle, setEventTitle] = useState(slug)
-  const [selectedImage, setSelectedImage] = useState<{ url: string; key: string } | null>(null)
+  const [selectedImage, setSelectedImage] = useState<{ key: string } | null>(null)
+  const [fullResUrl, setFullResUrl] = useState<string | null>(null)
 
   useEffect(() => {
     fetchGallery()
   }, [slug])
+
+  const handleImageClick = async (key: string) => {
+    try {
+      // Fetch full-resolution signed URL when user clicks
+      const signResponse = await fetch('/api/r2/sign-read', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ keys: [key] }),
+      })
+
+      if (!signResponse.ok) {
+        console.error('Failed to get signed URL')
+        return
+      }
+
+      const { urls } = await signResponse.json()
+      if (urls && urls.length > 0) {
+        setFullResUrl(urls[0].url)
+        setSelectedImage({ key })
+      }
+    } catch (err) {
+      console.error('Error loading full image:', err)
+    }
+  }
 
   const fetchGallery = async () => {
     try {
@@ -74,36 +99,17 @@ export default function EventGalleryPage() {
         return
       }
 
-      // 4. Get signed URLs for all photos (batch into chunks of 100)
-      console.log('🔐 Getting signed URLs for', keys.length, 'images...')
-      const BATCH_SIZE = 100
-      const allUrls: { key: string; url: string }[] = []
+      // 4. Create thumbnail URLs for fast loading
+      console.log('🖼️ Creating thumbnail URLs for', keys.length, 'images...')
+      const imageData = keys.map(key => ({
+        key,
+        thumbnailUrl: `/api/r2/thumbnail?key=${encodeURIComponent(key)}`
+      }))
 
-      for (let i = 0; i < keys.length; i += BATCH_SIZE) {
-        const batch = keys.slice(i, i + BATCH_SIZE)
-        console.log(`🔐 Batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(keys.length / BATCH_SIZE)}: ${batch.length} images`)
+      console.log('✅ Thumbnail URLs ready:', imageData.length)
 
-        const signResponse = await fetch('/api/r2/sign-read', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ keys: batch }),
-        })
-
-        if (!signResponse.ok) {
-          const errorData = await signResponse.json()
-          console.error('❌ Sign URLs failed for batch:', errorData)
-          throw new Error('Failed to get signed URLs')
-        }
-
-        const { urls } = await signResponse.json()
-        allUrls.push(...urls)
-        console.log(`✅ Batch complete: ${allUrls.length}/${keys.length} total`)
-      }
-
-      console.log('✅ All signed URLs retrieved:', allUrls.length)
-
-      // 5. Set images with both URL and key
-      setImages(allUrls)
+      // 5. Set images with thumbnail URLs and keys
+      setImages(imageData)
 
     } catch (err) {
       console.error('❌ Error fetching gallery:', err)
@@ -157,10 +163,10 @@ export default function EventGalleryPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(idx * 0.02, 2) }}
                   className="break-inside-avoid rounded-xl overflow-hidden bg-white/5 border border-white/10 group relative cursor-pointer"
-                  onClick={() => setSelectedImage(image)}
+                  onClick={() => handleImageClick(image.key)}
                 >
                   <img
-                    src={image.url}
+                    src={image.thumbnailUrl}
                     alt={`Photo ${idx + 1}`}
                     className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
@@ -185,12 +191,15 @@ export default function EventGalleryPage() {
       </div>
 
       {/* Image Modal */}
-      {selectedImage && (
+      {selectedImage && fullResUrl && (
         <ImageModal
-          imageUrl={selectedImage.url}
+          imageUrl={fullResUrl}
           imageKey={selectedImage.key}
           isOpen={!!selectedImage}
-          onClose={() => setSelectedImage(null)}
+          onClose={() => {
+            setSelectedImage(null)
+            setFullResUrl(null)
+          }}
         />
       )}
     </div>
