@@ -10,7 +10,7 @@ import { mockEvents } from '@/lib/mockData'
 export default function GalleryPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('all')
-  const [images, setImages] = useState<{ image_url: string, event_id: string }[]>([])
+  const [images, setImages] = useState<{ id: string, image_url: string, event_id: string }[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -22,18 +22,34 @@ export default function GalleryPage() {
       // Select distinct image_urls (since one image might have multiple faces/rows)
       // Actually, Supabase .select with distinct is tricky. 
       // We'll just fetch all and deduplicate in JS for this scale.
-      const { data, error } = await supabase
+      const { data: dbImages, error } = await supabase
         .from('face_embeddings')
-        .select('image_url, event_id')
+        .select('image_url, event_id, id, r2_object_key')
         .order('created_at', { ascending: false })
-        .limit(100) // Limit for now
+        .limit(50)
 
       if (error) throw error
 
-      if (data) {
-        // Deduplicate by URL
-        const uniqueImages = Array.from(new Map(data.map(item => [item.image_url, item])).values())
-        setImages(uniqueImages)
+      if (dbImages && dbImages.length > 0) {
+        // 2. Get Signed URLs for them
+        const keys = dbImages.map((img: { r2_object_key: string }) => img.r2_object_key)
+        const signRes = await fetch('/api/r2/sign-read', {
+          method: 'POST',
+          body: JSON.stringify({ keys })
+        })
+        const { urls } = await signRes.json()
+
+        // 3. Map back to state
+        const resolvedImages = dbImages.map((img: { id: string, event_id: string, r2_object_key: string }) => {
+          const signedUrlObj = urls.find((u: { key: string, url: string }) => u.key === img.r2_object_key)
+          return {
+            id: img.id,
+            event_id: img.event_id,
+            image_url: signedUrlObj ? signedUrlObj.url : ''
+          }
+        }).filter((img: { image_url: string }) => img.image_url !== '')
+
+        setImages(resolvedImages)
       }
     } catch (err) {
       console.error("Error fetching gallery:", err)
@@ -51,26 +67,26 @@ export default function GalleryPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black z-0" />
 
       {/* Header Section */}
-      <div className="relative z-10 pt-24 sm:pt-28 pb-8 sm:pb-12 text-center px-4">
-        <h1 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 sm:mb-8 bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent">
+      <div className="relative z-10 pt-24 pb-12 text-center px-4">
+        <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent">
           Gallery
         </h1>
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-gold text-black font-bold uppercase tracking-wide text-xs sm:text-sm rounded-full hover:bg-white transition-all shadow-[0_0_15px_rgba(255,215,0,0.3)] mb-8 sm:mb-12"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-gold text-black font-bold uppercase tracking-wide rounded-full hover:bg-white transition-all shadow-[0_0_15px_rgba(255,215,0,0.3)] mb-12"
         >
-          <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span>Find My Photos</span>
+          <Search className="w-5 h-5" />
+          Find My Photos
         </button>
 
         {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto mb-6 sm:mb-8">
+        <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto mb-8">
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider transition-all border ${activeTab === 'all'
-                ? 'bg-white text-black border-white'
-                : 'bg-transparent text-gray-400 border-gray-800 hover:border-gray-600'
+            className={`px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider transition-all border ${activeTab === 'all'
+              ? 'bg-white text-black border-white'
+              : 'bg-transparent text-gray-400 border-gray-800 hover:border-gray-600'
               }`}
           >
             All Photos
@@ -79,29 +95,28 @@ export default function GalleryPage() {
             <button
               key={evt._id}
               onClick={() => setActiveTab(evt.slug.current)}
-              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider transition-all border ${activeTab === evt.slug.current
-                  ? 'bg-white text-black border-white'
-                  : 'bg-transparent text-gray-400 border-gray-800 hover:border-gray-600'
+              className={`px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider transition-all border ${activeTab === evt.slug.current
+                ? 'bg-white text-black border-white'
+                : 'bg-transparent text-gray-400 border-gray-800 hover:border-gray-600'
                 }`}
             >
-              <span className="hidden sm:inline">{evt.title}</span>
-              <span className="sm:hidden">{evt.title.split(' ')[0]}</span>
+              {evt.title}
             </button>
           ))}
         </div>
       </div>
 
       {/* Gallery Grid */}
-      <div className="relative z-10 container mx-auto px-4 pb-16 sm:pb-20 md:pb-24">
+      <div className="relative z-10 container mx-auto px-4 pb-24">
         {isLoading ? (
-          <div className="text-center text-gray-500 animate-pulse py-12">Loading gallery...</div>
+          <div className="text-center text-gray-500 animate-pulse">Loading gallery...</div>
         ) : filteredImages.length === 0 ? (
-          <div className="text-center py-16 sm:py-20 bg-white/5 rounded-2xl border border-white/10">
-            <Camera className="w-10 h-10 sm:w-12 sm:h-12 mx-auto text-gray-600 mb-4" />
-            <p className="text-sm sm:text-base text-gray-400">No photos found for this category.</p>
+          <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/10">
+            <Camera className="w-12 h-12 mx-auto text-gray-600 mb-4" />
+            <p className="text-gray-400">No photos found for this category.</p>
           </div>
         ) : (
-          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
+          <div className="columns-1 md:columns-3 lg:columns-4 gap-4 space-y-4">
             {filteredImages.map((img, idx) => (
               <motion.div
                 key={img.image_url + idx}

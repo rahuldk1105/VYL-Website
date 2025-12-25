@@ -137,48 +137,46 @@ export default function FaceSearchModal({ isOpen, onClose }: FaceSearchModalProp
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm">
-            <div className="bg-gray-900 border border-white/10 rounded-xl sm:rounded-2xl w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] flex flex-col overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div className="bg-gray-900 border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
                 {/* Header */}
-                <div className="flex items-center justify-between p-3 sm:p-4 border-b border-white/10">
-                    <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                        <Camera className="text-gold w-5 h-5 sm:w-6 sm:h-6" /> 
-                        <span className="hidden sm:inline">Find My Photos</span>
-                        <span className="sm:hidden">Find Photos</span>
+                <div className="flex items-center justify-between p-4 border-b border-white/10">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Camera className="text-gold" /> Find My Photos
                     </h3>
                     <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                        <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
+                        <X className="w-6 h-6 text-gray-400" />
                     </button>
                 </div>
 
                 {/* Body */}
-                <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+                <div className="flex-1 overflow-y-auto p-6">
                     {!isModelLoaded ? (
                         <div className="text-center py-12">
                             <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full mx-auto mb-4" />
-                            <p className="text-sm sm:text-base text-gray-400">Loading AI Models...</p>
+                            <p className="text-gray-400">Loading AI Models...</p>
                         </div>
                     ) : (
-                        <div className="space-y-6 sm:space-y-8">
+                        <div className="space-y-8">
                             {/* Upload Section */}
                             <div className="text-center">
                                 <div
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="border-2 border-dashed border-white/20 hover:border-gold/50 rounded-xl p-6 sm:p-8 cursor-pointer transition-all hover:bg-white/5 group"
+                                    className="border-2 border-dashed border-white/20 hover:border-gold/50 rounded-xl p-8 cursor-pointer transition-all hover:bg-white/5 group"
                                 >
                                     {selectedImage ? (
-                                        <div className="relative w-28 h-28 sm:w-32 sm:h-32 mx-auto rounded-full overflow-hidden border-4 border-gold">
+                                        <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-gold">
                                             <img src={selectedImage} alt="Selfie" className="w-full h-full object-cover" />
                                         </div>
                                     ) : (
-                                        <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                            <Upload className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400 group-hover:text-gold" />
+                                        <div className="w-20 h-20 mx-auto bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                            <Upload className="w-10 h-10 text-gray-400 group-hover:text-gold" />
                                         </div>
                                     )}
-                                    <p className="text-base sm:text-lg font-medium text-white mt-4">
+                                    <p className="text-lg font-medium text-white mt-4">
                                         {selectedImage ? "Click to change photo" : "Upload a Selfie"}
                                     </p>
-                                    <p className="text-xs sm:text-sm text-gray-500 mt-2">We'll scan our gallery for your face</p>
+                                    <p className="text-sm text-gray-500 mt-2">We'll scan our gallery for your face</p>
                                 </div>
                                 <input
                                     ref={fileInputRef}
@@ -193,21 +191,21 @@ export default function FaceSearchModal({ isOpen, onClose }: FaceSearchModalProp
                             {isSearching && (
                                 <div className="text-center py-8">
                                     <Search className="w-8 h-8 text-gold animate-bounce mx-auto mb-4" />
-                                    <p className="text-sm sm:text-base text-gray-300">Scanning gallery...</p>
+                                    <p className="text-gray-300">Scanning gallery...</p>
                                 </div>
                             )}
 
                             {error && (
-                                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 sm:p-4 flex items-start gap-2 sm:gap-3 text-red-400">
-                                    <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                                    <p className="text-xs sm:text-sm">{error}</p>
+                                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-center gap-3 text-red-400">
+                                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                                    <p>{error}</p>
                                 </div>
                             )}
 
                             {results.length > 0 && (
                                 <div>
-                                    <h4 className="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4">Found {results.length} Matches</h4>
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                                    <h4 className="text-lg font-bold text-white mb-4">Found {results.length} Matches</h4>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                         {results.map((url, idx) => (
                                             <div key={idx} className="aspect-square rounded-lg overflow-hidden bg-white/5">
                                                 <img src={url} alt={`Match ${idx}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
