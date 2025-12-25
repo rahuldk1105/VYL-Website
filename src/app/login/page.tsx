@@ -38,8 +38,9 @@ export default function LoginPage() {
         // Manually set a cookie for middleware to see (since we lack @supabase/ssr)
         // This is a simple flag; security relies on client-side token mostly but this helps redirects.
         document.cookie = `auth-token=sb-session-active; path=/; max-age=${data.session.expires_in}; SameSite=Lax`
-        router.push('/admin')
-        window.location.href = '/admin'
+        console.log('Login successful! Redirecting to /admin...')
+        // Force hard navigation to reload the page completely
+        window.location.replace('/admin')
       } else {
         setError('Login failed. Please verify your email.')
       }
