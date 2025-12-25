@@ -30,8 +30,8 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Keys array cannot be empty' }, { status: 400 })
         }
 
-        if (keys.length > 50) {
-            return NextResponse.json({ error: 'Too many keys requested' }, { status: 400 })
+        if (keys.length > 100) {
+            return NextResponse.json({ error: 'Too many keys requested (max 100)' }, { status: 400 })
         }
 
         // Validate key format (basic check)
