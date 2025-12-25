@@ -86,19 +86,19 @@ export default function HeroCarousel({ slides = [] }: HeroCarouselProps) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="relative z-10 container h-full flex flex-col justify-center items-center text-center px-4 pt-24 md:pt-32">
+      <div className="relative z-10 container h-full flex flex-col justify-center items-center text-center px-4 pt-32 pb-20 md:pt-32">
         <AnimatePresence mode="wait">
-          <div key={current} className="flex flex-col items-center max-w-5xl">
+          <div key={current} className="flex flex-col items-center max-w-5xl w-full">
             {/* Animated Title */}
             <motion.h1
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="flex flex-col items-center justify-center font-black italic tracking-tighter text-white leading-[0.9] mb-6"
+              className="flex flex-col items-center justify-center font-black italic tracking-tighter text-white leading-[0.9] mb-6 px-2"
             >
               {slide.title.split(' ').map((word, i) => (
-                <span key={i} className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl inline-block mx-2 uppercase">
+                <span key={i} className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl inline-block mx-1 sm:mx-2 uppercase">
                   {word}
                 </span>
               ))}
@@ -110,7 +110,7 @@ export default function HeroCarousel({ slides = [] }: HeroCarouselProps) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-white text-lg md:text-xl max-w-2xl mb-10 font-medium drop-shadow-md"
+              className="text-white text-base sm:text-lg md:text-xl max-w-2xl mb-8 sm:mb-10 font-medium drop-shadow-md px-4"
             >
               {slide.subtitle}
             </motion.p>
@@ -123,7 +123,7 @@ export default function HeroCarousel({ slides = [] }: HeroCarouselProps) {
             >
               <Link
                 href={slide.ctaLink}
-                className="bg-gold text-black font-black uppercase text-sm md:text-base px-8 py-4 rounded-full hover:bg-white transition-all transform hover:scale-105 tracking-wide shadow-xl inline-block"
+                className="bg-gold text-black font-black uppercase text-xs sm:text-sm md:text-base px-6 sm:px-8 py-3 sm:py-4 rounded-full hover:bg-white transition-all transform hover:scale-105 tracking-wide shadow-xl inline-block"
               >
                 {slide.ctaText}
               </Link>

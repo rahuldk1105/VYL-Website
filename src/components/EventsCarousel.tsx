@@ -33,23 +33,23 @@ const EventsCarousel = ({ events, title = "Upcoming Events", description = "Disc
   }
 
   return (
-    <section className="py-24 bg-black text-white">
+    <section className="py-16 sm:py-20 md:py-24 bg-black text-white">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-10 md:mb-12 px-4"
         >
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight mb-3 sm:mb-4">
             {title}
           </h2>
-          <p className="text-base md:text-lg max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto text-white/80">
             {description}
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
           {events.map((event, index) => {
             const dateLine = `${format(new Date(event.startDate), 'd')}–${format(new Date(event.endDate), 'd MMMM yyyy')}`
             const formatLine = event.tagline || 'Full format matches'
@@ -63,7 +63,7 @@ const EventsCarousel = ({ events, title = "Upcoming Events", description = "Disc
                 transition={{ delay: index * 0.05 }}
               >
                 <Link href={`/tournaments/${event.slug}`} className="group block">
-                  <div className="relative h-64 overflow-hidden mb-6">
+                  <div className="relative h-56 sm:h-64 overflow-hidden mb-4 sm:mb-6 rounded-lg">
                     <SafeImage
                       src={event.heroImage}
                       alt={event.title}
@@ -73,28 +73,28 @@ const EventsCarousel = ({ events, title = "Upcoming Events", description = "Disc
                     />
                   </div>
 
-                  <h3 className="font-black uppercase text-xl md:text-2xl mb-4">
+                  <h3 className="font-black uppercase text-lg sm:text-xl md:text-2xl mb-3 sm:mb-4 line-clamp-2">
                     {event.title}
                   </h3>
 
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2 text-xs sm:text-sm text-white/90">
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-white" />
-                      <span>{dateLine}</span>
+                      <Calendar className="h-4 w-4 text-white/80 flex-shrink-0" />
+                      <span className="line-clamp-1">{dateLine}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CircleDot className="h-4 w-4 text-white" />
-                      <span>{formatLine}</span>
+                      <CircleDot className="h-4 w-4 text-white/80 flex-shrink-0" />
+                      <span className="line-clamp-1">{formatLine}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-white" />
-                      <span>{event.location}</span>
+                      <MapPin className="h-4 w-4 text-white/80 flex-shrink-0" />
+                      <span className="line-clamp-1">{event.location}</span>
                     </div>
                   </div>
 
-                  <div className="mt-6 inline-flex flex-col items-start">
-                    <span className="font-black uppercase tracking-wide">View More</span>
-                    <span className="mt-1 block w-24 border-b border-white" />
+                  <div className="mt-4 sm:mt-6 inline-flex flex-col items-start">
+                    <span className="font-black uppercase tracking-wide text-sm">View More</span>
+                    <span className="mt-1 block w-20 sm:w-24 border-b border-white" />
                   </div>
                 </Link>
               </motion.div>
