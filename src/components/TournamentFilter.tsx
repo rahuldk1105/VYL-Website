@@ -61,7 +61,7 @@ export default function TournamentFilter() {
   return (
     <div className="space-y-4">
       {/* Search Bar */}
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
@@ -69,22 +69,22 @@ export default function TournamentFilter() {
             placeholder="Search tournaments..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 text-white placeholder:text-gray-400 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent"
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           />
         </div>
 
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-white/10 text-white border border-white/20 rounded-lg hover:bg-white/20 transition-colors"
         >
           <Filter className="w-5 h-5" />
-          Filters
+          <span className="hidden sm:inline">Filters</span>
         </button>
 
         <button
           onClick={handleSearch}
-          className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-8 py-3 bg-gold text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
         >
           Search
         </button>
@@ -92,35 +92,35 @@ export default function TournamentFilter() {
 
       {/* Advanced Filters */}
       {showFilters && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-white/5 border border-white/10 rounded-lg">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               <MapPin className="inline w-4 h-4 mr-1" />
               Sport
             </label>
             <select
               value={selectedSport}
               onChange={(e) => setSelectedSport(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 text-white rounded-md focus:ring-2 focus:ring-gold focus:border-transparent"
             >
               {sports.map((sport) => (
-                <option key={sport} value={sport}>{sport}</option>
+                <option key={sport} value={sport} className="bg-gray-900">{sport}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               <Calendar className="inline w-4 h-4 mr-1" />
               Month
             </label>
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 text-white rounded-md focus:ring-2 focus:ring-gold focus:border-transparent"
             >
               {months.map((month) => (
-                <option key={month} value={month}>{month}</option>
+                <option key={month} value={month} className="bg-gray-900">{month}</option>
               ))}
             </select>
           </div>
@@ -131,7 +131,7 @@ export default function TournamentFilter() {
       {(searchTerm || selectedSport !== 'All Sports' || selectedMonth !== 'All Months') && (
         <button
           onClick={clearFilters}
-          className="text-sm text-blue-600 hover:text-blue-800 underline"
+          className="text-sm text-gold hover:text-yellow-400 underline"
         >
           Clear all filters
         </button>

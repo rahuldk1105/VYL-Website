@@ -70,7 +70,7 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="relative h-[70vh] bg-gradient-to-br from-primary-dark to-blue-900">
+      <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] bg-gradient-to-br from-primary-dark to-blue-900">
         <div className="absolute inset-0">
           <SafeImage
             src={event.image}
@@ -82,15 +82,15 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
         </div>
         <div className="absolute inset-0 bg-black bg-opacity-40" />
 
-        <div className="relative z-10 container h-full flex items-center">
+        <div className="relative z-10 container h-full flex items-center px-4">
           <div className="max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6">
               {event.title}
             </h1>
-            <p className="text-xl text-gray-200 mb-8 max-w-2xl">
+            <p className="text-base sm:text-lg md:text-xl text-gray-200 mb-6 sm:mb-8 max-w-2xl">
               {event.description}
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
               {new Date(event.endDate) >= new Date() && (
                 <Link
                   href="#register"
@@ -111,12 +111,12 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
       </div>
 
       {/* Event Details */}
-      <div className="container py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="container py-8 sm:py-12 md:py-16 px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6 sm:space-y-8">
             {/* Event Info */}
-            <div className="bg-white rounded-lg shadow-lg p-8">
+            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Event Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-start space-x-3">
@@ -184,33 +184,35 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
 
             {/* Match Specifications */}
             {event.matchSpecifications && (
-              <div className="bg-white rounded-lg shadow-lg p-8 overflow-hidden">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Match Specifications</h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="bg-gray-100 text-gray-700 font-bold uppercase">
-                      <tr>
-                        <th className="px-4 py-3 rounded-tl-lg">Category</th>
-                        <th className="px-4 py-3">Format</th>
-                        <th className="px-4 py-3">Time</th>
-                        <th className="px-4 py-3">Ball Size</th>
-                        <th className="px-4 py-3 rounded-tr-lg">Subs</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {event.matchSpecifications.map((spec, idx) => (
-                        <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-4 py-3 font-semibold text-gray-900">{spec.category}</td>
-                          <td className="px-4 py-3">{spec.players}</td>
-                          <td className="px-4 py-3">{spec.time} (mins)</td>
-                          <td className="px-4 py-3">Size {spec.ballSize}</td>
-                          <td className="px-4 py-3">{spec.subs}</td>
+              <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8 overflow-hidden">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Match Specifications</h2>
+                <div className="overflow-x-auto -mx-4 sm:mx-0">
+                  <div className="inline-block min-w-full align-middle px-4 sm:px-0">
+                    <table className="min-w-full text-xs sm:text-sm text-left">
+                      <thead className="bg-gray-100 text-gray-700 font-bold uppercase">
+                        <tr>
+                          <th className="px-2 sm:px-4 py-2 sm:py-3 rounded-tl-lg whitespace-nowrap">Category</th>
+                          <th className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">Format</th>
+                          <th className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">Time</th>
+                          <th className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">Ball Size</th>
+                          <th className="px-2 sm:px-4 py-2 sm:py-3 rounded-tr-lg whitespace-nowrap">Subs</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {event.matchSpecifications.map((spec, idx) => (
+                          <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 font-semibold text-gray-900 whitespace-nowrap">{spec.category}</td>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">{spec.players}</td>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">{spec.time} (mins)</td>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">Size {spec.ballSize}</td>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">{spec.subs}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-4 italic">
+                <p className="text-xs text-gray-500 mt-4 italic px-2 sm:px-0">
                   * Note: Only U-7 and U-9 follow 5+3 format. All other categories are 7+5.
                 </p>
               </div>

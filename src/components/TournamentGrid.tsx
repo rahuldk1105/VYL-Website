@@ -41,9 +41,9 @@ export default function TournamentGrid({ events }: TournamentGridProps) {
   if (filteredEvents.length === 0) {
     return (
       <div className="text-center py-12">
-        <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No tournaments found</h3>
-        <p className="text-gray-600">Try adjusting your search criteria or filters.</p>
+        <Trophy className="w-16 h-16 text-white/40 mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-white mb-2">No tournaments found</h3>
+        <p className="text-white/60">Try adjusting your search criteria or filters.</p>
       </div>
     )
   }
@@ -58,7 +58,7 @@ export default function TournamentGrid({ events }: TournamentGridProps) {
           <Link
             key={event._id}
             href={`/tournaments/${event.slug.current}`}
-            className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 block"
+            className="group bg-white/10 border border-white/20 rounded-lg shadow-md hover:shadow-xl hover:border-gold transition-all duration-300 hover:-translate-y-1 block overflow-hidden"
           >
             {/* Image */}
             <div className="relative h-48 overflow-hidden rounded-t-lg">
@@ -86,48 +86,48 @@ export default function TournamentGrid({ events }: TournamentGridProps) {
 
             {/* Content */}
             <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-gold transition-colors line-clamp-2">
                 {event.title}
               </h3>
 
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+              <p className="text-white/70 text-sm mb-4 line-clamp-2">
                 {event.description}
               </p>
 
               {/* Details */}
               <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm text-gray-600">
-                  <Calendar className="w-4 h-4 mr-2 text-gray-400" />
-                  <span>{formatDate(event.startDate)} - {formatDate(event.endDate)}</span>
+                <div className="flex items-center text-sm text-white/80">
+                  <Calendar className="w-4 h-4 mr-2 text-white/60" />
+                  <span className="line-clamp-1">{formatDate(event.startDate)} - {formatDate(event.endDate)}</span>
                 </div>
 
-                <div className="flex items-center text-sm text-gray-600">
-                  <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-                  <span>{event.location}</span>
+                <div className="flex items-center text-sm text-white/80">
+                  <MapPin className="w-4 h-4 mr-2 text-white/60" />
+                  <span className="line-clamp-1">{event.location}</span>
                 </div>
 
-                <div className="flex items-center text-sm text-gray-600">
-                  <Users className="w-4 h-4 mr-2 text-gray-400" />
+                <div className="flex items-center text-sm text-white/80">
+                  <Users className="w-4 h-4 mr-2 text-white/60" />
                   <span>{event.maxTeams} teams max</span>
                 </div>
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-between pt-4 border-t border-white/10">
                 <div className="flex items-center text-sm">
                   {isEventPassed ? (
-                    <span className="text-gray-500 font-medium">Event Ended</span>
+                    <span className="text-white/50 font-medium">Event Ended</span>
                   ) : isRegistrationClosed ? (
-                    <span className="text-red-500 font-medium">Closed</span>
+                    <span className="text-red-400 font-medium">Closed</span>
                   ) : (
-                    <div className="flex items-center text-green-600 font-medium">
+                    <div className="flex items-center text-green-400 font-medium">
                       <Clock className="w-4 h-4 mr-1" />
-                      <span>Register by {formatDate(event.registrationDeadline)}</span>
+                      <span className="text-xs sm:text-sm line-clamp-1">Register by {formatDate(event.registrationDeadline)}</span>
                     </div>
                   )}
                 </div>
 
-                <span className="text-sm font-semibold text-blue-600 group-hover:text-blue-700">
+                <span className="text-sm font-semibold text-gold group-hover:text-yellow-400 whitespace-nowrap">
                   View Details →
                 </span>
               </div>

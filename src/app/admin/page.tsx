@@ -41,25 +41,25 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
+    <div className="min-h-screen bg-black text-white p-4 sm:p-6 md:p-8">
       <div className="container mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-12">
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            <LayoutDashboard className="text-gold" />
-            Admin Dashboard
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 sm:mb-12">
+          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
+            <LayoutDashboard className="text-gold w-6 h-6 sm:w-7 sm:h-7" />
+            <span>Admin Dashboard</span>
           </h1>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors"
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors text-sm"
           >
             <LogOut size={18} />
-            Logout
+            <span>Logout</span>
           </button>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
           <div className="bg-gray-900 border border-white/10 rounded-xl p-6">
             <div className="flex items-center gap-3 mb-4">
               <Users className="text-blue-400" size={24} />
@@ -98,9 +98,9 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <Link
               href="/admin/index-faces"
               className="bg-gray-900 border border-white/10 hover:border-gold rounded-xl p-6 transition-colors group"

@@ -5,8 +5,8 @@ import Image from 'next/image'
 const Footer = () => {
   return (
     <footer className="bg-black text-white">
-      <div className="container py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="container py-10 sm:py-12 md:py-14 px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
           {/* Brand & description */}
           <div>
             <div className="flex items-center gap-3 mb-6">
@@ -52,9 +52,9 @@ const Footer = () => {
           <div>
             <h4 className="font-black uppercase mb-4">Follow Us</h4>
             <div className="flex items-center gap-4">
-              <a aria-label="Instagram" href="https://instagram.com/veeran_youth_league" target="_blank" className="bg-white/10 p-2 rounded-full hover:bg-gold hover:text-black transition-colors"><Instagram className="h-5 w-5" /></a>
-              <a aria-label="Facebook" href="https://facebook.com/veeran_youth_league" target="_blank" className="bg-white/10 p-2 rounded-full hover:bg-gold hover:text-black transition-colors"><Facebook className="h-5 w-5" /></a>
-              <a aria-label="YouTube" href="https://youtube.com" target="_blank" className="bg-white/10 p-2 rounded-full hover:red-600 hover:text-white transition-colors"><Youtube className="h-5 w-5" /></a>
+              <a aria-label="Instagram" href="https://instagram.com/veeran_youth_league" target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-gold hover:text-black transition-colors"><Instagram className="h-5 w-5" /></a>
+              <a aria-label="Facebook" href="https://facebook.com/veeran_youth_league" target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-gold hover:text-black transition-colors"><Facebook className="h-5 w-5" /></a>
+              <a aria-label="YouTube" href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-red-600 hover:text-white transition-colors"><Youtube className="h-5 w-5" /></a>
             </div>
           </div>
         </div>

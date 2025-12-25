@@ -104,21 +104,21 @@ export default function TeamRegistrationPage() {
     }, [])
 
     return (
-        <div className="pt-24 pb-16 bg-primary-dark min-h-screen">
+        <div className="pt-20 sm:pt-24 pb-12 sm:pb-16 bg-primary-dark min-h-screen">
             <div className="container mx-auto px-4">
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
-                    <div className="text-center mb-10">
-                        <h1 className="text-3xl md:text-5xl font-black uppercase text-white mb-4">
+                    <div className="text-center mb-8 sm:mb-10">
+                        <h1 className="text-2xl sm:text-3xl md:text-5xl font-black uppercase text-white mb-3 sm:mb-4">
                             Team Registration
                         </h1>
-                        <p className="text-xl text-gray-300">
+                        <p className="text-lg sm:text-xl text-gray-300">
                             Veeran Winter Cup 2025
                         </p>
                     </div>
 
                     {/* Form Container */}
-                    <div className="bg-white rounded-xl shadow-2xl p-4 md:p-8">
+                    <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 md:p-8">
                         <div id={containerId}></div>
 
                         <p className="text-center text-sm text-gray-500 mt-6">

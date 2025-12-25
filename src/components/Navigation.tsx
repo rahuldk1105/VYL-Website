@@ -97,7 +97,7 @@ export default function Navigation() {
           {/* Logo - Centered */}
           <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
             <Link href="/" onClick={() => setIsMenuOpen(false)}>
-              <div className="relative h-15 w-15 md:h-20 md:w-2 lg:h-28 lg:w-28 transition-all duration-300">
+              <div className="relative h-16 w-16 md:h-20 md:w-20 lg:h-28 lg:w-28 transition-all duration-300">
                 <Image
                   src="/veeran_logo.png"
                   alt="Veeran Youth League logo"
