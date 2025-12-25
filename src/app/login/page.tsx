@@ -39,6 +39,7 @@ export default function LoginPage() {
         // This is a simple flag; security relies on client-side token mostly but this helps redirects.
         document.cookie = `auth-token=sb-session-active; path=/; max-age=${data.session.expires_in}; SameSite=Lax`
         router.push('/admin')
+        window.location.href = '/admin'
       } else {
         setError('Login failed. Please verify your email.')
       }
