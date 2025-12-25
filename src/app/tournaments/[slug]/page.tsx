@@ -16,25 +16,37 @@ export async function generateMetadata({ params }: TournamentPageProps): Promise
 
   if (!event) {
     return {
-      title: 'Tournament Not Found',
+      title: 'Tournament Not Found | Veeran Youth League',
       description: 'The requested tournament could not be found.'
     }
   }
 
+  const imageUrl = event.image.startsWith('http') ? event.image : `https://www.veeranyouthleague.com${event.image}`
+
   return {
-    title: `${event.title} - Register Now`,
+    title: `${event.title} - Register Now | Veeran Youth League`,
     description: event.description.substring(0, 160),
     openGraph: {
-      title: event.title,
+      title: `${event.title} | Premium Youth Football Tournament`,
       description: event.description,
+      url: `https://www.veeranyouthleague.com/tournaments/${event.slug.current}`,
+      siteName: 'Veeran Youth League',
       images: [
         {
-          url: event.image,
-          width: 800,
-          height: 600,
+          url: imageUrl,
+          width: 1200,
+          height: 630,
           alt: event.title,
         }
       ],
+      locale: 'en_IN',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: event.title,
+      description: event.description.substring(0, 160),
+      images: [imageUrl],
     }
   }
 }
@@ -69,6 +81,42 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'SportsEvent',
+            name: event.title,
+            description: event.description,
+            startDate: event.startDate,
+            endDate: event.endDate,
+            location: {
+              '@type': 'Place',
+              name: event.location, // Ideally split this into name and address if possible
+              address: {
+                '@type': 'PostalAddress',
+                addressCountry: 'IN',
+                streetAddress: event.location,
+              }
+            },
+            image: [event.image.startsWith('http') ? event.image : `https://www.veeranyouthleague.com${event.image}`],
+            organizer: {
+              '@type': 'Organization',
+              name: 'Veeran Youth League',
+              url: 'https://www.veeranyouthleague.com'
+            },
+            offers: {
+              '@type': 'Offer',
+              price: event.price,
+              priceCurrency: event.currency || 'INR',
+              url: `https://www.veeranyouthleague.com/tournaments/${event.slug.current}`,
+              availability: new Date(event.registrationDeadline) >= new Date() ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut'
+            }
+          })
+        }}
+      />
+
       {/* Hero Section */}
       <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] bg-gradient-to-br from-primary-dark to-blue-900">
         <div className="absolute inset-0">
