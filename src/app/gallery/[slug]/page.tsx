@@ -101,7 +101,7 @@ export default function EventGalleryPage() {
 
       // 4. Create thumbnail URLs for fast loading
       console.log('🖼️ Creating thumbnail URLs for', keys.length, 'images...')
-      const imageData = keys.map(key => ({
+      const imageData = keys.map((key: string) => ({
         key,
         thumbnailUrl: `/api/r2/thumbnail?key=${encodeURIComponent(key)}`
       }))
