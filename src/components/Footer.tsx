@@ -59,8 +59,12 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-white/30 pt-6 text-center">
-          <p className="text-white/80">© Veeran Youth League</p>
+        <div className="mt-12 border-t border-white/30 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+          <p className="text-white/80 text-sm">© {new Date().getFullYear()} Veeran Youth League. All rights reserved.</p>
+          <div className="flex gap-6 text-sm text-white/60">
+            <Link href="/privacy" className="hover:text-gold transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-gold transition-colors">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>

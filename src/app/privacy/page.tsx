@@ -1,173 +1,127 @@
+import { Shield, Lock, Eye, FileText, Mail } from 'lucide-react'
 
+export const metadata = {
+  title: 'Privacy Policy | Veeran Youth League',
+  description: 'Privacy Policy for Veeran Youth League users and participants.'
+}
 
-export default function PrivacyPage() {
+export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black text-white selection:bg-gold selection:text-black">
+      {/* Background Gradients */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,160,0,0.1),transparent_50%)] z-0 pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(25,118,210,0.1),transparent_50%)] z-0 pointer-events-none" />
+
       {/* Hero Section */}
-      <div className="relative h-[40vh] bg-gradient-to-br from-primary-dark to-blue-900">
-        <div className="absolute inset-0 bg-black bg-opacity-30" />
-        <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Privacy Policy
-            </h1>
-            <p className="text-xl text-gray-200">Last updated: January 2024</p>
+      <div className="relative z-10 pt-32 pb-12 px-4 border-b border-white/10 bg-gradient-to-b from-gray-900/50 to-black/50 backdrop-blur-sm">
+        <div className="container mx-auto max-w-4xl text-left">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-gold text-xs font-bold uppercase tracking-wider mb-6">
+            <Shield className="w-4 h-4" />
+            Legal Documentation
           </div>
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent">
+            Privacy Policy
+          </h1>
+          <p className="text-lg text-gray-400 max-w-2xl leading-relaxed">
+            Your privacy is critically important to us. This policy details how Veeran Youth League collects, uses, and protects your personal information.
+          </p>
+          <p className="mt-4 text-sm text-gray-500">
+            Last Updated: December 25, 2025
+          </p>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg p-8 space-y-8">
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                At Veeran Youth League (VYL), we are committed to protecting your privacy and ensuring the security of your personal information.
-                This Privacy Policy outlines how we collect, use, disclose, and protect your information when you use our website and services.
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                By accessing or using our website, you agree to the terms of this Privacy Policy. If you do not agree with any part of this policy,
-                please do not use our website or services.
-              </p>
-            </section>
+      {/* Content Section */}
+      <div className="relative z-10 container mx-auto max-w-4xl px-4 py-16">
+        <div className="space-y-16">
 
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Information We Collect</h2>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Personal Information</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                We may collect personal information that you voluntarily provide to us, including but not limited to:
-              </p>
-              <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                <li>Name and contact information (email address, phone number, mailing address)</li>
-                <li>Date of birth and age verification</li>
-                <li>Sports affiliation and team information</li>
-                <li>Payment information for event registration</li>
-                <li>Emergency contact information</li>
-                <li>Medical information relevant to sports participation</li>
-              </ul>
-
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Automatically Collected Information</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                When you visit our website, we automatically collect certain information about your device and usage, including:
-              </p>
-              <ul className="list-disc list-inside text-gray-600 space-y-2">
-                <li>IP address and browser information</li>
-                <li>Device type and operating system</li>
-                <li>Pages visited and time spent on our website</li>
-                <li>Referring website information</li>
-                <li>Cookies and similar tracking technologies</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">3. How We Use Your Information</h2>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                We use the information we collect for various purposes, including:
-              </p>
-              <ul className="list-disc list-inside text-gray-600 space-y-2">
-                <li>Processing event registrations and payments</li>
-                <li>Communicating with you about events, updates, and important information</li>
-                <li>Providing customer support and responding to inquiries</li>
-                <li>Improving our website, services, and user experience</li>
-                <li>Sending marketing communications (with your consent)</li>
-                <li>Ensuring safety and compliance with event regulations</li>
-                <li>Preventing fraud and maintaining security</li>
-                <li>Complying with legal obligations</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Information Sharing and Disclosure</h2>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                We do not sell your personal information to third parties. We may share your information in the following circumstances:
-              </p>
-              <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                <li><strong>Service Providers:</strong> With trusted third-party service providers who assist us in operating our business</li>
-                <li><strong>Event Partners:</strong> With sports organizations, venues, and sponsors for event coordination</li>
-                <li><strong>Legal Requirements:</strong> When required by law or to protect our legal rights</li>
-                <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of business assets</li>
-                <li><strong>With Your Consent:</strong> For any other purpose with your explicit permission</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Data Security</h2>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                We implement appropriate technical and organizational measures to protect your personal information against unauthorized access,
-                alteration, disclosure, or destruction. These measures include:
-              </p>
-              <ul className="list-disc list-inside text-gray-600 space-y-2">
-                <li>Encryption of sensitive data during transmission and storage</li>
-                <li>Secure payment processing through PCI-compliant providers</li>
-                <li>Regular security audits and vulnerability assessments</li>
-                <li>Access controls and authentication procedures</li>
-                <li>Staff training on data protection and privacy</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Your Rights and Choices</h2>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                Depending on your location, you may have certain rights regarding your personal information, including:
-              </p>
-              <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                <li>Access to your personal information</li>
-                <li>Correction of inaccurate information</li>
-                <li>Deletion of your personal information</li>
-                <li>Objection to processing of your information</li>
-                <li>Data portability</li>
-                <li>Withdrawal of consent for marketing communications</li>
-              </ul>
-              <p className="text-gray-600 leading-relaxed">
-                To exercise these rights, please contact us using the information provided below.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">7. International Data Transfers</h2>
-              <p className="text-gray-600 leading-relaxed">
-                Your information may be transferred to and processed within India. We ensure appropriate safeguards are in place for all processing activities.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Children&apos;s Privacy</h2>
-              <p className="text-gray-600 leading-relaxed">
-                Our services are not directed to children under 13 years of age. We do not knowingly collect personal information
-                from children under 13. If you believe we have collected information from a child under 13, please contact us immediately.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Changes to This Policy</h2>
-              <p className="text-gray-600 leading-relaxed">
-                We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting
-                the new policy on this page and updating the &quot;Last updated&quot; date. Your continued use of our services after
-                any changes constitutes your acceptance of the updated policy.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Contact Us</h2>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                If you have any questions about this Privacy Policy or our privacy practices, please contact us:
-              </p>
-              <div className="text-gray-600 space-y-2">
-                <p><strong>Email:</strong> contact@veerancup.in</p>
-                <p><strong>Phone:</strong> +91 98765 43210</p>
-                <p><strong>Address:</strong></p>
-                <p className="ml-4">
-                  Veeran Youth League<br />
-                  Chennai, Tamil Nadu<br />
-                  India
-                </p>
+          {/* Section 1 */}
+          <section className="space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-gold">
+                <FileText className="w-6 h-6" />
               </div>
-              <p className="text-gray-600 leading-relaxed mt-4">
-                For privacy-related inquiries, you may also contact our Data Protection Officer at <strong>contact@veerancup.in</strong>.
-              </p>
-            </section>
-          </div>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-white uppercase tracking-wide">1. Introduction</h2>
+                <div className="space-y-4 text-gray-300 leading-relaxed text-left">
+                  <p>
+                    Welcome to Veeran Youth League ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice or our practices with regards to your personal information, please contact us at contact@veerancup.in.
+                  </p>
+                  <p>
+                    When you visit our website and use our services, you trust us with your personal information. We take your privacy very seriously. In this privacy policy, we seek to explain to you in the clearest way possible what information we collect, how we use it, and what rights you have in relation to it.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 2 */}
+          <section className="space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-gold">
+                <Eye className="w-6 h-6" />
+              </div>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-white uppercase tracking-wide">2. Information We Collect</h2>
+                <div className="space-y-4 text-gray-300 leading-relaxed text-left">
+                  <p>
+                    We collect personal information that you voluntarily provide to us when you register on the website, express an interest in obtaining information about us or our products and services, when you participate in activities on the website (such as registering for a tournament), or otherwise when you contact us.
+                  </p>
+                  <ul className="list-disc pl-5 space-y-2 text-gray-400">
+                    <li><strong>Personal Data:</strong> Name, email address, phone number, date of birth, and gender of participants.</li>
+                    <li><strong>Media:</strong> Photos and videos taken during events which may include your likeness.</li>
+                    <li><strong>Face Data:</strong> If you use our "Find My Photos" feature, we process your facial geometry to match your selfie with photos in our gallery. This biometric data is transient and is used solely for the purpose of searching for your photos.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 3 */}
+          <section className="space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-gold">
+                <Lock className="w-6 h-6" />
+              </div>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-white uppercase tracking-wide">3. How We Use Your Data</h2>
+                <div className="space-y-4 text-gray-300 leading-relaxed text-left">
+                  <p>
+                    We use personal information collected via our website for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations.
+                  </p>
+                  <ul className="list-disc pl-5 space-y-2 text-gray-400">
+                    <li>To facilitate account creation and logon process.</li>
+                    <li>To send administrative information to you.</li>
+                    <li>To fulfill and manage your orders and tournament registrations.</li>
+                    <li>To post testimonials and event highlights.</li>
+                    <li>To deliver and facilitate delivery of services to the user.</li>
+                    <li>To respond to user inquiries/offer support to users.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 4 */}
+          <section className="space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-gold">
+                <Mail className="w-6 h-6" />
+              </div>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-white uppercase tracking-wide">4. Contact & Security</h2>
+                <div className="space-y-4 text-gray-300 leading-relaxed text-left">
+                  <p>
+                    We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process. However, despite our safeguards and efforts to secure your information, no electronic transmission over the Internet or information storage technology can be guaranteed to be 100% secure.
+                  </p>
+                  <p>
+                    If you have questions or comments about this policy, you may email us at <a href="mailto:contact@veerancup.in" className="text-gold hover:underline">contact@veerancup.in</a>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
         </div>
       </div>
     </div>
