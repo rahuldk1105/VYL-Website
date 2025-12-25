@@ -4,27 +4,27 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { LayoutDashboard, Users, Camera, Image, Settings, LogOut } from 'lucide-react'
+import { supabase } from '@/lib/supabaseClient'
 
 export default function AdminDashboard() {
   const router = useRouter()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Check authentication
-    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
-      const [key, value] = cookie.trim().split('=')
-      acc[key] = value
-      return acc
-    }, {} as Record<string, string>)
-    
-    setIsAuthenticated(!!cookies['auth-token'])
-    
-    if (!cookies['auth-token']) {
-      router.push('/login')
-    }
+    // Check Supabase session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setIsAuthenticated(true)
+      } else {
+        router.push('/login')
+      }
+      setIsLoading(false)
+    })
   }, [router])
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
     document.cookie = 'auth-token=; path=/; max-age=0'
     router.push('/')
   }
