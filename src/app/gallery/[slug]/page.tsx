@@ -1,228 +1,131 @@
 'use client'
 
-import React, { useState } from 'react'
-import Image from 'next/image'
-import { notFound } from 'next/navigation'
-import { Calendar, MapPin, Camera, X, ChevronLeft, ChevronRight, Download, Share2 } from 'lucide-react'
-import { mockGalleries } from '@/lib/galleryData'
+import React, { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { Camera, Search, ArrowLeft } from 'lucide-react'
+import FaceSearchModal from '@/components/FaceSearchModal'
+import { supabase } from '@/lib/supabaseClient'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
-interface GalleryPageProps {
-  params: Promise<{ slug: string }>
-}
+export default function EventGalleryPage() {
+  const params = useParams()
+  const slug = params.slug as string
 
-export default function GalleryDetailPage({ params }: GalleryPageProps) {
-  const { slug } = React.use(params)
-  const gallery = mockGalleries.find(g => g.slug.current === slug)
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
-  
-  if (!gallery) {
-    notFound()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [images, setImages] = useState<{ id: string, image_url: string, event_id: string }[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [eventTitle, setEventTitle] = useState(slug)
+
+  useEffect(() => {
+    fetchEventDetails()
+    fetchImages()
+  }, [slug])
+
+  const fetchEventDetails = async () => {
+    // Fetch event title for display
+    const { data } = await supabase
+      .from('events')
+      .select('title')
+      .eq('slug', slug)
+      .single()
+
+    if (data) setEventTitle(data.title)
   }
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
-    })
-  }
+  const fetchImages = async () => {
+    try {
+      const { data: dbImages, error } = await supabase
+        .from('face_embeddings')
+        .select('image_url, event_id, id, r2_object_key')
+        .eq('event_id', slug) // Filter by specific event
+        .order('created_at', { ascending: false })
+        .limit(100)
 
-  const openLightbox = (index: number) => {
-    setSelectedImageIndex(index)
-  }
+      if (error) throw error
 
-  const closeLightbox = () => {
-    setSelectedImageIndex(null)
-  }
+      if (dbImages && dbImages.length > 0) {
+        // 2. Get Signed URLs for them
+        const keys = dbImages.map((img: { r2_object_key: string }) => img.r2_object_key)
+        const signRes = await fetch('/api/r2/sign-read', {
+          method: 'POST',
+          body: JSON.stringify({ keys })
+        })
+        const { urls } = await signRes.json()
 
-  const nextImage = () => {
-    if (selectedImageIndex !== null) {
-      setSelectedImageIndex((selectedImageIndex + 1) % gallery.images.length)
-    }
-  }
+        // 3. Map back to state
+        const resolvedImages = dbImages.map((img: { id: string, event_id: string, r2_object_key: string }) => {
+          const signedUrlObj = urls.find((u: { key: string, url: string }) => u.key === img.r2_object_key)
+          return {
+            id: img.id,
+            event_id: img.event_id,
+            image_url: signedUrlObj ? signedUrlObj.url : ''
+          }
+        }).filter((img: { image_url: string }) => img.image_url !== '')
 
-  const prevImage = () => {
-    if (selectedImageIndex !== null) {
-      setSelectedImageIndex((selectedImageIndex - 1 + gallery.images.length) % gallery.images.length)
-    }
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (selectedImageIndex !== null) {
-      if (e.key === 'ArrowLeft') prevImage()
-      if (e.key === 'ArrowRight') nextImage()
-      if (e.key === 'Escape') closeLightbox()
+        setImages(resolvedImages)
+      }
+    } catch (err) {
+      console.error("Error fetching gallery:", err)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative h-[50vh] bg-gradient-to-br from-primary-dark to-blue-900">
-        <div className="absolute inset-0 bg-black bg-opacity-30" />
-        <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-3 mb-4">
-              <Camera className="w-8 h-8 text-gold" />
-              <span className="text-gold font-semibold text-lg">Photo Gallery</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              {gallery.title}
-            </h1>
-            <p className="text-xl text-gray-200 mb-6">
-              {gallery.description}
-            </p>
-            <div className="flex items-center gap-6 text-gray-300">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                <span>{formatDate(gallery.date)}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5" />
-                <span>{gallery.location}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-black text-white overflow-hidden relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black z-0" />
+
+      {/* Header Section */}
+      <div className="relative z-10 pt-24 pb-8 text-center px-4">
+        <Link href="/gallery" className="inline-flex items-center text-gray-400 hover:text-white mb-6 transition-colors">
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Albums
+        </Link>
+        <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-6 bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent">
+          {eventTitle}
+        </h1>
+
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-gold text-black font-bold uppercase tracking-wide rounded-full hover:bg-white transition-all shadow-[0_0_15px_rgba(255,215,0,0.3)] mb-8"
+        >
+          <Search className="w-5 h-5" />
+          Find My Photos
+        </button>
       </div>
 
-      {/* Gallery Info */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              {gallery.images.length} Professional Photos
-            </h2>
-            <p className="text-gray-600">
-              Click on any image to view in full size and download
-            </p>
+      {/* Gallery Grid */}
+      <div className="relative z-10 container mx-auto px-4 pb-24">
+        {isLoading ? (
+          <div className="text-center text-gray-500 animate-pulse">Loading photos...</div>
+        ) : images.length === 0 ? (
+          <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/10">
+            <Camera className="w-12 h-12 mx-auto text-gray-600 mb-4" />
+            <p className="text-gray-400">No photos uploaded for this tournament yet.</p>
           </div>
-          <div className="flex gap-2">
-            {gallery.categories.map((category) => (
-              <span
-                key={category}
-                className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+        ) : (
+          <div className="columns-1 md:columns-3 lg:columns-4 gap-4 space-y-4">
+            {images.map((img, idx) => (
+              <motion.div
+                key={img.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                className="break-inside-avoid rounded-xl overflow-hidden bg-white/5 border border-white/10 group relative"
               >
-                {category}
-              </span>
+                <img
+                  src={img.image_url}
+                  alt="Gallery"
+                  className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </motion.div>
             ))}
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Photo Grid */}
-      <div className="container mx-auto px-4 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gallery.images.map((image, index) => (
-            <div
-              key={index}
-              className="group relative bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300"
-              onClick={() => openLightbox(index)}
-            >
-              <div className="aspect-w-16 aspect-h-12 relative h-64">
-                <Image
-                  src={image.url}
-                  alt={image.caption}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
-              </div>
-              
-              {/* Overlay on hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <p className="text-white text-sm font-medium mb-1">{image.caption}</p>
-                  {image.photographer && (
-                    <p className="text-gray-300 text-xs">Photo by {image.photographer}</p>
-                  )}
-                </div>
-              </div>
-              
-              {/* Zoom icon */}
-              <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Camera className="w-4 h-4" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Lightbox */}
-      {selectedImageIndex !== null && (
-        <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
-          onClick={closeLightbox}
-          onKeyDown={handleKeyDown}
-          tabIndex={0}
-        >
-          {/* Close button */}
-          <button
-            onClick={closeLightbox}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
-          >
-            <X className="w-8 h-8" />
-          </button>
-
-          {/* Navigation buttons */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              prevImage()
-            }}
-            className="absolute left-4 text-white hover:text-gray-300 transition-colors z-10"
-          >
-            <ChevronLeft className="w-8 h-8" />
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              nextImage()
-            }}
-            className="absolute right-4 text-white hover:text-gray-300 transition-colors z-10"
-          >
-            <ChevronRight className="w-8 h-8" />
-          </button>
-
-          {/* Image container */}
-          <div
-            className="relative max-w-5xl max-h-[90vh] mx-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={gallery.images[selectedImageIndex].url}
-              alt={gallery.images[selectedImageIndex].caption}
-              width={1200}
-              height={800}
-              className="max-w-full max-h-full object-contain rounded-lg"
-            />
-            
-            {/* Image info */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 rounded-b-lg">
-              <div className="text-white">
-                <p className="text-lg font-medium mb-2">{gallery.images[selectedImageIndex].caption}</p>
-                {gallery.images[selectedImageIndex].photographer && (
-                  <p className="text-gray-300 text-sm mb-4">
-                    Photo by {gallery.images[selectedImageIndex].photographer}
-                  </p>
-                )}
-                <div className="flex items-center gap-4 text-sm text-gray-300">
-                  <span>{selectedImageIndex + 1} of {gallery.images.length}</span>
-                  <button className="flex items-center gap-2 hover:text-white transition-colors">
-                    <Download className="w-4 h-4" />
-                    Download
-                  </button>
-                  <button className="flex items-center gap-2 hover:text-white transition-colors">
-                    <Share2 className="w-4 h-4" />
-                    Share
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <FaceSearchModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   )
 }

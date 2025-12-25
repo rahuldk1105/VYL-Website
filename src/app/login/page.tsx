@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Lock, User, Mail } from 'lucide-react'
+import { supabase } from '@/lib/supabaseClient'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -24,23 +25,26 @@ export default function LoginPage() {
         return
       }
 
-      // For now, use a simple hardcoded admin credential
-      // In production, this should be replaced with proper authentication
-      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@vylleague.com'
-      const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'VYL@admin2025!'
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
 
-      if (email === adminEmail && password === adminPassword) {
-        // Set auth token in cookies
-        document.cookie = `auth-token=secure-admin-token; path=/; max-age=3600; SameSite=Lax`
-        
-        // Redirect to admin dashboard
+      if (authError) {
+        throw authError
+      }
+
+      if (data.session) {
+        // Manually set a cookie for middleware to see (since we lack @supabase/ssr)
+        // This is a simple flag; security relies on client-side token mostly but this helps redirects.
+        document.cookie = `auth-token=sb-session-active; path=/; max-age=${data.session.expires_in}; SameSite=Lax`
         router.push('/admin')
       } else {
-        setError('Invalid email or password')
+        setError('Login failed. Please verify your email.')
       }
 
     } catch (err) {
-      setError('Login failed. Please try again.')
+      setError((err as Error).message || 'Login failed. Please try again.')
       console.error('Login error:', err)
     } finally {
       setLoading(false)

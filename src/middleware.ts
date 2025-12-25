@@ -15,7 +15,7 @@ export function middleware(request: NextRequest) {
     }
 
     // Validate token (simple check for now)
-    if (authToken !== 'secure-admin-token') {
+    if (authToken !== 'sb-session-active') {
       // Invalidate bad token
       const response = NextResponse.redirect(new URL('/login', request.url))
       response.cookies.delete('auth-token')
@@ -25,13 +25,13 @@ export function middleware(request: NextRequest) {
 
   // Add security headers to all responses
   const response = NextResponse.next()
-  
+
   // Content Security Policy - basic protection
   response.headers.set(
     'Content-Security-Policy',
     "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://api.web3forms.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com https://cdn.sanity.io; font-src 'self'; connect-src 'self' https://api.web3forms.com https://*.supabase.co https://*.cloudflarestorage.com; frame-src 'self' https://forms.zohopublic.in;"
   )
-  
+
   // Additional security headers
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-Content-Type-Options', 'nosniff')

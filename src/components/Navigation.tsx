@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { LogOut, User } from 'lucide-react'
+import { supabase } from '@/lib/supabaseClient'
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -16,15 +17,24 @@ export default function Navigation() {
 
   // Check authentication status
   useEffect(() => {
-    // Check for auth token in cookies
-    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
-      const [key, value] = cookie.trim().split('=')
-      acc[key] = value
-      return acc
-    }, {} as Record<string, string>)
-    
-    setIsAuthenticated(!!cookies['auth-token'])
-  }, [pathname])
+    // 1. Check initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session)
+    })
+
+    // 2. Listen for changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session)
+      // Sync cookie for middleware
+      if (session) {
+        document.cookie = `auth-token=sb-session-active; path=/; max-age=${session.expires_in}; SameSite=Lax`
+      } else {
+        document.cookie = 'auth-token=; path=/; max-age=0'
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
 
   useEffect(() => {
     if (!isHome) return
@@ -122,10 +132,9 @@ export default function Navigation() {
             {/* Authentication buttons */}
             {isAuthenticated ? (
               <button
-                onClick={() => {
-                  // Clear auth token
-                  document.cookie = 'auth-token=; path=/; max-age=0'
-                  setIsAuthenticated(false)
+                onClick={async () => {
+                  await supabase.auth.signOut()
+                  // Cookie is cleared by onAuthStateChange listener
                   router.push('/')
                 }}
                 className="p-2 rounded-full hover:bg-white/10 transition-colors"
