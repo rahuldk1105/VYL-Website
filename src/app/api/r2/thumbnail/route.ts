@@ -53,7 +53,7 @@ export async function GET(request: Request) {
       .toBuffer()
 
     // Return thumbnail with proper headers
-    return new NextResponse(thumbnail, {
+    return new NextResponse(new Uint8Array(thumbnail), {
       headers: {
         'Content-Type': 'image/jpeg',
         'Cache-Control': 'public, max-age=31536000, immutable',
