@@ -1,40 +1,43 @@
 'use client'
 
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { LayoutDashboard, Users, Camera, Image, Settings, LogOut } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 
 export default function AdminDashboard() {
-  const router = useRouter()
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [userEmail, setUserEmail] = useState('')
 
   useEffect(() => {
-    // Check Supabase session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setIsAuthenticated(true)
-      } else {
-        router.push('/login')
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session) {
+        // Not logged in, redirect to login
+        window.location.href = '/login'
+        return
       }
+
+      setUserEmail(session.user.email || '')
       setIsLoading(false)
-    })
-  }, [router])
+    }
+
+    checkAuth()
+  }, [])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
     document.cookie = 'auth-token=; path=/; max-age=0'
-    router.push('/')
+    window.location.href = '/login'
   }
 
-  if (!isAuthenticated) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p>Loading...</p>
+          <p>Loading Dashboard...</p>
         </div>
       </div>
     )
@@ -45,10 +48,13 @@ export default function AdminDashboard() {
       <div className="container mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 sm:mb-12">
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
-            <LayoutDashboard className="text-gold w-6 h-6 sm:w-7 sm:h-7" />
-            <span>Admin Dashboard</span>
-          </h1>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
+              <LayoutDashboard className="text-gold w-6 h-6 sm:w-7 sm:h-7" />
+              <span>Admin Dashboard</span>
+            </h1>
+            <p className="text-gray-400 text-sm mt-1">Logged in as: {userEmail}</p>
+          </div>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors text-sm"

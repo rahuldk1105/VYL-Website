@@ -2,14 +2,13 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { LogOut, User } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 
 export default function Navigation() {
   const pathname = usePathname()
-  const router = useRouter()
   const isHome = pathname === '/'
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -17,15 +16,16 @@ export default function Navigation() {
 
   // Check authentication status
   useEffect(() => {
-    // 1. Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
       setIsAuthenticated(!!session)
-    })
+    }
 
-    // 2. Listen for changes
+    checkAuth()
+
+    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(!!session)
-      // Sync cookie for middleware
       if (session) {
         document.cookie = `auth-token=sb-session-active; path=/; max-age=${session.expires_in}; SameSite=Lax`
       } else {
@@ -43,7 +43,6 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [isHome])
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden'
@@ -52,13 +51,18 @@ export default function Navigation() {
     }
   }, [isMenuOpen])
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    document.cookie = 'auth-token=; path=/; max-age=0'
+    window.location.href = '/'
+  }
+
   const menu = [
     { href: '/tournaments', label: 'TOURNAMENTS' },
     { href: '/gallery', label: 'GALLERIES' },
     { href: '/contact', label: 'CONTACT' },
   ]
 
-  // Admin menu items (only shown when authenticated)
   const adminMenu = [
     { href: '/admin', label: 'ADMIN DASHBOARD' },
     { href: '/admin/index-faces', label: 'FACE INDEXING' },
@@ -132,11 +136,7 @@ export default function Navigation() {
             {/* Authentication buttons */}
             {isAuthenticated ? (
               <button
-                onClick={async () => {
-                  await supabase.auth.signOut()
-                  // Cookie is cleared by onAuthStateChange listener
-                  router.push('/')
-                }}
+                onClick={handleLogout}
                 className="p-2 rounded-full hover:bg-white/10 transition-colors"
                 title="Logout"
               >
@@ -181,7 +181,7 @@ export default function Navigation() {
           <div className="mt-8 pt-8 border-t border-white/10 w-full max-w-xs text-center">
             <p className="text-gray-400 mb-4 text-sm uppercase tracking-widest">Connect With Us</p>
             <div className="flex justify-center gap-6">
-              {/* Social placeholders could go here */}
+              {/* Social placeholders */}
             </div>
           </div>
         </div>

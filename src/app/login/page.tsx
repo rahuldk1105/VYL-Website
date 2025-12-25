@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Lock, User, Mail } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Lock, Mail } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 
 export default function LoginPage() {
@@ -10,47 +9,67 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
+  const [checkingSession, setCheckingSession] = useState(true)
+
+  // Check if already logged in on mount
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        // Already logged in, redirect to admin
+        window.location.href = '/admin'
+      } else {
+        setCheckingSession(false)
+      }
+    }
+    checkSession()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
+    if (!email || !password) {
+      setError('Please enter both email and password')
+      setLoading(false)
+      return
+    }
+
     try {
-      // Basic validation
-      if (!email || !password) {
-        setError('Please enter both email and password')
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password,
+      })
+
+      if (authError) {
+        setError(authError.message)
         setLoading(false)
         return
       }
 
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-
-      if (authError) {
-        throw authError
-      }
-
       if (data.session) {
-        // Manually set a cookie for middleware to see (since we lack @supabase/ssr)
-        // This is a simple flag; security relies on client-side token mostly but this helps redirects.
+        // Set cookie for middleware
         document.cookie = `auth-token=sb-session-active; path=/; max-age=${data.session.expires_in}; SameSite=Lax`
-        console.log('Login successful! Redirecting to /admin...')
-        // Force hard navigation to reload the page completely
-        window.location.replace('/admin')
+        // Hard redirect
+        window.location.href = '/admin'
       } else {
-        setError('Login failed. Please verify your email.')
+        setError('Login failed. No session created.')
+        setLoading(false)
       }
-
     } catch (err) {
-      setError((err as Error).message || 'Login failed. Please try again.')
-      console.error('Login error:', err)
-    } finally {
+      setError('An unexpected error occurred')
       setLoading(false)
     }
+  }
+
+  // Show loading while checking session
+  if (checkingSession) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full"></div>
+      </div>
+    )
   }
 
   return (
@@ -78,7 +97,6 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
                 className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors"
                 placeholder="admin@vylleague.com"
               />
@@ -93,7 +111,6 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
                 className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors"
                 placeholder="••••••••"
               />
@@ -106,14 +123,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-gold text-black font-bold py-3 px-4 rounded-lg hover:bg-yellow-400 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="animate-spin w-4 h-4 border-2 border-black border-t-transparent rounded-full"></span>
-                Signing In...
-              </span>
-            ) : (
-              'Sign In'
-            )}
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
