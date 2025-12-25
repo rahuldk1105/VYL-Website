@@ -29,7 +29,7 @@ export function middleware(request: NextRequest) {
   // Content Security Policy - basic protection
   response.headers.set(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://api.web3forms.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com https://cdn.sanity.io; font-src 'self'; connect-src 'self' https://api.web3forms.com https://*.supabase.co https://*.cloudflarestorage.com; frame-src 'self' https://forms.zohopublic.in;"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://api.web3forms.com https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com https://cdn.sanity.io; font-src 'self'; connect-src 'self' https://api.web3forms.com https://*.supabase.co https://*.cloudflarestorage.com https://vercel.live; frame-src 'self' https://forms.zohopublic.in;"
   )
 
   // Additional security headers
