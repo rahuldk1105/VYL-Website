@@ -1,0 +1,145 @@
+'use client'
+
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { LayoutDashboard, Users, Camera, Image, Settings, LogOut } from 'lucide-react'
+
+export default function AdminDashboard() {
+  const router = useRouter()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  useEffect(() => {
+    // Check authentication
+    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=')
+      acc[key] = value
+      return acc
+    }, {} as Record<string, string>)
+    
+    setIsAuthenticated(!!cookies['auth-token'])
+    
+    if (!cookies['auth-token']) {
+      router.push('/login')
+    }
+  }, [router])
+
+  const handleLogout = () => {
+    document.cookie = 'auth-token=; path=/; max-age=0'
+    router.push('/')
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center text-white">
+          <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-black text-white p-8">
+      <div className="container mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-12">
+          <h1 className="text-3xl font-bold flex items-center gap-3">
+            <LayoutDashboard className="text-gold" />
+            Admin Dashboard
+          </h1>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors"
+          >
+            <LogOut size={18} />
+            Logout
+          </button>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="bg-gray-900 border border-white/10 rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Users className="text-blue-400" size={24} />
+              <h3 className="text-lg font-semibold">Users</h3>
+            </div>
+            <p className="text-3xl font-bold">Coming Soon</p>
+            <p className="text-gray-400 text-sm mt-2">User management will be available soon</p>
+          </div>
+
+          <div className="bg-gray-900 border border-white/10 rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Camera className="text-green-400" size={24} />
+              <h3 className="text-lg font-semibold">Photos</h3>
+            </div>
+            <p className="text-3xl font-bold">Coming Soon</p>
+            <p className="text-gray-400 text-sm mt-2">Photo management will be available soon</p>
+          </div>
+
+          <div className="bg-gray-900 border border-white/10 rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Image className="text-purple-400" size={24} />
+              <h3 className="text-lg font-semibold">Gallery</h3>
+            </div>
+            <p className="text-3xl font-bold">Coming Soon</p>
+            <p className="text-gray-400 text-sm mt-2">Gallery management will be available soon</p>
+          </div>
+
+          <div className="bg-gray-900 border border-white/10 rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Settings className="text-yellow-400" size={24} />
+              <h3 className="text-lg font-semibold">Settings</h3>
+            </div>
+            <p className="text-3xl font-bold">Coming Soon</p>
+            <p className="text-gray-400 text-sm mt-2">System settings will be available soon</p>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Link
+              href="/admin/index-faces"
+              className="bg-gray-900 border border-white/10 hover:border-gold rounded-xl p-6 transition-colors group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gold/10 group-hover:bg-gold/20 rounded-lg flex items-center justify-center transition-colors">
+                  <Camera className="w-6 h-6 text-gold" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">Face Indexing</h3>
+                  <p className="text-gray-400">Upload and index photos with face recognition</p>
+                </div>
+              </div>
+            </Link>
+
+            <div className="bg-gray-900 border border-white/10 rounded-xl p-6 opacity-50 cursor-not-allowed">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center">
+                  <Users className="w-6 h-6 text-gray-400" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">User Management</h3>
+                  <p className="text-gray-400">Coming soon</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div>
+          <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
+          <div className="bg-gray-900 border border-white/10 rounded-xl p-6">
+            <div className="text-center py-12">
+              <p className="text-gray-400">Activity tracking will be implemented soon</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

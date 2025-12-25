@@ -28,6 +28,14 @@ export default function AdminIndexPage() {
 
         setIsProcessing(true)
         const files = Array.from(e.target.files)
+        
+        // Validate file count
+        if (files.length > 50) {
+            addLog('Error: Maximum 50 files can be uploaded at once')
+            setIsProcessing(false)
+            return
+        }
+
         addLog(`Selected ${files.length} files. Starting R2 Pipeline...`)
 
         let successCount = 0
@@ -36,6 +44,18 @@ export default function AdminIndexPage() {
             setStatus(`Processing ${index + 1}/${files.length}: ${file.name}`)
 
             try {
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    addLog(`Skipping ${file.name}: Not an image file`)
+                    continue
+                }
+
+                // Validate file size (max 10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    addLog(`Skipping ${file.name}: File too large (max 10MB)`)
+                    continue
+                }
+
                 // 1. Resize Image (Client-side optimization)
                 const resizedBlob = await resizeImage(file, 1920) // Max 1920px width
 
@@ -47,15 +67,26 @@ export default function AdminIndexPage() {
                         contentType: 'image/jpeg'
                     })
                 })
+                
+                if (!signRes.ok) {
+                    const errorData = await signRes.json()
+                    throw new Error(errorData.error || 'Failed to get signed URL')
+                }
+                
                 const { url: signedUrl, key: r2Key } = await signRes.json()
                 if (!signedUrl) throw new Error('Resulted in failed signature')
 
                 // 3. Upload to R2 (Direct PUT)
-                await fetch(signedUrl, {
+                const uploadRes = await fetch(signedUrl, {
                     method: 'PUT',
                     body: resizedBlob,
                     headers: { 'Content-Type': 'image/jpeg' }
                 })
+                
+                if (!uploadRes.ok) {
+                    throw new Error('Failed to upload to R2')
+                }
+                
                 addLog(`Uploaded to R2: ${r2Key}`)
 
                 // 4. Detect Faces (using local Blob to save bandwidth)
