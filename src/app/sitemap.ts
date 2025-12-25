@@ -1,11 +1,13 @@
 import { MetadataRoute } from 'next'
-import { mockEvents } from '@/lib/mockData'
+import { getEvents } from '@/lib/events'
 
 // In a real app, you'd fetch this from your API/CMS
 const BASE_URL = 'https://www.veeranyouthleague.com'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-    const tournaments = mockEvents.map((event) => ({
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    const events = await getEvents()
+
+    const tournaments = events.map((event) => ({
         url: `${BASE_URL}/tournaments/${event.slug.current}`,
         lastModified: new Date(event.startDate),
         changeFrequency: 'weekly' as const,

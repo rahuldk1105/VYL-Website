@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 import TournamentFilter from '@/components/TournamentFilter'
 import TournamentGrid from '@/components/TournamentGrid'
-import { mockEvents } from '@/lib/mockData'
+import { getEvents } from '@/lib/events'
 import SafeImage from '@/components/SafeImage'
 
 export const metadata: Metadata = {
@@ -11,7 +11,9 @@ export const metadata: Metadata = {
     keywords: ["find football tournament", "upcoming football events", "register for football league", "VYL tournaments", "chennai football matches"],
 }
 
-export default function TournamentsPage() {
+export default async function TournamentsPage() {
+    const events = await getEvents()
+
     return (
         <div className="min-h-screen bg-black text-white">
             {/* Hero */}
@@ -54,7 +56,7 @@ export default function TournamentsPage() {
                         </div>
                     ))}
                 </div>}>
-                    <TournamentGrid events={[...mockEvents].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())} />
+                    <TournamentGrid events={[...events].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())} />
                 </Suspense>
             </div>
         </div>

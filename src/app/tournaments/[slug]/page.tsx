@@ -1,7 +1,7 @@
 import SafeImage from '@/components/SafeImage'
 import { notFound } from 'next/navigation'
 import { Calendar, MapPin, Users, Trophy, Clock, DollarSign, Star, CheckCircle } from 'lucide-react'
-import { mockEvents } from '@/lib/mockData'
+import { getEventBySlug } from '@/lib/events'
 import Link from 'next/link'
 
 import { Metadata } from 'next'
@@ -12,7 +12,7 @@ interface TournamentPageProps {
 
 export async function generateMetadata({ params }: TournamentPageProps): Promise<Metadata> {
   const { slug } = await params
-  const event = mockEvents.find(e => e.slug.current === slug)
+  const event = await getEventBySlug(slug)
 
   if (!event) {
     return {
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: TournamentPageProps): Promise
 
 export default async function TournamentPage({ params }: TournamentPageProps) {
   const { slug } = await params
-  const event = mockEvents.find(e => e.slug.current === slug)
+  const event = await getEventBySlug(slug)
 
   if (!event) {
     notFound()

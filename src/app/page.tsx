@@ -2,9 +2,11 @@ import HeroCarousel from '@/components/HeroCarousel'
 import MissionSection from '@/components/MissionSection'
 import EventsCarousel from '@/components/EventsCarousel'
 
-import { mockEvents as sharedMockEvents } from '@/lib/mockData'
+import { getEvents } from '@/lib/events'
 
-export default function Home() {
+export default async function Home() {
+  const sharedMockEvents = await getEvents()
+
   // Mock data for demonstration
   const mockSlides = [
     {
