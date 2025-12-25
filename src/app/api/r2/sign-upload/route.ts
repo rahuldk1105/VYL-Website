@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import { r2 } from '@/lib/r2Client'
+import { r2, isR2Configured } from '@/lib/r2Client'
 
 export const runtime = 'edge' // Optional: Use edge if compatible, or default to node
 
 export async function POST(request: Request) {
     try {
+        // Validate R2 configuration at request time
+        if (!isR2Configured()) {
+            return NextResponse.json({ error: 'R2 is not configured' }, { status: 503 })
+        }
+
         // Validate content type
         const contentTypeHeader = request.headers.get('content-type')
         if (contentTypeHeader !== 'application/json') {
