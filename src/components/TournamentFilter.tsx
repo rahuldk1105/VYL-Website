@@ -17,16 +17,6 @@ export default function TournamentFilter() {
   const [selectedMonth, setSelectedMonth] = useState(searchParams.get('month') || 'All Months')
   const [showFilters, setShowFilters] = useState(false)
 
-  const createQueryString = (name: string, value: string) => {
-    const params = new URLSearchParams(searchParams)
-    if (value === 'All Sports' || value === 'All Months') {
-      params.delete(name)
-    } else {
-      params.set(name, value)
-    }
-    return params.toString()
-  }
-
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams)
 

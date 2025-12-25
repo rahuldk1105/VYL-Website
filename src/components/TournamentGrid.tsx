@@ -52,7 +52,6 @@ export default function TournamentGrid({ events }: TournamentGridProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {filteredEvents.map((event) => {
         const isRegistrationClosed = new Date() > new Date(event.registrationDeadline)
-        const isEventPassed = new Date() > new Date(event.endDate)
 
         return (
           <Link

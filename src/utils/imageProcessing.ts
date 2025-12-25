@@ -18,7 +18,11 @@ export const resizeImage = (file: File, maxWidth = 1920): Promise<Blob> => {
                 canvas.width = width
                 canvas.height = height
                 const ctx = canvas.getContext('2d')
-                ctx?.drawImage(img, 0, 0, width, height)
+                if (!ctx) {
+                    reject(new Error('Canvas context not available'))
+                    return
+                }
+                ctx.drawImage(img, 0, 0, width, height)
 
                 canvas.toBlob((blob) => {
                     if (blob) resolve(blob)

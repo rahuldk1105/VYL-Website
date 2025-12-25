@@ -1,5 +1,4 @@
 import HeroCarousel from '@/components/HeroCarousel'
-import MissionSection from '@/components/MissionSection'
 import EventsCarousel from '@/components/EventsCarousel'
 
 import { mockEvents as sharedMockEvents } from '@/lib/mockData'
@@ -35,16 +34,6 @@ export default function Home() {
       ctaText: 'Explore Tours',
       ctaLink: '/tournaments'
     }
-  ]
-
-  const mockMissionText = `The Veeran Football League was founded to create a strong and competitive platform for young football talent. With multiple successful youth leagues completed, Veeran now presents its next chapter — the Veeran Winter Cup 2025.
-
-These are our roots. This is Veeran Football.`
-
-  const mockMissionImages = [
-    'https://images.unsplash.com/photo-1518091043644-c1d4457512c6',
-    'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
-    'https://images.unsplash.com/photo-1518837695005-2083093ee35b'
   ]
 
   // Transform shared events to the format expected by EventsCarousel

@@ -47,12 +47,12 @@ export const mockGalleries: Gallery[] = [
     date: '2024-04-20',
     location: 'Bengaluru, Karnataka',
     thumbnail: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
-    slug: { current: 'basketball-premier-league' },
-    categories: ['Basketball', 'Action', 'Indoor'],
+    slug: { current: 'youth-football-premier-league' },
+    categories: ['Football', 'Action', 'Youth'],
     images: [
       {
         url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
-        caption: 'Player going for a slam dunk',
+        caption: 'Young player taking a shot',
         photographer: 'Alex Rodriguez'
       },
       {
@@ -62,12 +62,12 @@ export const mockGalleries: Gallery[] = [
       },
       {
         url: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6',
-        caption: 'Three-point shot attempt',
+        caption: 'Dribbling past the defender',
         photographer: 'Kevin Lee'
       },
       {
         url: 'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
-        caption: 'Defensive play at the net',
+        caption: 'Goal celebration',
         photographer: 'Anna Kim'
       }
     ]
@@ -80,12 +80,12 @@ export const mockGalleries: Gallery[] = [
     date: '2024-05-10',
     location: 'New Delhi, Delhi',
     thumbnail: 'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
-    slug: { current: 'youth-tennis-open' },
-    categories: ['Tennis', 'Youth', 'Development'],
+    slug: { current: 'youth-football-open' },
+    categories: ['Football', 'Youth', 'Development'],
     images: [
       {
         url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
-        caption: 'Young player serving',
+        caption: 'Young player in action',
         photographer: 'Tom Wilson'
       },
       {
@@ -108,22 +108,22 @@ export const mockGalleries: Gallery[] = [
     date: '2024-06-15',
     location: 'Hyderabad, Telangana',
     thumbnail: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6',
-    slug: { current: 'volleyball-beach-championship' },
-    categories: ['Volleyball', 'Beach', 'Outdoor'],
+    slug: { current: 'youth-football-championship' },
+    categories: ['Football', 'Championship', 'Action'],
     images: [
       {
         url: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6',
-        caption: 'Beach volleyball spike',
+        caption: 'Championship match action',
         photographer: 'Carlos Mendez'
       },
       {
         url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
-        caption: 'Sunset beach volleyball match',
+        caption: 'Exciting play on the field',
         photographer: 'Sophie Turner'
       },
       {
         url: 'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
-        caption: 'Team celebration on the beach',
+        caption: 'Team celebration',
         photographer: 'Ryan Johnson'
       }
     ]
@@ -136,12 +136,12 @@ export const mockGalleries: Gallery[] = [
     date: '2024-07-08',
     location: 'Kolkata, West Bengal',
     thumbnail: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
-    slug: { current: 'badminton-masters-cup' },
-    categories: ['Badminton', 'Indoor', 'Elite'],
+    slug: { current: 'football-masters-cup' },
+    categories: ['Football', 'Elite', 'Masters'],
     images: [
       {
         url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
-        caption: 'Smash shot during finals',
+        caption: 'Final match action',
         photographer: 'Zhang Wei'
       },
       {
@@ -164,12 +164,12 @@ export const mockGalleries: Gallery[] = [
     date: '2024-08-12',
     location: 'Ahmedabad, Gujarat',
     thumbnail: 'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
-    slug: { current: 'swimming-elite-meet' },
-    categories: ['Swimming', 'Aquatic', 'Elite'],
+    slug: { current: 'football-elite-meet' },
+    categories: ['Football', 'Elite', 'Action'],
     images: [
       {
         url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b',
-        caption: 'Freestyle sprint finish',
+        caption: 'Elite match action',
         photographer: 'Michael Torres'
       },
       {
@@ -179,7 +179,7 @@ export const mockGalleries: Gallery[] = [
       },
       {
         url: 'https://images.unsplash.com/photo-1521412644187-dc1d7d314f76',
-        caption: 'Diving start sequence',
+        caption: 'Championship highlight',
         photographer: 'David Kim'
       }
     ]

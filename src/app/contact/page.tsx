@@ -1,5 +1,4 @@
 import SafeImage from '@/components/SafeImage'
-import Link from 'next/link'
 import ClientContactForm from '@/components/ClientContactForm'
 
 export default function ContactPage() {

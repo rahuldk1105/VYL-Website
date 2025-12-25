@@ -1,6 +1,6 @@
 import SafeImage from '@/components/SafeImage'
 import { notFound } from 'next/navigation'
-import { Calendar, MapPin, Users, Trophy, Clock, DollarSign, Star, CheckCircle } from 'lucide-react'
+import { Calendar, MapPin, Users, Trophy, DollarSign, Star, CheckCircle } from 'lucide-react'
 import { mockEvents } from '@/lib/mockData'
 import Link from 'next/link'
 

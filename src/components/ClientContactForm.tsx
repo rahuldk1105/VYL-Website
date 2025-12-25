@@ -36,7 +36,7 @@ export default function ClientContactForm() {
      } else {
        setStatus({ ok: false, text: data.message || 'Something went wrong. Please try again.' })
      }
-   } catch (err) {
+   } catch {
      setStatus({ ok: false, text: 'Network error. Please try again later.' })
    } finally {
      setLoading(false)

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { Trophy, Users, Globe, Star, Award, Target } from 'lucide-react'
+import { Trophy, Users, Globe, Star } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: "About Us - Grassroot Football Development",
@@ -164,7 +164,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
                 <p className="text-blue-600 font-medium mb-3">{member.role}</p>
-                <p className="text-gray-600">{member.bio}</p>
+                <p className="text-lg text-gray-600">{member.bio}</p>
               </div>
             ))}
           </div>
