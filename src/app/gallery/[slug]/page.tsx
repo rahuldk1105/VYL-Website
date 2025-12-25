@@ -6,14 +6,16 @@ import { Camera, ArrowLeft } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import ImageModal from '@/components/ImageModal'
 
 export default function EventGalleryPage() {
   const params = useParams()
   const slug = params.slug as string
 
-  const [images, setImages] = useState<string[]>([])
+  const [images, setImages] = useState<{ url: string; key: string }[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [eventTitle, setEventTitle] = useState(slug)
+  const [selectedImage, setSelectedImage] = useState<{ url: string; key: string } | null>(null)
 
   useEffect(() => {
     fetchGallery()
@@ -64,7 +66,7 @@ export default function EventGalleryPage() {
       }
 
       const { keys, total } = await listResponse.json()
-      console.log('✅ Found', total || keys?.length || 0, 'images:', keys)
+      console.log('✅ Found', total || keys?.length || 0, 'images')
 
       if (!keys || keys.length === 0) {
         console.warn('⚠️ No images found in directory')
@@ -100,10 +102,8 @@ export default function EventGalleryPage() {
 
       console.log('✅ All signed URLs retrieved:', allUrls.length)
 
-      // 5. Extract just the URLs
-      const imageUrls = allUrls.map((item) => item.url)
-      console.log('🖼️ Setting', imageUrls.length, 'images')
-      setImages(imageUrls)
+      // 5. Set images with both URL and key
+      setImages(allUrls)
 
     } catch (err) {
       console.error('❌ Error fetching gallery:', err)
@@ -128,14 +128,17 @@ export default function EventGalleryPage() {
           {eventTitle}
         </h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Browse photos from this tournament
+          Click any photo to view full size and download
         </p>
       </div>
 
       {/* Gallery Grid */}
       <div className="relative z-10 container mx-auto px-4 pb-24">
         {isLoading ? (
-          <div className="text-center text-gray-500 animate-pulse">Loading photos...</div>
+          <div className="text-center text-gray-500 animate-pulse">
+            <div className="inline-block w-8 h-8 border-4 border-gold border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p>Loading photos...</p>
+          </div>
         ) : images.length === 0 ? (
           <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/10">
             <Camera className="w-12 h-12 mx-auto text-gray-600 mb-4" />
@@ -145,26 +148,51 @@ export default function EventGalleryPage() {
             </p>
           </div>
         ) : (
-          <div className="columns-1 md:columns-3 lg:columns-4 gap-4 space-y-4">
-            {images.map((imageUrl, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                className="break-inside-avoid rounded-xl overflow-hidden bg-white/5 border border-white/10 group relative"
-              >
-                <img
-                  src={imageUrl}
-                  alt={`Photo ${idx + 1}`}
-                  className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </motion.div>
-            ))}
-          </div>
+          <>
+            <div className="columns-1 md:columns-3 lg:columns-4 gap-4 space-y-4">
+              {images.map((image, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: Math.min(idx * 0.02, 2) }}
+                  className="break-inside-avoid rounded-xl overflow-hidden bg-white/5 border border-white/10 group relative cursor-pointer"
+                  onClick={() => setSelectedImage(image)}
+                >
+                  <img
+                    src={image.url}
+                    alt={`Photo ${idx + 1}`}
+                    className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                    style={{ maxHeight: '400px', objectFit: 'cover' }}
+                  />
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
+                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-sm font-semibold">
+                      Click to view
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Image count */}
+            <div className="mt-8 text-center text-gray-400">
+              Showing {images.length} photos
+            </div>
+          </>
         )}
       </div>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <ImageModal
+          imageUrl={selectedImage.url}
+          imageKey={selectedImage.key}
+          isOpen={!!selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
     </div>
   )
 }
