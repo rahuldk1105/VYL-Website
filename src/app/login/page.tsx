@@ -36,9 +36,8 @@ function LoginForm() {
       }
 
       if (data.session) {
-        // Redirect to the intended page or admin dashboard
-        const redirectTo = searchParams.get('redirectTo') || '/admin'
-        window.location.href = redirectTo
+        // Redirect to admin dashboard
+        window.location.href = '/admin'
       } else {
         setError('Login failed. No session created.')
         setLoading(false)
