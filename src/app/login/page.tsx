@@ -9,18 +9,21 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [checkingSession, setCheckingSession] = useState(true)
+  const [ready, setReady] = useState(false)
 
-  // Check if already logged in on mount
+  // Check if already logged in on mount - but DON'T redirect automatically
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        // Already logged in, redirect to admin
-        window.location.href = '/admin'
-      } else {
-        setCheckingSession(false)
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          // Show a link instead of auto-redirect to prevent loops
+          setError('')
+        }
+      } catch (e) {
+        // Ignore errors
       }
+      setReady(true)
     }
     checkSession()
   }, [])
@@ -49,10 +52,8 @@ export default function LoginPage() {
       }
 
       if (data.session) {
-        // Set cookie for middleware
-        document.cookie = `auth-token=sb-session-active; path=/; max-age=${data.session.expires_in}; SameSite=Lax`
-        // Hard redirect
-        window.location.href = '/admin'
+        // Use replace to prevent back button issues
+        window.location.replace('/admin')
       } else {
         setError('Login failed. No session created.')
         setLoading(false)
@@ -63,8 +64,8 @@ export default function LoginPage() {
     }
   }
 
-  // Show loading while checking session
-  if (checkingSession) {
+  // Show loading while checking
+  if (!ready) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full"></div>
