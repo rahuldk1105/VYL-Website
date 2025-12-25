@@ -72,27 +72,36 @@ export default function EventGalleryPage() {
         return
       }
 
-      // 4. Get signed URLs for all photos
+      // 4. Get signed URLs for all photos (batch into chunks of 100)
       console.log('🔐 Getting signed URLs for', keys.length, 'images...')
-      const signResponse = await fetch('/api/r2/sign-read', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keys }),
-      })
+      const BATCH_SIZE = 100
+      const allUrls: { key: string; url: string }[] = []
 
-      console.log('🔐 Sign response status:', signResponse.status)
+      for (let i = 0; i < keys.length; i += BATCH_SIZE) {
+        const batch = keys.slice(i, i + BATCH_SIZE)
+        console.log(`🔐 Batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(keys.length / BATCH_SIZE)}: ${batch.length} images`)
 
-      if (!signResponse.ok) {
-        const errorData = await signResponse.json()
-        console.error('❌ Sign URLs failed:', errorData)
-        throw new Error('Failed to get signed URLs')
+        const signResponse = await fetch('/api/r2/sign-read', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ keys: batch }),
+        })
+
+        if (!signResponse.ok) {
+          const errorData = await signResponse.json()
+          console.error('❌ Sign URLs failed for batch:', errorData)
+          throw new Error('Failed to get signed URLs')
+        }
+
+        const { urls } = await signResponse.json()
+        allUrls.push(...urls)
+        console.log(`✅ Batch complete: ${allUrls.length}/${keys.length} total`)
       }
 
-      const { urls } = await signResponse.json()
-      console.log('✅ Got signed URLs:', urls.length)
+      console.log('✅ All signed URLs retrieved:', allUrls.length)
 
       // 5. Extract just the URLs
-      const imageUrls = urls.map((item: { url: string }) => item.url)
+      const imageUrls = allUrls.map((item) => item.url)
       console.log('🖼️ Setting', imageUrls.length, 'images')
       setImages(imageUrls)
 
