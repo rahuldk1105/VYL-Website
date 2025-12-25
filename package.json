@@ -13,6 +13,7 @@
     "@aws-sdk/s3-request-presigner": "^3.957.0",
     "@sanity/client": "^7.13.1",
     "@sanity/image-url": "^2.0.1",
+    "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.89.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
