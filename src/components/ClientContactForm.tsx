@@ -12,36 +12,35 @@ export default function ClientContactForm() {
   const [status, setStatus] = useState<null | { ok: boolean; text: string }>(null)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
-    setStatus(null)
-    try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          access_key: '0be0e885-9030-4c58-b011-b8ed369d8759',
-          name,
-          email,
-          subject,
-          message,
-        }),
-      })
-      const data = await res.json()
-      if (data.success) {
-        setStatus({ ok: true, text: 'Message sent successfully. We will contact you soon.' })
-        setName('')
-        setEmail('')
-        setSubject('')
-        setMessage('')
-      } else {
-        setStatus({ ok: false, text: data.message || 'Something went wrong. Please try again.' })
-      }
-    } catch (err) {
-      setStatus({ ok: false, text: 'Network error. Please try again later.' })
-    } finally {
-      setLoading(false)
-    }
+   e.preventDefault()
+   setLoading(true)
+   setStatus(null)
+   try {
+     const res = await fetch('/api/contact', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({
+         name,
+         email,
+         subject,
+         message,
+       }),
+     })
+     const data = await res.json()
+     if (data.success) {
+       setStatus({ ok: true, text: 'Message sent successfully. We will contact you soon.' })
+       setName('')
+       setEmail('')
+       setSubject('')
+       setMessage('')
+     } else {
+       setStatus({ ok: false, text: data.message || 'Something went wrong. Please try again.' })
+     }
+   } catch (err) {
+     setStatus({ ok: false, text: 'Network error. Please try again later.' })
+   } finally {
+     setLoading(false)
+   }
   }
 
   return (

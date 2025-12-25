@@ -4,6 +4,7 @@ import "./globals.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import ContactCTA from "@/components/ContactCTA"
+import ErrorBoundary from "@/components/ErrorBoundary"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -79,12 +80,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
-        <Navigation />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <ContactCTA />
-        <Footer />
+        <ErrorBoundary>
+          <Navigation />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <ContactCTA />
+          <Footer />
+        </ErrorBoundary>
       </body>
     </html>
   )
