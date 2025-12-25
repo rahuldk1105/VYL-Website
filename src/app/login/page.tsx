@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Lock, Mail } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 
@@ -9,24 +10,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [ready, setReady] = useState(false)
-
-  // Check if already logged in on mount - but DON'T redirect automatically
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (session) {
-          // Show a link instead of auto-redirect to prevent loops
-          setError('')
-        }
-      } catch (e) {
-        // Ignore errors
-      }
-      setReady(true)
-    }
-    checkSession()
-  }, [])
+  const searchParams = useSearchParams()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,8 +36,9 @@ export default function LoginPage() {
       }
 
       if (data.session) {
-        // Use replace to prevent back button issues
-        window.location.replace('/admin')
+        // Redirect to the intended page or admin dashboard
+        const redirectTo = searchParams.get('redirectTo') || '/admin'
+        window.location.href = redirectTo
       } else {
         setError('Login failed. No session created.')
         setLoading(false)
@@ -62,15 +47,6 @@ export default function LoginPage() {
       setError('An unexpected error occurred')
       setLoading(false)
     }
-  }
-
-  // Show loading while checking
-  if (!ready) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full"></div>
-      </div>
-    )
   }
 
   return (

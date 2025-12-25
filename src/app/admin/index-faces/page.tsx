@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
+import { ArrowLeft, Upload, Loader2 } from 'lucide-react'
 import { loadModels, getAllFaceDescriptors } from '@/utils/faceRecognition'
 import { supabase } from '@/lib/supabaseClient'
 import { resizeImage } from '@/utils/imageProcessing'
@@ -25,6 +27,8 @@ export default function AdminIndexPage() {
         loadModels().then(() => {
             setModelLoaded(true)
             addLog("AI Models Loaded")
+        }).catch((err) => {
+            addLog(`Error loading models: ${err.message}`)
         })
     }, [])
 
@@ -35,6 +39,11 @@ export default function AdminIndexPage() {
                 .from('events')
                 .select('id, title, slug')
                 .order('start_date', { ascending: false })
+
+            if (error) {
+                addLog(`Error fetching events: ${error.message}`)
+                return
+            }
 
             if (data) {
                 const mappedEvents = data.map((e: any) => ({
@@ -51,10 +60,17 @@ export default function AdminIndexPage() {
         fetchEvents()
     }, [])
 
-    const addLog = (msg: string) => setLogs(prev => [msg, ...prev].slice(0, 50)) // Keep last 50 logs
+    const addLog = (msg: string) => {
+        setLogs(prev => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 100))
+    }
 
     const handleBulkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.length) return
+
+        if (!selectedEvent) {
+            addLog('Error: Please select an event first')
+            return
+        }
 
         setIsProcessing(true)
         const files = Array.from(e.target.files)
@@ -66,9 +82,10 @@ export default function AdminIndexPage() {
             return
         }
 
-        addLog(`Selected ${files.length} files. Starting R2 Pipeline...`)
+        addLog(`Selected ${files.length} files. Starting upload...`)
 
         let successCount = 0
+        let errorCount = 0
 
         for (const [index, file] of files.entries()) {
             setStatus(`Processing ${index + 1}/${files.length}: ${file.name}`)
@@ -77,21 +94,26 @@ export default function AdminIndexPage() {
                 // Validate file type
                 if (!file.type.startsWith('image/')) {
                     addLog(`Skipping ${file.name}: Not an image file`)
+                    errorCount++
                     continue
                 }
 
                 // Validate file size (max 10MB)
                 if (file.size > 10 * 1024 * 1024) {
                     addLog(`Skipping ${file.name}: File too large (max 10MB)`)
+                    errorCount++
                     continue
                 }
 
-                // 1. Resize Image (Client-side optimization)
-                const resizedBlob = await resizeImage(file, 1920) // Max 1920px width
+                // 1. Resize Image
+                const resizedBlob = await resizeImage(file, 1920)
 
                 // 2. Get Presigned URL
                 const signRes = await fetch('/api/r2/sign-upload', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify({
                         filename: file.name,
                         contentType: 'image/jpeg'
@@ -104,9 +126,9 @@ export default function AdminIndexPage() {
                 }
 
                 const { url: signedUrl, key: r2Key } = await signRes.json()
-                if (!signedUrl) throw new Error('Resulted in failed signature')
+                if (!signedUrl) throw new Error('No signed URL returned')
 
-                // 3. Upload to R2 (Direct PUT)
+                // 3. Upload to R2
                 const uploadRes = await fetch(signedUrl, {
                     method: 'PUT',
                     body: resizedBlob,
@@ -114,95 +136,148 @@ export default function AdminIndexPage() {
                 })
 
                 if (!uploadRes.ok) {
-                    throw new Error('Failed to upload to R2')
+                    throw new Error(`Upload failed: ${uploadRes.status}`)
                 }
 
-                addLog(`Uploaded to R2: ${r2Key}`)
+                addLog(`✓ Uploaded: ${file.name}`)
 
-                // 4. Detect Faces (using local Blob to save bandwidth)
+                // 4. Detect Faces
                 const blobUrl = URL.createObjectURL(resizedBlob)
                 const detections = await getAllFaceDescriptors(blobUrl)
                 URL.revokeObjectURL(blobUrl)
 
-                // 5. Save to Supabase (New Schema)
-                // Step A: Insert Image Record
-                const { data: imgData, error: imgError } = await supabase
-                    .from('face_embeddings') // Using face_embeddings as the primary table based on previous context
+                addLog(`  Found ${detections.length} face(s)`)
+
+                // 5. Save to Database
+                const { error: dbError } = await supabase
+                    .from('face_embeddings')
                     .insert({
                         r2_object_key: r2Key,
                         event_id: selectedEvent,
-                        image_url: signedUrl.split('?')[0] // Store base URL, though we sign on read usually
+                        image_url: signedUrl.split('?')[0],
+                        face_count: detections.length
                     })
-                    .select()
-                    .single()
 
-                if (imgError) throw imgError
-
-                // Note: If you have a separate 'images' table vs 'face_embeddings', adjust here.
-                // Based on previous chats, 'face_embeddings' seemed to hold the image ref and embedding. 
-                // But the previous file content used 'images' and 'players'. I will stick to the previous file's logic 
-                // BUT user said "Migrate to Supabase" earlier. 
-                // Wait, the previous file had: 
-                // .from('images').insert(...)
-                // .from('players').insert(...)
-                // Checking previous context: "The user's main objective is to completely replace Cloudinary with Cloudflare R2... and refactoring both the admin and gallery pages".
-                // The previous file content I read (Step 253) shows it WAS using 'images' and 'players' tables.
-                // However, in step 156 (gallery page), it queries `face_embeddings`.
-                // Conflict: Gallery reads `face_embeddings`. Admin writes `images` + `players`.
-                // I should verify the schema.
-                // But to be safe and consistent with the Gallery Code I just wrote (Step 232):
-                // Gallery queries: supabase.from('face_embeddings').select('image_url, event_id, id, r2_object_key')
-                // So I MUST write to `face_embeddings` or the gallery won't see it.
-                // The previous `AdminIndexPage` code (Step 253) seemed to be writing to `images` and `players` which might be a different schema or an old one.
-                // I will update this to write to `face_embeddings` as the gallery expects.
-
-                /* 
-                Correct Schema Assumption based on Gallery Page:
-                Table: face_embeddings
-                Columns: id, r2_object_key, event_id, image_url, embedding (vector?)
-                */
-
-                // Let's assume a simplified single-table approach for now if that's what the Gallery is using.
-                // Actually, `face_embeddings` sounds like it stores 1 row per face? 
-                // Or 1 row per image?
-                // Gallery: `dbImages.map((img) => img.r2_object_key)` -> implies 1 row per image.
-
-                // Let's write to `face_embeddings` to match the gallery.
-
-                await supabase.from('face_embeddings').insert({
-                    r2_object_key: r2Key,
-                    event_id: selectedEvent,
-                    image_url: `https://pub-r2.veeranyouthleague.com/${r2Key}`, // We don't know the public domain for sure, but we can store the key.
-                    // If the gallery signs the key, the stored URL might not matter as much, or it might be used for fallbacks.
-                })
-
-                if (detections.length > 0) {
-                    // If we are storing embeddings, we'd update them here.
-                    // The previous code had a complex relation. 
-                    // For now, let's just ensure the IMAGE is visible in the gallery.
-                    // Indexing faces properly requires the vector column.
-                    // I will assume the 'face_embeddings' table has a 'embeddings' column or similar?
-                    // Without viewing the schema, it's risky.
-                    // BUT, the user's primary "Gallery" request works off `face_embeddings`.
-                    // I will stick to the previous code's logic BUT target `face_embeddings` for the image entry.
+                if (dbError) {
+                    throw new Error(`Database error: ${dbError.message}`)
                 }
 
-                // WAIT, I shouldn't break the existing face search logic if it relies on `players` table.
-                // But the Gallery page I wrote explicitly queries `face_embeddings`. 
-                // This means the admin page WAS writing to the WRONG tables or the Gallery is reading the WRONG table?
-                // Step 156: Gallery reads `face_embeddings`.
-                // Step 253: Admin writes `images`.
-                // This implies the Admin page was NOT linked to the current Gallery implementation.
-                // I MUST fix this synchronization.
-                // I will modify the Admin page to write to `face_embeddings` because that is what displays the images.
+                successCount++
 
             } catch (err) {
                 console.error(err)
-                addLog(`Error on ${file.name}: ${(err as Error).message}`)
+                addLog(`✗ Error on ${file.name}: ${(err as Error).message}`)
+                errorCount++
             }
+        }
+
+        setStatus('Idle')
+        setIsProcessing(false)
+        addLog(`\n=== Complete ===\nSuccess: ${successCount}, Errors: ${errorCount}`)
+
+        // Reset file input
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ''
         }
     }
 
-    // ... rest of component
-}
+    return (
+        <div className="min-h-screen bg-black text-white p-4 sm:p-6 md:p-8">
+            <div className="container mx-auto max-w-4xl">
+                {/* Header */}
+                <div className="flex items-center gap-4 mb-8">
+                    <Link
+                        href="/admin"
+                        className="p-2 bg-gray-900 border border-white/10 rounded-lg hover:bg-gray-800 transition-colors"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Link>
+                    <div>
+                        <h1 className="text-2xl sm:text-3xl font-bold">Face Indexing</h1>
+                        <p className="text-gray-400 text-sm mt-1">Upload and index photos with face recognition</p>
+                    </div>
+                </div>
 
+                {/* Model Status */}
+                <div className="bg-gray-900 border border-white/10 rounded-xl p-6 mb-6">
+                    <div className="flex items-center gap-3">
+                        <div className={`w-3 h-3 rounded-full ${modelLoaded ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'}`}></div>
+                        <span className="text-sm font-medium">
+                            {modelLoaded ? 'AI Models Ready' : 'Loading AI Models...'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Upload Form */}
+                <div className="bg-gray-900 border border-white/10 rounded-xl p-6 mb-6">
+                    <h2 className="text-xl font-bold mb-4">Upload Images</h2>
+
+                    {/* Event Selection */}
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                            Select Event
+                        </label>
+                        <select
+                            value={selectedEvent}
+                            onChange={(e) => setSelectedEvent(e.target.value)}
+                            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors"
+                            disabled={isProcessing}
+                        >
+                            {events.length === 0 && <option>Loading events...</option>}
+                            {events.map(event => (
+                                <option key={event.id} value={event.slug}>
+                                    {event.title}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* File Input */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                            Select Images (Max 500 files, 10MB each)
+                        </label>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            onChange={handleBulkUpload}
+                            disabled={!modelLoaded || isProcessing || !selectedEvent}
+                            className="block w-full text-sm text-gray-400
+                                file:mr-4 file:py-3 file:px-6
+                                file:rounded-lg file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-gold file:text-black
+                                hover:file:bg-yellow-400
+                                file:cursor-pointer
+                                disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                    </div>
+
+                    {/* Status */}
+                    {isProcessing && (
+                        <div className="mt-4 flex items-center gap-3 text-gold">
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <span className="text-sm font-medium">{status}</span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Logs */}
+                <div className="bg-gray-900 border border-white/10 rounded-xl p-6">
+                    <h2 className="text-xl font-bold mb-4">Activity Log</h2>
+                    <div className="bg-black border border-white/5 rounded-lg p-4 h-96 overflow-y-auto font-mono text-xs">
+                        {logs.length === 0 ? (
+                            <p className="text-gray-500">No activity yet. Upload images to start.</p>
+                        ) : (
+                            logs.map((log, idx) => (
+                                <div key={idx} className="text-gray-300 mb-1">{log}</div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}

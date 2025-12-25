@@ -6,61 +6,21 @@ import { LayoutDashboard, Users, Camera, Image, Settings, LogOut } from 'lucide-
 import { supabase } from '@/lib/supabaseClient'
 
 export default function AdminDashboard() {
-  const [isLoading, setIsLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userEmail, setUserEmail] = useState('')
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-
-        if (session) {
-          setUserEmail(session.user.email || '')
-          setIsAuthenticated(true)
-        }
-        // Don't redirect - just show appropriate content
-      } catch (e) {
-        // Ignore errors
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user?.email) {
+        setUserEmail(session.user.email)
       }
-      setIsLoading(false)
     }
-
-    checkAuth()
+    getUser()
   }, [])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    window.location.replace('/login')
-  }
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center text-white">
-          <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p>Loading...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Show login prompt if not authenticated (no redirect to prevent loops)
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center text-white">
-          <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-          <p className="text-gray-400 mb-6">You need to be logged in to access the admin dashboard.</p>
-          <Link
-            href="/login"
-            className="bg-gold text-black font-bold py-3 px-6 rounded-lg hover:bg-yellow-400 transition-colors"
-          >
-            Go to Login
-          </Link>
-        </div>
-      </div>
-    )
+    window.location.href = '/login'
   }
 
   return (

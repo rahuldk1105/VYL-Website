@@ -1,12 +1,11 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { type NextRequest } from 'next/server'
+import { updateSession } from '@/lib/supabase/middleware'
 
-export function middleware(request: NextRequest) {
-  // Only add security headers - NO auth redirects here
-  // Auth is handled client-side to avoid cookie timing issues
+export async function middleware(request: NextRequest) {
+  // Handle auth and get response
+  const response = await updateSession(request)
 
-  const response = NextResponse.next()
-
+  // Add security headers
   response.headers.set(
     'Content-Security-Policy',
     "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://api.web3forms.com https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com https://cdn.sanity.io https://*.cloudflarestorage.com; font-src 'self'; connect-src 'self' https://api.web3forms.com https://*.supabase.co https://*.cloudflarestorage.com https://vercel.live; frame-src 'self' https://forms.zohopublic.in;"
