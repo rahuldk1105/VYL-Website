@@ -21,6 +21,8 @@ export default function EventGalleryPage() {
 
   const fetchGallery = async () => {
     try {
+      console.log('🔍 Starting gallery fetch for slug:', slug)
+
       // 1. Fetch event details including r2_directory
       const { data: eventData, error: eventError } = await supabase
         .from('events')
@@ -29,19 +31,22 @@ export default function EventGalleryPage() {
         .single()
 
       if (eventError || !eventData) {
-        console.error('Event not found:', eventError)
+        console.error('❌ Event not found:', eventError)
         setIsLoading(false)
         return
       }
 
+      console.log('✅ Event found:', eventData)
       setEventTitle(eventData.title)
 
       // 2. Check if event has an R2 directory configured
       if (!eventData.r2_directory) {
-        console.log('No R2 directory configured for this event')
+        console.warn('⚠️ No R2 directory configured for this event')
         setIsLoading(false)
         return
       }
+
+      console.log('📁 R2 Directory:', eventData.r2_directory)
 
       // 3. List all photos in the R2 directory
       const listResponse = await fetch('/api/r2/list-directory', {
@@ -50,36 +55,49 @@ export default function EventGalleryPage() {
         body: JSON.stringify({ directory: eventData.r2_directory }),
       })
 
+      console.log('📋 List response status:', listResponse.status)
+
       if (!listResponse.ok) {
+        const errorData = await listResponse.json()
+        console.error('❌ List directory failed:', errorData)
         throw new Error('Failed to list directory')
       }
 
-      const { keys } = await listResponse.json()
+      const { keys, total } = await listResponse.json()
+      console.log('✅ Found', total || keys?.length || 0, 'images:', keys)
 
       if (!keys || keys.length === 0) {
+        console.warn('⚠️ No images found in directory')
         setIsLoading(false)
         return
       }
 
       // 4. Get signed URLs for all photos
+      console.log('🔐 Getting signed URLs for', keys.length, 'images...')
       const signResponse = await fetch('/api/r2/sign-read', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keys }),
       })
 
+      console.log('🔐 Sign response status:', signResponse.status)
+
       if (!signResponse.ok) {
+        const errorData = await signResponse.json()
+        console.error('❌ Sign URLs failed:', errorData)
         throw new Error('Failed to get signed URLs')
       }
 
       const { urls } = await signResponse.json()
+      console.log('✅ Got signed URLs:', urls.length)
 
       // 5. Extract just the URLs
       const imageUrls = urls.map((item: { url: string }) => item.url)
+      console.log('🖼️ Setting', imageUrls.length, 'images')
       setImages(imageUrls)
 
     } catch (err) {
-      console.error('Error fetching gallery:', err)
+      console.error('❌ Error fetching gallery:', err)
     } finally {
       setIsLoading(false)
     }
