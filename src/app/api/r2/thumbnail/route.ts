@@ -44,7 +44,9 @@ export async function GET(request: Request) {
     const buffer = Buffer.concat(chunks)
 
     // Resize image to thumbnail (400px width, auto height)
+    // Auto-rotate based on EXIF orientation to preserve original orientation
     const thumbnail = await sharp(buffer)
+      .rotate() // Auto-rotate based on EXIF orientation
       .resize(400, null, {
         fit: 'inside',
         withoutEnlargement: true,
