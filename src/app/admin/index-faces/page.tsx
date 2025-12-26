@@ -28,7 +28,6 @@ export default function FaceIndexingPage() {
     const [logs, setLogs] = useState<string[]>([])
     const [indexedCounts, setIndexedCounts] = useState<Record<string, number>>({})
 
-    // Load events and indexed counts on mount
     useEffect(() => {
         fetchEvents()
         fetchIndexedCounts()
@@ -80,22 +79,24 @@ export default function FaceIndexingPage() {
         setError(null)
 
         try {
-            addLog(`🚀 Starting server-side indexing for: ${event.title}`)
+            addLog(`🚀 Starting SERVER-SIDE indexing for: ${event.title}`)
             addLog(`📂 R2 Directory: ${event.r2_directory}`)
+            addLog(`⏳ This runs on the server - no CORS issues!`)
 
+            // Call the SERVER-SIDE indexing API
             const response = await fetch('/api/index-faces-server', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     directory: event.r2_directory,
                     eventSlug: event.slug,
-                    batchSize: 10, // Process 10 images per request
+                    batchSize: 10,
                 }),
             })
 
             const data = await response.json()
 
-            // Show API logs
+            // Show server logs
             if (data.logs) {
                 data.logs.forEach((log: string) => addLog(`[Server] ${log}`))
             }
@@ -112,13 +113,14 @@ export default function FaceIndexingPage() {
                     remaining: data.remaining || 0,
                 })
 
+                addLog(`✅ Batch complete: ${data.processed} images processed, ${data.facesFound} faces found`)
+
                 if (data.remaining > 0) {
-                    addLog(`⏳ ${data.remaining} images remaining. Click "Continue Indexing" to process more.`)
+                    addLog(`⏳ ${data.remaining} images remaining. Click "Continue" to process more.`)
                 } else {
-                    addLog(`✅ All images indexed!`)
+                    addLog(`🎉 All images indexed!`)
                 }
 
-                // Refresh counts
                 fetchIndexedCounts()
             }
 
@@ -143,7 +145,7 @@ export default function FaceIndexingPage() {
                         Face Indexing
                     </h1>
                     <p className="text-gray-400">
-                        Server-side face detection for the "Find My Photos" feature
+                        Server-side face detection - processes images directly from R2
                     </p>
                 </div>
 
@@ -169,6 +171,9 @@ export default function FaceIndexingPage() {
                                 </span>
                             </div>
                         ))}
+                        {events.length === 0 && (
+                            <p className="text-gray-500">No events with R2 directories configured</p>
+                        )}
                     </div>
                 </div>
 
@@ -177,11 +182,11 @@ export default function FaceIndexingPage() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                         Select Tournament to Index
                     </label>
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 flex-wrap">
                         <select
                             value={selectedEvent}
                             onChange={(e) => setSelectedEvent(e.target.value)}
-                            className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold"
+                            className="flex-1 min-w-[200px] bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold"
                             disabled={isLoading}
                         >
                             {events.map(event => (
@@ -201,9 +206,13 @@ export default function FaceIndexingPage() {
                             ) : (
                                 <Zap className="w-5 h-5" />
                             )}
-                            {isLoading ? 'Processing...' : stats?.remaining ? 'Continue Indexing' : 'Start Indexing'}
+                            {isLoading ? 'Processing on Server...' : stats?.remaining ? 'Continue Indexing' : 'Start Indexing'}
                         </button>
                     </div>
+
+                    <p className="text-sm text-gray-500 mt-3">
+                        ⚡ Processes 10 images per batch on the server (no browser limitations)
+                    </p>
                 </div>
 
                 {/* Progress Stats */}
@@ -211,7 +220,6 @@ export default function FaceIndexingPage() {
                     <div className="bg-gray-900 border border-white/10 rounded-xl p-6 mb-6">
                         <h3 className="text-lg font-semibold mb-4">Last Batch Results</h3>
 
-                        {/* Progress Bar */}
                         <div className="h-3 bg-gray-800 rounded-full overflow-hidden mb-4">
                             <motion.div
                                 className="h-full bg-gradient-to-r from-gold to-yellow-400"
@@ -236,7 +244,7 @@ export default function FaceIndexingPage() {
                             </div>
                             <div className="bg-gray-800 rounded-lg p-3">
                                 <p className="text-2xl font-bold text-blue-400">{stats.facesFound}</p>
-                                <p className="text-sm text-gray-400">Faces Found</p>
+                                <p className="text-sm text-gray-400">Faces (batch)</p>
                             </div>
                             <div className="bg-gray-800 rounded-lg p-3">
                                 <p className="text-2xl font-bold text-yellow-400">{stats.remaining}</p>
@@ -259,7 +267,7 @@ export default function FaceIndexingPage() {
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold flex items-center gap-2">
                             <FolderOpen className="w-5 h-5" />
-                            Activity Log
+                            Server Logs
                         </h3>
                         <button
                             onClick={() => setLogs([])}
@@ -270,16 +278,16 @@ export default function FaceIndexingPage() {
                     </div>
                     <div className="bg-black rounded-lg p-4 h-64 overflow-y-auto font-mono text-sm">
                         {logs.length === 0 ? (
-                            <p className="text-gray-500">No activity yet. Select a tournament and start indexing.</p>
+                            <p className="text-gray-500">Select a tournament and click "Start Indexing"</p>
                         ) : (
                             logs.map((log, idx) => (
                                 <div
                                     key={idx}
-                                    className={`py-1 ${log.includes('✅') ? 'text-green-400' :
+                                    className={`py-1 ${log.includes('✅') || log.includes('🎉') ? 'text-green-400' :
                                             log.includes('❌') ? 'text-red-400' :
-                                                log.includes('⚠️') ? 'text-yellow-400' :
+                                                log.includes('⚠️') || log.includes('⏳') ? 'text-yellow-400' :
                                                     log.includes('👤') ? 'text-blue-400' :
-                                                        log.includes('🚀') ? 'text-purple-400' :
+                                                        log.includes('🚀') || log.includes('[Server]') ? 'text-purple-400' :
                                                             'text-gray-300'
                                         }`}
                                 >
@@ -290,15 +298,15 @@ export default function FaceIndexingPage() {
                     </div>
                 </div>
 
-                {/* Instructions */}
+                {/* Info Box */}
                 <div className="mt-8 bg-blue-500/10 border border-blue-500/20 rounded-xl p-6">
                     <h3 className="text-lg font-semibold text-blue-400 mb-3">💡 How it works</h3>
                     <ul className="space-y-2 text-gray-300 text-sm">
-                        <li>• Processes 10 images per batch (server-side)</li>
-                        <li>• Click "Continue Indexing" to process more batches</li>
-                        <li>• Each image is downloaded from R2 and analyzed for faces</li>
-                        <li>• Face embeddings are stored in Supabase for search</li>
-                        <li>• Users can then use "Find My Photos" to search by selfie</li>
+                        <li>• Images are downloaded directly from R2 on the server (no CORS issues)</li>
+                        <li>• Face detection runs on Vercel's servers using @vladmandic/face-api</li>
+                        <li>• Processes 10 images per batch to stay within Vercel's time limits</li>
+                        <li>• A cron job runs every 6 hours to auto-index new uploads</li>
+                        <li>• Click "Continue Indexing" multiple times to process all images</li>
                     </ul>
                 </div>
             </div>
