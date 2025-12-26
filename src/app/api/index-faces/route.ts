@@ -1,93 +1,162 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { S3Client, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/client-s3'
+import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3'
 import { createClient } from '@supabase/supabase-js'
 
-// Server-side Supabase client with service role key
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
-const s3Client = new S3Client({
-    region: 'auto',
-    endpoint: process.env.R2_ENDPOINT!,
-    credentials: {
-        accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-    },
-})
-
-const BUCKET_NAME = process.env.R2_BUCKET_NAME!
+export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest) {
-    try {
-        const { directory, eventSlug } = await request.json()
+    const logs: string[] = []
+    const log = (msg: string) => {
+        console.log(msg)
+        logs.push(msg)
+    }
 
-        if (!directory) {
-            return NextResponse.json({ error: 'Directory is required' }, { status: 400 })
+    try {
+        log('🚀 Starting face indexing API...')
+
+        // Check environment variables
+        const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID
+        const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID
+        const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY
+        const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME
+        const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+        const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+        log(`📋 R2_ACCOUNT_ID: ${R2_ACCOUNT_ID ? '✅ Set' : '❌ Missing'}`)
+        log(`📋 R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID ? '✅ Set' : '❌ Missing'}`)
+        log(`📋 R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY ? '✅ Set' : '❌ Missing'}`)
+        log(`📋 R2_BUCKET_NAME: ${R2_BUCKET_NAME ? `✅ ${R2_BUCKET_NAME}` : '❌ Missing'}`)
+        log(`📋 SUPABASE_URL: ${SUPABASE_URL ? '✅ Set' : '❌ Missing'}`)
+        log(`📋 SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_KEY ? '✅ Set' : '❌ Missing'}`)
+
+        if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_BUCKET_NAME) {
+            return NextResponse.json({
+                error: 'R2 configuration missing',
+                logs,
+                missingVars: {
+                    R2_ACCOUNT_ID: !R2_ACCOUNT_ID,
+                    R2_ACCESS_KEY_ID: !R2_ACCESS_KEY_ID,
+                    R2_SECRET_ACCESS_KEY: !R2_SECRET_ACCESS_KEY,
+                    R2_BUCKET_NAME: !R2_BUCKET_NAME,
+                }
+            }, { status: 500 })
         }
 
-        console.log(`🔍 Starting face indexing for directory: ${directory}`)
+        if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+            return NextResponse.json({
+                error: 'Supabase configuration missing',
+                logs,
+            }, { status: 500 })
+        }
 
-        // 1. List all objects in the R2 directory
+        const { directory, eventSlug } = await request.json()
+        log(`📂 Directory requested: ${directory}`)
+        log(`🏷️ Event slug: ${eventSlug || 'auto-detect'}`)
+
+        if (!directory) {
+            return NextResponse.json({ error: 'Directory is required', logs }, { status: 400 })
+        }
+
+        // Initialize clients
+        const s3Client = new S3Client({
+            region: 'auto',
+            endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+            credentials: {
+                accessKeyId: R2_ACCESS_KEY_ID,
+                secretAccessKey: R2_SECRET_ACCESS_KEY,
+            },
+        })
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+
+        // List objects in R2
+        const prefix = directory.endsWith('/') ? directory : `${directory}/`
+        log(`🔍 Listing objects with prefix: ${prefix}`)
+
         const listCommand = new ListObjectsV2Command({
-            Bucket: BUCKET_NAME,
-            Prefix: directory.endsWith('/') ? directory : `${directory}/`,
+            Bucket: R2_BUCKET_NAME,
+            Prefix: prefix,
+            MaxKeys: 1000,
         })
 
         const listResult = await s3Client.send(listCommand)
+        log(`📦 R2 returned ${listResult.KeyCount || 0} objects`)
+
         const allKeys = listResult.Contents?.map(obj => obj.Key).filter(Boolean) as string[] || []
 
         // Filter for image files only
         const imageKeys = allKeys.filter(key =>
             /\.(jpg|jpeg|png|webp|gif)$/i.test(key)
         )
+        log(`📸 Found ${imageKeys.length} image files`)
 
-        console.log(`📸 Found ${imageKeys.length} images in R2`)
+        if (imageKeys.length === 0) {
+            return NextResponse.json({
+                success: true,
+                message: 'No images found in directory',
+                logs,
+                total: 0,
+                indexed: 0,
+            })
+        }
 
-        // 2. Check which images are already indexed
-        const { data: existingIndexes } = await supabase
+        // Check which images are already indexed
+        log(`🔍 Checking database for existing indexes...`)
+        const { data: existingIndexes, error: dbError } = await supabase
             .from('face_embeddings')
             .select('r2_object_key')
-            .in('r2_object_key', imageKeys)
+            .in('r2_object_key', imageKeys.slice(0, 100)) // Check first 100
+
+        if (dbError) {
+            log(`❌ Database error: ${dbError.message}`)
+            return NextResponse.json({
+                error: 'Database query failed',
+                details: dbError.message,
+                logs,
+            }, { status: 500 })
+        }
 
         const indexedKeys = new Set(existingIndexes?.map(e => e.r2_object_key) || [])
         const newImages = imageKeys.filter(key => !indexedKeys.has(key))
-
-        console.log(`🆕 ${newImages.length} new images to index`)
+        log(`🆕 ${newImages.length} new images to index (${indexedKeys.size} already indexed)`)
 
         if (newImages.length === 0) {
             return NextResponse.json({
                 success: true,
                 message: 'All images already indexed',
+                logs,
                 total: imageKeys.length,
                 indexed: 0,
                 skipped: imageKeys.length,
             })
         }
 
-        // 3. For each new image, we need to detect faces
-        // Since face detection requires browser APIs (face-api.js), 
-        // we'll mark them for client-side processing
-        const pendingImages = newImages.map(key => ({
+        // Return pending images for client-side processing
+        const pendingImages = newImages.slice(0, 50).map(key => ({ // Limit to 50 at a time
             key,
-            url: `/api/r2/thumbnail?key=${encodeURIComponent(key)}`,
             eventSlug: eventSlug || directory.split('/')[0],
         }))
+
+        log(`✅ Returning ${pendingImages.length} images for client-side face detection`)
 
         return NextResponse.json({
             success: true,
             message: `Found ${newImages.length} new images to index`,
+            logs,
             total: imageKeys.length,
             alreadyIndexed: indexedKeys.size,
             pendingImages,
         })
 
     } catch (error) {
-        console.error('❌ Error in face indexing:', error)
-        return NextResponse.json(
-            { error: 'Failed to process face indexing', details: String(error) },
-            { status: 500 }
-        )
+        const errorMsg = error instanceof Error ? error.message : String(error)
+        log(`❌ Error: ${errorMsg}`)
+        console.error('Full error:', error)
+
+        return NextResponse.json({
+            error: 'Failed to process face indexing',
+            details: errorMsg,
+            logs,
+        }, { status: 500 })
     }
 }

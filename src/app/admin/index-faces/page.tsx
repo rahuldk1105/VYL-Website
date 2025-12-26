@@ -99,14 +99,23 @@ export default function FaceIndexingPage() {
                 }),
             })
 
-            if (!listResponse.ok) {
-                throw new Error('Failed to list images')
+            const responseData = await listResponse.json()
+
+            // Show API logs if available
+            if (responseData.logs) {
+                responseData.logs.forEach((log: string) => addLog(`[API] ${log}`))
             }
 
-            const { pendingImages, total, alreadyIndexed } = await listResponse.json()
+            if (!listResponse.ok) {
+                addLog(`❌ API Error: ${responseData.error || 'Unknown error'}`)
+                if (responseData.details) addLog(`   Details: ${responseData.details}`)
+                throw new Error(responseData.error || 'Failed to list images')
+            }
+
+            const { pendingImages, total, alreadyIndexed } = responseData
 
             if (!pendingImages || pendingImages.length === 0) {
-                addLog(`✅ All ${total} images already indexed!`)
+                addLog(`✅ All ${total || 0} images already indexed!`)
                 setIsLoading(false)
                 return
             }
@@ -341,10 +350,10 @@ export default function FaceIndexingPage() {
                                 <div
                                     key={idx}
                                     className={`py-1 ${log.includes('✅') ? 'text-green-400' :
-                                            log.includes('❌') ? 'text-red-400' :
-                                                log.includes('⚠️') ? 'text-yellow-400' :
-                                                    log.includes('👤') ? 'text-blue-400' :
-                                                        'text-gray-300'
+                                        log.includes('❌') ? 'text-red-400' :
+                                            log.includes('⚠️') ? 'text-yellow-400' :
+                                                log.includes('👤') ? 'text-blue-400' :
+                                                    'text-gray-300'
                                         }`}
                                 >
                                     {log}
