@@ -1,4 +1,10 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "crons": [
+    {
+      "path": "/api/cron/index-faces",
+      "schedule": "0 */6 * * *"
+    }
+  ]
 }
