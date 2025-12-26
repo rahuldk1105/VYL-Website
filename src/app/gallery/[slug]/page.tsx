@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Camera, ArrowLeft } from 'lucide-react'
+import { Camera, ArrowLeft, Search } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import ImageModal from '@/components/ImageModal'
+import FaceSearchModal from '@/components/FaceSearchModal'
 
 export default function EventGalleryPage() {
   const params = useParams()
@@ -17,6 +18,8 @@ export default function EventGalleryPage() {
   const [eventTitle, setEventTitle] = useState(slug)
   const [selectedImage, setSelectedImage] = useState<{ key: string } | null>(null)
   const [fullResUrl, setFullResUrl] = useState<string | null>(null)
+  const [isFaceSearchOpen, setIsFaceSearchOpen] = useState(false)
+  const [r2Directory, setR2Directory] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     fetchGallery()
@@ -65,6 +68,7 @@ export default function EventGalleryPage() {
 
       console.log('✅ Event found:', eventData)
       setEventTitle(eventData.title)
+      setR2Directory(eventData.r2_directory || undefined)
 
       // 2. Check if event has an R2 directory configured
       if (!eventData.r2_directory) {
@@ -133,9 +137,18 @@ export default function EventGalleryPage() {
         <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-6 bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent">
           {eventTitle}
         </h1>
-        <p className="text-gray-400 max-w-2xl mx-auto">
+        <p className="text-gray-400 max-w-2xl mx-auto mb-6">
           Click any photo to view full size and download
         </p>
+
+        {/* Find My Photos Button */}
+        <button
+          onClick={() => setIsFaceSearchOpen(true)}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold uppercase tracking-wide rounded-full hover:shadow-[0_0_25px_rgba(255,215,0,0.4)] transition-all transform hover:scale-105"
+        >
+          <Search className="w-5 h-5" />
+          Find My Photos
+        </button>
       </div>
 
       {/* Gallery Grid */}
@@ -202,6 +215,14 @@ export default function EventGalleryPage() {
           }}
         />
       )}
+
+      {/* Face Search Modal */}
+      <FaceSearchModal
+        isOpen={isFaceSearchOpen}
+        onClose={() => setIsFaceSearchOpen(false)}
+        eventSlug={slug}
+        r2Directory={r2Directory}
+      />
     </div>
   )
 }
