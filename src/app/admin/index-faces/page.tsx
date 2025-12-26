@@ -83,8 +83,8 @@ export default function FaceIndexingPage() {
             addLog(`📂 R2 Directory: ${event.r2_directory}`)
             addLog(`⏳ This runs on the server - no CORS issues!`)
 
-            // Call the SERVER-SIDE indexing API
-            const response = await fetch('/api/index-faces-server', {
+            // Call the new SERVER-SIDE face indexer API (v2)
+            const response = await fetch('/api/face-indexer', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -284,11 +284,11 @@ export default function FaceIndexingPage() {
                                 <div
                                     key={idx}
                                     className={`py-1 ${log.includes('✅') || log.includes('🎉') ? 'text-green-400' :
-                                            log.includes('❌') ? 'text-red-400' :
-                                                log.includes('⚠️') || log.includes('⏳') ? 'text-yellow-400' :
-                                                    log.includes('👤') ? 'text-blue-400' :
-                                                        log.includes('🚀') || log.includes('[Server]') ? 'text-purple-400' :
-                                                            'text-gray-300'
+                                        log.includes('❌') ? 'text-red-400' :
+                                            log.includes('⚠️') || log.includes('⏳') ? 'text-yellow-400' :
+                                                log.includes('👤') ? 'text-blue-400' :
+                                                    log.includes('🚀') || log.includes('[Server]') ? 'text-purple-400' :
+                                                        'text-gray-300'
                                         }`}
                                 >
                                     {log}
