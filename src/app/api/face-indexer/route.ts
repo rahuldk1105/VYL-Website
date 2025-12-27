@@ -1,28 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { S3Client, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/client-s3'
-import { createClient } from '@supabase/supabase-js'
-import * as faceapi from '@vladmandic/face-api'
-import * as canvas from 'canvas'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 export const maxDuration = 300
-
-const { Canvas, Image, ImageData } = canvas
-// @ts-ignore
-faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
-
-let modelsLoaded = false
-
-async function loadModels() {
-    if (modelsLoaded) return
-    const modelPath = process.cwd() + '/public/models'
-    await Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromDisk(modelPath),
-        faceapi.nets.faceLandmark68Net.loadFromDisk(modelPath),
-        faceapi.nets.faceRecognitionNet.loadFromDisk(modelPath),
-    ])
-    modelsLoaded = true
-}
 
 export async function POST(request: NextRequest) {
     const logs: string[] = []
@@ -30,6 +10,10 @@ export async function POST(request: NextRequest) {
 
     try {
         log('🚀 Face Indexer v2 - Server Side Processing')
+
+        // Dynamic imports to avoid build issues  
+        const { S3Client, ListObjectsV2Command, GetObjectCommand } = await import('@aws-sdk/client-s3')
+        const { createClient } = await import('@supabase/supabase-js')
 
         const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID
         const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID
@@ -63,7 +47,21 @@ export async function POST(request: NextRequest) {
         const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
         log('📦 Loading AI models...')
-        await loadModels()
+
+        // Dynamic import face detection libs
+        const faceapi = await import('@vladmandic/face-api')
+        const canvas = await import('canvas')
+
+        const { Canvas, Image, ImageData } = canvas
+        // @ts-ignore
+        faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
+
+        const modelPath = process.cwd() + '/public/models'
+        await Promise.all([
+            faceapi.nets.ssdMobilenetv1.loadFromDisk(modelPath),
+            faceapi.nets.faceLandmark68Net.loadFromDisk(modelPath),
+            faceapi.nets.faceRecognitionNet.loadFromDisk(modelPath),
+        ])
         log('✅ Models ready')
 
         const prefix = directory.endsWith('/') ? directory : `${directory}/`

@@ -1,32 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { S3Client, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/client-s3'
-import { createClient } from '@supabase/supabase-js'
-import * as faceapi from '@vladmandic/face-api'
-import * as canvas from 'canvas'
 
 export const runtime = 'nodejs'
-export const maxDuration = 300 // 5 minutes max
-
-// Initialize face-api with node-canvas
-const { Canvas, Image, ImageData } = canvas
-// @ts-ignore
-faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
-
-let modelsLoaded = false
-
-async function loadModels() {
-    if (modelsLoaded) return
-    const modelPath = process.cwd() + '/public/models'
-    await Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromDisk(modelPath),
-        faceapi.nets.faceLandmark68Net.loadFromDisk(modelPath),
-        faceapi.nets.faceRecognitionNet.loadFromDisk(modelPath),
-    ])
-    modelsLoaded = true
-}
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
-    // Verify cron secret for security (optional but recommended)
+    // Verify cron secret for security
     const authHeader = request.headers.get('authorization')
     if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -36,6 +14,10 @@ export async function GET(request: NextRequest) {
     console.log('🕐 Cron job started: Face indexing')
 
     try {
+        // Dynamic imports to avoid build issues
+        const { S3Client, ListObjectsV2Command, GetObjectCommand } = await import('@aws-sdk/client-s3')
+        const { createClient } = await import('@supabase/supabase-js')
+
         const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID
         const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID
         const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY
@@ -43,17 +25,17 @@ export async function GET(request: NextRequest) {
         const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
         const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-        if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_BUCKET_NAME || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-            return NextResponse.json({ error: 'Missing configuration' }, { status: 500 })
+        if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_BUCKET_NAME) {
+            return NextResponse.json({ error: 'R2 config missing' }, { status: 500 })
+        }
+        if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+            return NextResponse.json({ error: 'Supabase config missing' }, { status: 500 })
         }
 
         const s3Client = new S3Client({
             region: 'auto',
             endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-            credentials: {
-                accessKeyId: R2_ACCESS_KEY_ID,
-                secretAccessKey: R2_SECRET_ACCESS_KEY,
-            },
+            credentials: { accessKeyId: R2_ACCESS_KEY_ID, secretAccessKey: R2_SECRET_ACCESS_KEY },
         })
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
@@ -68,71 +50,73 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ message: 'No events to process' })
         }
 
+        // Dynamic import face detection libs
+        const faceapi = await import('@vladmandic/face-api')
+        const canvas = await import('canvas')
+
+        const { Canvas, Image, ImageData } = canvas
+        // @ts-ignore
+        faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
+
         // Load models
-        await loadModels()
+        const modelPath = process.cwd() + '/public/models'
+        await Promise.all([
+            faceapi.nets.ssdMobilenetv1.loadFromDisk(modelPath),
+            faceapi.nets.faceLandmark68Net.loadFromDisk(modelPath),
+            faceapi.nets.faceRecognitionNet.loadFromDisk(modelPath),
+        ])
         console.log('✅ Models loaded')
 
         let totalProcessed = 0
         let totalFaces = 0
 
-        // Process each event
         for (const event of events) {
             if (!event.r2_directory) continue
-
             console.log(`📂 Processing: ${event.slug}`)
 
-            // List all images
             const prefix = event.r2_directory.endsWith('/') ? event.r2_directory : `${event.r2_directory}/`
-            const listCommand = new ListObjectsV2Command({
+            const listResult = await s3Client.send(new ListObjectsV2Command({
                 Bucket: R2_BUCKET_NAME,
                 Prefix: prefix,
                 MaxKeys: 1000,
-            })
+            }))
 
-            const listResult = await s3Client.send(listCommand)
             const imageKeys = (listResult.Contents || [])
                 .map(obj => obj.Key)
                 .filter(key => key && /\.(jpg|jpeg|png|webp)$/i.test(key)) as string[]
 
-            // Get already indexed
-            const { data: existingIndexes } = await supabase
+            const { data: existing } = await supabase
                 .from('face_embeddings')
                 .select('r2_object_key')
                 .eq('event_id', event.slug)
 
-            const indexedKeys = new Set(existingIndexes?.map(e => e.r2_object_key) || [])
-            const newImages = imageKeys.filter(key => !indexedKeys.has(key))
+            const indexedSet = new Set(existing?.map(e => e.r2_object_key) || [])
+            const newImages = imageKeys.filter(key => !indexedSet.has(key))
+            console.log(`🆕 ${newImages.length} new images`)
 
-            console.log(`🆕 ${newImages.length} new images for ${event.slug}`)
-
-            // Process up to 20 new images per event
-            const batch = newImages.slice(0, 20)
+            const batch = newImages.slice(0, 10)
 
             for (const key of batch) {
                 try {
-                    // Download image
-                    const getCommand = new GetObjectCommand({
+                    const response = await s3Client.send(new GetObjectCommand({
                         Bucket: R2_BUCKET_NAME,
                         Key: key,
-                    })
+                    }))
+                    const buffer = await response.Body?.transformToByteArray()
+                    if (!buffer) continue
 
-                    const response = await s3Client.send(getCommand)
-                    const imageBuffer = await response.Body?.transformToByteArray()
-
-                    if (!imageBuffer) continue
-
-                    const img = await canvas.loadImage(Buffer.from(imageBuffer))
+                    const img = await canvas.loadImage(Buffer.from(buffer))
                     const detections = await faceapi
                         .detectAllFaces(img as unknown as HTMLImageElement)
                         .withFaceLandmarks()
                         .withFaceDescriptors()
 
                     if (detections.length > 0) {
-                        const records = detections.map((detection, faceIndex) => ({
+                        const records = detections.map((d, i) => ({
                             r2_object_key: key,
                             event_id: event.slug,
-                            face_embedding: Array.from(detection.descriptor),
-                            face_index: faceIndex,
+                            face_embedding: Array.from(d.descriptor),
+                            face_index: i,
                         }))
 
                         await supabase
@@ -141,25 +125,22 @@ export async function GET(request: NextRequest) {
 
                         totalFaces += detections.length
                     }
-
                     totalProcessed++
                 } catch (err) {
-                    console.error(`Error processing ${key}:`, err)
+                    console.error(`Error: ${key}`, err)
                 }
 
-                // Check time limit (4.5 minutes to be safe)
                 if (Date.now() - startTime > 270000) {
-                    console.log('⏰ Time limit approaching, stopping')
+                    console.log('⏰ Time limit')
                     break
                 }
             }
 
-            // Check time limit between events too
             if (Date.now() - startTime > 270000) break
         }
 
         const duration = Math.round((Date.now() - startTime) / 1000)
-        console.log(`✅ Cron complete: ${totalProcessed} images, ${totalFaces} faces, ${duration}s`)
+        console.log(`✅ Done: ${totalProcessed} images, ${totalFaces} faces, ${duration}s`)
 
         return NextResponse.json({
             success: true,
@@ -169,7 +150,7 @@ export async function GET(request: NextRequest) {
         })
 
     } catch (error) {
-        console.error('❌ Cron error:', error)
+        console.error('❌ Error:', error)
         return NextResponse.json({ error: String(error) }, { status: 500 })
     }
 }
