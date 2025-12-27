@@ -1,10 +1,10 @@
 'use client'
 
 import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Trophy, ArrowLeft, ChevronDown } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 
 // Points table data - Veeran Winter Cup
 const leagueData = {
@@ -66,29 +66,31 @@ const ageGroups = Object.keys(leagueData)
 
 export default function PointsTablePage() {
     const [selectedGroup, setSelectedGroup] = useState<string>('U-7')
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
     const tableData = leagueData[selectedGroup as keyof typeof leagueData]
 
     return (
-        <div className="min-h-screen bg-[#1a5fb4] text-white">
+        <div className="min-h-screen bg-black text-white">
             {/* Header */}
-            <header className="relative py-8 px-4">
-                <div className="max-w-4xl mx-auto">
+            <header className="py-8 px-4">
+                <div className="max-w-5xl mx-auto">
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
+                        className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-6 transition-colors"
                     >
                         <ArrowLeft className="w-5 h-5" />
                         Back to Home
                     </Link>
 
                     <div className="flex items-center gap-4 md:gap-6">
-                        {/* Logo */}
-                        <div className="relative w-20 h-20 md:w-28 md:h-28 flex-shrink-0">
-                            <div className="absolute inset-0 bg-[#1a5fb4] rounded-full flex items-center justify-center border-4 border-yellow-400">
-                                <Trophy className="w-10 h-10 md:w-14 md:h-14 text-yellow-400" />
-                            </div>
+                        {/* Veeran Logo */}
+                        <div className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0">
+                            <Image
+                                src="/veeran_logo.png"
+                                alt="Veeran Youth League"
+                                fill
+                                className="object-contain"
+                            />
                         </div>
 
                         {/* Title */}
@@ -104,41 +106,21 @@ export default function PointsTablePage() {
                 </div>
             </header>
 
-            {/* Age Group Selector */}
-            <div className="max-w-4xl mx-auto px-4 mb-6">
-                <div className="relative">
-                    <button
-                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        className="w-full md:w-64 flex items-center justify-between gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-6 py-4 text-xl font-bold hover:bg-white/20 transition-colors"
-                    >
-                        <span className="text-yellow-400">{selectedGroup}</span>
-                        <ChevronDown className={`w-6 h-6 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-                    </button>
-
-                    <AnimatePresence>
-                        {isDropdownOpen && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                className="absolute top-full mt-2 w-full md:w-64 bg-[#0d3d8a] border border-white/20 rounded-xl overflow-hidden z-10 shadow-2xl"
-                            >
-                                {ageGroups.map((group) => (
-                                    <button
-                                        key={group}
-                                        onClick={() => {
-                                            setSelectedGroup(group)
-                                            setIsDropdownOpen(false)
-                                        }}
-                                        className={`w-full px-6 py-3 text-left font-bold hover:bg-white/10 transition-colors ${selectedGroup === group ? 'bg-yellow-400 text-blue-900' : ''
-                                            }`}
-                                    >
-                                        {group}
-                                    </button>
-                                ))}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+            {/* Age Group Buttons */}
+            <div className="max-w-5xl mx-auto px-4 mb-8">
+                <div className="flex flex-wrap gap-2 md:gap-3">
+                    {ageGroups.map((group) => (
+                        <button
+                            key={group}
+                            onClick={() => setSelectedGroup(group)}
+                            className={`px-4 md:px-6 py-2 md:py-3 font-bold text-sm md:text-base transition-all ${selectedGroup === group
+                                    ? 'bg-yellow-400 text-black'
+                                    : 'bg-white/10 text-white hover:bg-white/20'
+                                }`}
+                        >
+                            {group}
+                        </button>
+                    ))}
                 </div>
             </div>
 
@@ -147,7 +129,7 @@ export default function PointsTablePage() {
                 key={selectedGroup}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-4xl mx-auto px-4 mb-6"
+                className="max-w-5xl mx-auto px-4 mb-6"
             >
                 <h3 className="text-5xl md:text-7xl font-black text-yellow-400 text-center">
                     {selectedGroup}
@@ -155,7 +137,7 @@ export default function PointsTablePage() {
             </motion.div>
 
             {/* Points Table */}
-            <div className="max-w-4xl mx-auto px-4 pb-12">
+            <div className="max-w-5xl mx-auto px-4 pb-12">
                 <motion.div
                     key={selectedGroup}
                     initial={{ opacity: 0 }}
@@ -163,8 +145,8 @@ export default function PointsTablePage() {
                     className="overflow-x-auto"
                 >
                     {/* Table Header */}
-                    <div className="bg-yellow-400 text-blue-900 rounded-t-xl">
-                        <div className="grid grid-cols-[60px_1fr_60px_60px_60px_60px_80px] md:grid-cols-[80px_1fr_80px_80px_80px_80px_100px] items-center py-4 px-4 font-bold text-sm md:text-base">
+                    <div className="bg-yellow-400 text-black">
+                        <div className="grid grid-cols-[50px_1fr_50px_50px_50px_50px_70px] md:grid-cols-[70px_1fr_70px_70px_70px_70px_90px] items-center py-3 md:py-4 px-3 md:px-4 font-bold text-xs md:text-base">
                             <div className="text-center">POS</div>
                             <div>CLUB</div>
                             <div className="text-center">PL</div>
@@ -176,35 +158,35 @@ export default function PointsTablePage() {
                     </div>
 
                     {/* Table Body */}
-                    <div className="bg-[#0d3d8a] rounded-b-xl overflow-hidden">
+                    <div className="bg-white text-black">
                         {tableData.map((team, index) => (
                             <motion.div
                                 key={team.club}
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                                className={`grid grid-cols-[60px_1fr_60px_60px_60px_60px_80px] md:grid-cols-[80px_1fr_80px_80px_80px_80px_100px] items-center py-5 px-4 border-b border-white/10 last:border-b-0 hover:bg-white/5 transition-colors ${index === 0 ? 'bg-white/5' : ''
+                                transition={{ delay: index * 0.05 }}
+                                className={`grid grid-cols-[50px_1fr_50px_50px_50px_50px_70px] md:grid-cols-[70px_1fr_70px_70px_70px_70px_90px] items-center py-4 md:py-5 px-3 md:px-4 border-b-2 border-black/10 last:border-b-0 ${index === 0 ? 'bg-yellow-50' : index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                                     }`}
                             >
-                                <div className="text-center text-2xl md:text-3xl font-bold text-white">
+                                <div className="text-center text-xl md:text-2xl font-black">
                                     {team.pos}
                                 </div>
-                                <div className="font-bold text-sm md:text-lg uppercase tracking-wide">
+                                <div className="font-bold text-xs md:text-base uppercase tracking-wide">
                                     {team.club}
                                 </div>
-                                <div className="text-center text-lg md:text-xl">
+                                <div className="text-center text-base md:text-lg font-medium">
                                     {team.pl}
                                 </div>
-                                <div className="text-center text-lg md:text-xl">
+                                <div className="text-center text-base md:text-lg font-medium">
                                     {team.w}
                                 </div>
-                                <div className="text-center text-lg md:text-xl">
+                                <div className="text-center text-base md:text-lg font-medium">
                                     {team.d}
                                 </div>
-                                <div className="text-center text-lg md:text-xl">
+                                <div className="text-center text-base md:text-lg font-medium">
                                     {team.l}
                                 </div>
-                                <div className="text-center text-2xl md:text-3xl font-black text-yellow-400">
+                                <div className="text-center text-xl md:text-2xl font-black text-yellow-600">
                                     {team.pts}
                                 </div>
                             </motion.div>
@@ -213,36 +195,36 @@ export default function PointsTablePage() {
                 </motion.div>
 
                 {/* Legend */}
-                <div className="mt-8 flex flex-wrap gap-4 justify-center text-sm text-white/70">
+                <div className="mt-8 flex flex-wrap gap-4 justify-center text-sm text-white/60">
                     <div className="flex items-center gap-2">
-                        <span className="font-bold">POS</span>
+                        <span className="font-bold text-yellow-400">POS</span>
                         <span>Position</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="font-bold">PL</span>
+                        <span className="font-bold text-yellow-400">PL</span>
                         <span>Played</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="font-bold">W</span>
+                        <span className="font-bold text-yellow-400">W</span>
                         <span>Won</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="font-bold">D</span>
+                        <span className="font-bold text-yellow-400">D</span>
                         <span>Draw</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="font-bold">L</span>
+                        <span className="font-bold text-yellow-400">L</span>
                         <span>Lost</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="font-bold">PTS</span>
+                        <span className="font-bold text-yellow-400">PTS</span>
                         <span>Points</span>
                     </div>
                 </div>
 
                 {/* Footer */}
                 <div className="mt-12 text-center">
-                    <p className="text-white/50 text-sm">
+                    <p className="text-white/40 text-sm">
                         Last updated: December 2024
                     </p>
                     <p className="text-yellow-400 font-bold mt-2">
