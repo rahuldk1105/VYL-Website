@@ -1,3 +1,14 @@
+// Polyfill TextEncoder/TextDecoder BEFORE any imports
+import { TextEncoder, TextDecoder } from 'util'
+if (typeof globalThis.TextEncoder === 'undefined') {
+    // @ts-ignore
+    globalThis.TextEncoder = TextEncoder
+}
+if (typeof globalThis.TextDecoder === 'undefined') {
+    // @ts-ignore
+    globalThis.TextDecoder = TextDecoder
+}
+
 import { NextRequest, NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
@@ -9,9 +20,8 @@ export async function POST(request: NextRequest) {
     const log = (msg: string) => { console.log(msg); logs.push(msg) }
 
     try {
-        log('🚀 Face Indexer v2 - Server Side Processing')
+        log('🚀 Face Indexer v3 - Server Side Processing')
 
-        // Dynamic imports to avoid build issues  
         const { S3Client, ListObjectsV2Command, GetObjectCommand } = await import('@aws-sdk/client-s3')
         const { createClient } = await import('@supabase/supabase-js')
 
@@ -47,15 +57,6 @@ export async function POST(request: NextRequest) {
         const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
         log('📦 Loading AI models...')
-
-        // Polyfill TextEncoder/TextDecoder for serverless environment
-        if (typeof globalThis.TextEncoder === 'undefined') {
-            const util = await import('util')
-            // @ts-ignore
-            globalThis.TextEncoder = util.TextEncoder
-            // @ts-ignore
-            globalThis.TextDecoder = util.TextDecoder
-        }
 
         // Dynamic import face detection libs
         const faceapi = await import('@vladmandic/face-api')
