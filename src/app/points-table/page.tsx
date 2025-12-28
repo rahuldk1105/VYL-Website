@@ -19,8 +19,8 @@ const leagueData = {
     'U-9': [
         { pos: 1, club: 'BKFC', pl: 4, w: 4, d: 0, l: 0, pts: 8 },
         { pos: 2, club: 'FC Marina', pl: 4, w: 2, d: 1, l: 1, pts: 5 },
-        { pos: 3, club: 'MFC', pl: 3, w: 2, d: 0, l: 1, pts: 4 },
-        { pos: 4, club: 'Just Play - A', pl: 3, w: 2, d: 0, l: 1, pts: 4 },
+        { pos: 3, club: 'Just Play - A', pl: 3, w: 2, d: 0, l: 1, pts: 4 },
+        { pos: 4, club: 'MFC', pl: 3, w: 1, d: 1, l: 1, pts: 3 },
         { pos: 5, club: 'CP Sports', pl: 4, w: 1, d: 1, l: 2, pts: 3 },
         { pos: 6, club: 'Austin FC', pl: 4, w: 1, d: 0, l: 3, pts: 2 },
         { pos: 7, club: 'Bhavans', pl: 3, w: 1, d: 0, l: 2, pts: 2 },
@@ -39,13 +39,13 @@ const leagueData = {
         { pos: 10, club: 'Tiny Boots', pl: 1, w: 0, d: 0, l: 1, pts: 0 },
     ],
     'U-13': [
-        { pos: 1, club: 'VPS', pl: 3, w: 2, d: 1, l: 0, pts: 5 },
-        { pos: 2, club: 'Just Play', pl: 3, w: 2, d: 1, l: 0, pts: 5 },
-        { pos: 3, club: 'Sana Model School', pl: 3, w: 2, d: 1, l: 0, pts: 5 },
-        { pos: 4, club: "Beck'z FC", pl: 2, w: 0, d: 1, l: 1, pts: 1 },
-        { pos: 5, club: 'HAL Jr. Boys', pl: 3, w: 0, d: 1, l: 2, pts: 1 },
-        { pos: 6, club: 'Bhavans - A', pl: 3, w: 0, d: 1, l: 2, pts: 1 },
-        { pos: 7, club: 'Bhavans - B', pl: 1, w: 0, d: 0, l: 1, pts: 0 },
+        { pos: 1, club: 'Just Play', pl: 3, w: 3, d: 0, l: 0, pts: 6, eliminated: false },
+        { pos: 2, club: 'Sana Model School', pl: 3, w: 3, d: 0, l: 0, pts: 6, eliminated: false },
+        { pos: 3, club: 'HAL Jr. Boys', pl: 3, w: 2, d: 0, l: 1, pts: 4, eliminated: false },
+        { pos: 4, club: "Beck'z FC", pl: 2, w: 1, d: 0, l: 1, pts: 2, eliminated: false },
+        { pos: 5, club: 'Bhavans - A', pl: 3, w: 0, d: 0, l: 3, pts: 0, eliminated: false },
+        { pos: 6, club: 'Bhavans - B', pl: 1, w: 0, d: 0, l: 1, pts: 0, eliminated: false },
+        { pos: '-', club: 'VPS', pl: 0, w: 0, d: 0, l: 0, pts: 0, eliminated: true },
     ],
     'U-15 Boys': [
         { pos: 1, club: 'Just Play', pl: 4, w: 4, d: 0, l: 0, pts: 8 },
@@ -114,8 +114,8 @@ export default function PointsTablePage() {
                             key={group}
                             onClick={() => setSelectedGroup(group)}
                             className={`px-4 md:px-6 py-2 md:py-3 font-bold text-sm md:text-base transition-all ${selectedGroup === group
-                                    ? 'bg-yellow-400 text-black'
-                                    : 'bg-white/10 text-white hover:bg-white/20'
+                                ? 'bg-yellow-400 text-black'
+                                : 'bg-white/10 text-white hover:bg-white/20'
                                 }`}
                         >
                             {group}
@@ -159,38 +159,46 @@ export default function PointsTablePage() {
 
                     {/* Table Body */}
                     <div className="bg-white text-black">
-                        {tableData.map((team, index) => (
-                            <motion.div
-                                key={team.club}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.05 }}
-                                className={`grid grid-cols-[50px_1fr_50px_50px_50px_50px_70px] md:grid-cols-[70px_1fr_70px_70px_70px_70px_90px] items-center py-4 md:py-5 px-3 md:px-4 border-b-2 border-black/10 last:border-b-0 ${index === 0 ? 'bg-yellow-50' : index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                                    }`}
-                            >
-                                <div className="text-center text-xl md:text-2xl font-black">
-                                    {team.pos}
-                                </div>
-                                <div className="font-bold text-xs md:text-base uppercase tracking-wide">
-                                    {team.club}
-                                </div>
-                                <div className="text-center text-base md:text-lg font-medium">
-                                    {team.pl}
-                                </div>
-                                <div className="text-center text-base md:text-lg font-medium">
-                                    {team.w}
-                                </div>
-                                <div className="text-center text-base md:text-lg font-medium">
-                                    {team.d}
-                                </div>
-                                <div className="text-center text-base md:text-lg font-medium">
-                                    {team.l}
-                                </div>
-                                <div className="text-center text-xl md:text-2xl font-black text-yellow-600">
-                                    {team.pts}
-                                </div>
-                            </motion.div>
-                        ))}
+                        {tableData.map((team, index) => {
+                            const isEliminated = 'eliminated' in team && team.eliminated
+                            return (
+                                <motion.div
+                                    key={team.club}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: index * 0.05 }}
+                                    className={`grid grid-cols-[50px_1fr_50px_50px_50px_50px_70px] md:grid-cols-[70px_1fr_70px_70px_70px_70px_90px] items-center py-4 md:py-5 px-3 md:px-4 border-b-2 border-black/10 last:border-b-0 ${isEliminated ? 'bg-red-50' : index === 0 ? 'bg-yellow-50' : index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                                        }`}
+                                >
+                                    <div className="text-center text-xl md:text-2xl font-black">
+                                        {isEliminated ? '-' : team.pos}
+                                    </div>
+                                    <div className="font-bold text-xs md:text-base uppercase tracking-wide">
+                                        {team.club}
+                                        {isEliminated && (
+                                            <span className="ml-2 text-red-600 text-xs font-bold">ELIMINATED</span>
+                                        )}
+                                    </div>
+                                    {isEliminated ? (
+                                        <>
+                                            <div className="text-center text-base md:text-lg font-medium text-gray-400">-</div>
+                                            <div className="text-center text-base md:text-lg font-medium text-gray-400">-</div>
+                                            <div className="text-center text-base md:text-lg font-medium text-gray-400">-</div>
+                                            <div className="text-center text-base md:text-lg font-medium text-gray-400">-</div>
+                                            <div className="text-center text-xl md:text-2xl font-black text-gray-400">-</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="text-center text-base md:text-lg font-medium">{team.pl}</div>
+                                            <div className="text-center text-base md:text-lg font-medium">{team.w}</div>
+                                            <div className="text-center text-base md:text-lg font-medium">{team.d}</div>
+                                            <div className="text-center text-base md:text-lg font-medium">{team.l}</div>
+                                            <div className="text-center text-xl md:text-2xl font-black text-yellow-600">{team.pts}</div>
+                                        </>
+                                    )}
+                                </motion.div>
+                            )
+                        })}
                     </div>
                 </motion.div>
 
