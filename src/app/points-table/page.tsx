@@ -232,10 +232,23 @@ export default function PointsTablePage() {
 
                 {/* Footer */}
                 <div className="mt-12 text-center">
-                    <p className="text-white/40 text-sm">
-                        Last updated: December 2024
-                    </p>
-                    <p className="text-yellow-400 font-bold mt-2">
+                    <div className="inline-block bg-white/5 border border-white/10 px-6 py-3 mb-4">
+                        <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Last Updated</p>
+                        <p className="text-yellow-400 font-bold text-lg">
+                            28 December 2024, 9:43 AM IST
+                        </p>
+                    </div>
+
+                    {/* Contact Notice */}
+                    <div className="max-w-xl mx-auto bg-yellow-400/10 border border-yellow-400/30 px-6 py-4 mb-6">
+                        <p className="text-white/80 text-sm leading-relaxed">
+                            If coaches or parents have any concerns or conflict of interests,
+                            kindly contact the organizers at the phone number given in the footer below.
+                            We will try our best to resolve the conflicts.
+                        </p>
+                    </div>
+
+                    <p className="text-yellow-400 font-bold">
                         #VeeranWinterCup #YouthFootball
                     </p>
                 </div>
