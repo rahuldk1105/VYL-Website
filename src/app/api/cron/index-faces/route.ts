@@ -50,6 +50,15 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ message: 'No events to process' })
         }
 
+        // Polyfill TextEncoder/TextDecoder for serverless environment
+        if (typeof globalThis.TextEncoder === 'undefined') {
+            const util = await import('util')
+            // @ts-ignore
+            globalThis.TextEncoder = util.TextEncoder
+            // @ts-ignore
+            globalThis.TextDecoder = util.TextDecoder
+        }
+
         // Dynamic import face detection libs
         const faceapi = await import('@vladmandic/face-api')
         const canvas = await import('canvas')

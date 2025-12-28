@@ -48,6 +48,15 @@ export async function POST(request: NextRequest) {
 
         log('📦 Loading AI models...')
 
+        // Polyfill TextEncoder/TextDecoder for serverless environment
+        if (typeof globalThis.TextEncoder === 'undefined') {
+            const util = await import('util')
+            // @ts-ignore
+            globalThis.TextEncoder = util.TextEncoder
+            // @ts-ignore
+            globalThis.TextDecoder = util.TextDecoder
+        }
+
         // Dynamic import face detection libs
         const faceapi = await import('@vladmandic/face-api')
         const canvas = await import('canvas')
@@ -57,6 +66,8 @@ export async function POST(request: NextRequest) {
         faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 
         const modelPath = process.cwd() + '/public/models'
+        log('📂 Model path: ' + modelPath)
+
         await Promise.all([
             faceapi.nets.ssdMobilenetv1.loadFromDisk(modelPath),
             faceapi.nets.faceLandmark68Net.loadFromDisk(modelPath),
