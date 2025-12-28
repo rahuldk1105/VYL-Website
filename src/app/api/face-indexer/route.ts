@@ -1,12 +1,12 @@
-// Polyfill TextEncoder/TextDecoder BEFORE any imports
-import { TextEncoder, TextDecoder } from 'util'
-if (typeof globalThis.TextEncoder === 'undefined') {
-    // @ts-ignore
-    globalThis.TextEncoder = TextEncoder
+// Polyfill TextEncoder/TextDecoder for @vladmandic/face-api
+import util from 'util'
+
+// Ensure global TextEncoder/TextDecoder are available
+if (typeof global.TextEncoder === 'undefined') {
+    global.TextEncoder = util.TextEncoder as any
 }
-if (typeof globalThis.TextDecoder === 'undefined') {
-    // @ts-ignore
-    globalThis.TextDecoder = TextDecoder
+if (typeof global.TextDecoder === 'undefined') {
+    global.TextDecoder = util.TextDecoder as any
 }
 
 import { NextRequest, NextResponse } from 'next/server'
