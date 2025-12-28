@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Camera, ArrowLeft, UserSearch } from 'lucide-react'
+import { Camera, ArrowLeft, Search } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -19,6 +19,7 @@ export default function EventGalleryPage() {
   const [selectedImage, setSelectedImage] = useState<{ key: string } | null>(null)
   const [fullResUrl, setFullResUrl] = useState<string | null>(null)
   const [isFaceSearchOpen, setIsFaceSearchOpen] = useState(false)
+  const [r2Directory, setR2Directory] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     fetchGallery()
@@ -67,6 +68,7 @@ export default function EventGalleryPage() {
 
       console.log('✅ Event found:', eventData)
       setEventTitle(eventData.title)
+      setR2Directory(eventData.r2_directory || undefined)
 
       // 2. Check if event has an R2 directory configured
       if (!eventData.r2_directory) {
@@ -139,12 +141,12 @@ export default function EventGalleryPage() {
           Click any photo to view full size and download
         </p>
 
-        {/* Face Search Button */}
+        {/* Find My Photos Button */}
         <button
           onClick={() => setIsFaceSearchOpen(true)}
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-gold to-yellow-500 hover:from-yellow-400 hover:to-gold text-black font-bold px-6 py-3 rounded-full transition-all transform hover:scale-105 shadow-lg"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold uppercase tracking-wide rounded-full hover:shadow-[0_0_25px_rgba(255,215,0,0.4)] transition-all transform hover:scale-105"
         >
-          <UserSearch className="w-5 h-5" />
+          <Search className="w-5 h-5" />
           Find My Photos
         </button>
       </div>
@@ -218,6 +220,8 @@ export default function EventGalleryPage() {
       <FaceSearchModal
         isOpen={isFaceSearchOpen}
         onClose={() => setIsFaceSearchOpen(false)}
+        eventSlug={slug}
+        r2Directory={r2Directory}
       />
     </div>
   )
