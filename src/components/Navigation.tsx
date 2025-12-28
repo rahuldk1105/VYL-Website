@@ -4,37 +4,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { LogOut, User } from 'lucide-react'
-import { supabase } from '@/lib/supabaseClient'
 
 export default function Navigation() {
   const pathname = usePathname()
   const isHome = pathname === '/'
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-
-  // Check authentication status
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      setIsAuthenticated(!!session)
-    }
-
-    checkAuth()
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session)
-      if (session) {
-        document.cookie = `auth-token=sb-session-active; path=/; max-age=${session.expires_in}; SameSite=Lax`
-      } else {
-        document.cookie = 'auth-token=; path=/; max-age=0'
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
 
   useEffect(() => {
     if (!isHome) return
@@ -51,21 +26,10 @@ export default function Navigation() {
     }
   }, [isMenuOpen])
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    document.cookie = 'auth-token=; path=/; max-age=0'
-    window.location.href = '/'
-  }
-
   const menu = [
     { href: '/tournaments', label: 'TOURNAMENTS' },
     { href: '/gallery', label: 'GALLERIES' },
     { href: '/contact', label: 'CONTACT' },
-  ]
-
-  const adminMenu = [
-    { href: '/admin', label: 'ADMIN DASHBOARD' },
-    { href: '/admin/index-faces', label: 'FACE INDEXING' },
   ]
 
   return (
@@ -89,15 +53,6 @@ export default function Navigation() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {menu.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="font-black uppercase text-sm lg:text-base tracking-wide hover:text-gold transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
-            {isAuthenticated && adminMenu.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -132,25 +87,6 @@ export default function Navigation() {
               <span className="hidden sm:inline">Join Now !</span>
               <span className="sm:hidden">Join</span>
             </Link>
-
-            {/* Authentication buttons */}
-            {isAuthenticated ? (
-              <button
-                onClick={handleLogout}
-                className="p-2 rounded-full hover:bg-white/10 transition-colors"
-                title="Logout"
-              >
-                <LogOut className="w-5 h-5 text-white" />
-              </button>
-            ) : (
-              <Link
-                href="/login"
-                className="p-2 rounded-full hover:bg-white/10 transition-colors"
-                title="Admin Login"
-              >
-                <User className="w-5 h-5 text-white" />
-              </Link>
-            )}
           </div>
         </div>
       </nav>
@@ -159,16 +95,6 @@ export default function Navigation() {
       <div className={`fixed inset-0 bg-black z-40 transition-transform duration-500 ease-in-out md:hidden ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex flex-col items-center justify-center h-full space-y-8 p-4">
           {menu.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-3xl font-black uppercase text-white tracking-wider hover:text-gold transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
-          {isAuthenticated && adminMenu.map((item) => (
             <Link
               key={item.href}
               href={item.href}
