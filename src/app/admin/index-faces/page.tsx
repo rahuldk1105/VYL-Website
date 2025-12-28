@@ -136,7 +136,7 @@ export default function FaceIndexingPage() {
     const totalIndexed = Object.values(indexedCounts).reduce((a, b) => a + b, 0)
 
     return (
-        <div className="min-h-screen bg-black text-white p-4 md:p-8">
+        <div className="min-h-screen bg-black text-white p-4 md:p-8 pt-24 md:pt-28">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
