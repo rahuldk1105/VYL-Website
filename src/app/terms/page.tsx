@@ -1,4 +1,4 @@
-import { Scale, Book, Ban, AlertTriangle, FileText } from 'lucide-react'
+import { Scale, Book, Ban, AlertTriangle, FileText, Trophy, Shield } from 'lucide-react'
 
 export const metadata = {
   title: 'Terms of Service | Veeran Youth League',
@@ -26,7 +26,7 @@ export default function TermsPage() {
             Please read these terms carefully before exploring our website or participating in our tournaments.
           </p>
           <p className="mt-4 text-sm text-gray-500">
-            Last Updated: December 25, 2025
+            Last Updated: December 18, 2025 at 5:33 PM
           </p>
         </div>
       </div>
@@ -94,14 +94,72 @@ export default function TermsPage() {
             </div>
           </section>
 
-          {/* Section 4 */}
+          {/* Section 4 - Tournament Participation */}
+          <section className="space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-gold">
+                <Trophy className="w-6 h-6" />
+              </div>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-white uppercase tracking-wide">4. Tournament Participation</h2>
+                <div className="space-y-4 text-gray-300 leading-relaxed text-left">
+                  <p>
+                    All participants must adhere to the rules and regulations set forth by Veeran Youth League for each tournament. Teams and players agree to:
+                  </p>
+                  <ul className="list-disc pl-5 space-y-2 text-gray-400">
+                    <li>Provide accurate and truthful information regarding player age, eligibility, and team details.</li>
+                    <li>Comply with all tournament schedules, fixture timings, and venue guidelines.</li>
+                    <li>Maintain sportsmanship and fair play throughout the competition.</li>
+                    <li>Accept decisions made by referees, match officials, and the organizing committee as final.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 5 - Age Fraud & Protest Protocol */}
+          <section className="space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-gold">
+                <Shield className="w-6 h-6" />
+              </div>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-white uppercase tracking-wide">5. Age Fraud & Protest Protocol</h2>
+                <div className="space-y-4 text-gray-300 leading-relaxed text-left">
+                  <p>
+                    Veeran Youth League maintains strict policies to ensure fair competition and age compliance. If any team wishes to protest against age fraud or suspects another team of fielding overage players, the following protocol must be followed:
+                  </p>
+                  <div className="bg-white/5 border-l-4 border-gold p-4 rounded-r space-y-3">
+                    <h3 className="font-bold text-white">Protest Procedure:</h3>
+                    <ol className="list-decimal pl-5 space-y-2 text-gray-400">
+                      <li><strong className="text-white">Written Submission:</strong> The protesting team must submit a formal written letter to the organizing committee detailing the complaint and suspected violations.</li>
+                      <li><strong className="text-white">Verification Fee:</strong> A non-refundable verification fee of ₹1,000 (One Thousand Indian Rupees) must be paid at the time of filing the protest.</li>
+                      <li><strong className="text-white">Investigation:</strong> The organizing committee will conduct a thorough investigation, which may include document verification and identity checks.</li>
+                      <li><strong className="text-white">Fee Refund Policy:</strong>
+                        <ul className="list-disc pl-5 space-y-1 mt-2">
+                          <li>If the accused team is found guilty of age fraud, the ₹1,000 verification fee will be <strong className="text-gold">fully refunded</strong> to the protesting team.</li>
+                          <li>If the accusation is proven false or unsubstantiated, the verification fee will <strong className="text-red-400">NOT be refunded</strong>.</li>
+                        </ul>
+                      </li>
+                      <li><strong className="text-white">Decision:</strong> The organizing committee's decision on all protests shall be final and binding.</li>
+                    </ol>
+                  </div>
+                  <p className="text-sm text-gray-500 italic">
+                    This policy is designed to maintain integrity while discouraging frivolous complaints. All teams are expected to compete fairly and honestly.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 6 */}
           <section className="space-y-6">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-gold">
                 <AlertTriangle className="w-6 h-6" />
               </div>
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-white uppercase tracking-wide">4. Limitation of Liability</h2>
+                <h2 className="text-2xl font-bold text-white uppercase tracking-wide">6. Limitation of Liability</h2>
                 <div className="space-y-4 text-gray-300 leading-relaxed text-left">
                   <p>
                     In no event will we or our directors, employees, or agents be liable to you or any third party for any direct, indirect, consequential, exemplary, incidental, special, or punitive damages, including lost profit, lost revenue, loss of data, or other damages arising from your use of the site, even if we have been advised of the possibility of such damages.

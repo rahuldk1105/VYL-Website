@@ -1,6 +1,6 @@
 import SafeImage from '@/components/SafeImage'
 import { notFound } from 'next/navigation'
-import { Calendar, MapPin, Users, Trophy, Clock, DollarSign, Star, CheckCircle } from 'lucide-react'
+import { Calendar, MapPin, Users, Trophy, Clock, DollarSign, Star, CheckCircle, Shield, AlertTriangle } from 'lucide-react'
 import { getEventBySlug } from '@/lib/events'
 import Link from 'next/link'
 
@@ -339,6 +339,78 @@ export default async function TournamentPage({ params }: TournamentPageProps) {
                     <p className="text-gray-600">{format.description}</p>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            {/* Terms & Conditions */}
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <Shield className="w-6 h-6 text-gold" />
+                Terms & Conditions
+              </h2>
+
+              <div className="space-y-6">
+                {/* General Terms */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Tournament Participation</h3>
+                  <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                    <li>All participants must provide accurate and truthful information regarding player age, eligibility, and team details.</li>
+                    <li>Teams must comply with all tournament schedules, fixture timings, and venue guidelines.</li>
+                    <li>Sportsmanship and fair play must be maintained throughout the competition.</li>
+                    <li>Decisions made by referees, match officials, and the organizing committee are final and binding.</li>
+                    <li>Participation in sports events carries inherent risks. By registering, you acknowledge these risks.</li>
+                  </ul>
+                </div>
+
+                {/* Age Fraud Protocol */}
+                <div className="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-r">
+                  <div className="flex items-start gap-3 mb-4">
+                    <AlertTriangle className="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">Age Fraud & Protest Protocol</h3>
+                      <p className="text-gray-700 text-sm mb-4">
+                        Veeran Youth League maintains strict policies to ensure fair competition. If your team wishes to protest against age fraud or suspects another team of fielding overage players:
+                      </p>
+                    </div>
+                  </div>
+
+                  <ol className="list-decimal pl-5 space-y-3 text-sm text-gray-800">
+                    <li>
+                      <strong className="text-gray-900">Written Submission:</strong> Submit a formal written letter to the organizing committee detailing the complaint and suspected violations.
+                    </li>
+                    <li>
+                      <strong className="text-gray-900">Verification Fee:</strong> Pay a verification fee of <strong className="text-orange-600">₹1,000 (One Thousand Indian Rupees)</strong> at the time of filing the protest.
+                    </li>
+                    <li>
+                      <strong className="text-gray-900">Investigation:</strong> The organizing committee will conduct a thorough investigation, including document verification and identity checks.
+                    </li>
+                    <li>
+                      <strong className="text-gray-900">Fee Refund Policy:</strong>
+                      <ul className="list-disc pl-5 space-y-1 mt-2">
+                        <li>If the accused team is found <strong className="text-green-600">guilty of age fraud</strong>, the ₹1,000 fee will be <strong>fully refunded</strong> to the protesting team.</li>
+                        <li>If the accusation is proven <strong className="text-red-600">false or unsubstantiated</strong>, the verification fee will <strong>NOT be refunded</strong>.</li>
+                      </ul>
+                    </li>
+                    <li>
+                      <strong className="text-gray-900">Final Decision:</strong> The organizing committee's decision on all protests shall be final and binding.
+                    </li>
+                  </ol>
+
+                  <p className="text-xs text-gray-600 italic mt-4">
+                    This policy maintains integrity while discouraging frivolous complaints. All teams are expected to compete fairly and honestly.
+                  </p>
+                </div>
+
+                {/* Link to Full Terms */}
+                <div className="pt-4 border-t border-gray-200">
+                  <p className="text-sm text-gray-600">
+                    By registering for this tournament, you agree to our{' '}
+                    <Link href="/terms" className="text-gold hover:text-yellow-600 font-semibold underline">
+                      full Terms of Service
+                    </Link>
+                    . Last updated: December 18, 2025 at 5:33 PM
+                  </p>
+                </div>
               </div>
             </div>
           </div>
