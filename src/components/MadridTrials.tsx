@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { MapPin, Calendar, Users, Trophy, Check, AlertCircle, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
