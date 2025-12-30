@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { X, MapPin, Calendar, Users, Trophy, Check, AlertCircle, CheckCircle } from 'lucide-react'
+import Link from 'next/link'
+import { X, MapPin, Calendar, Users, Trophy, Check, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface MadridTrialsProps {
@@ -126,16 +127,26 @@ export default function MadridTrials({ zohoFormUrl = '' }: MadridTrialsProps) {
                 ))}
               </div>
 
-              {/* CTA Button */}
-              <button
-                onClick={() => setIsFormOpen(true)}
-                className="group relative bg-gradient-to-r from-gold to-yellow-500 text-black font-black text-lg px-10 py-4 rounded-full hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] transition-all transform hover:scale-105 uppercase tracking-wide"
-              >
-                <span className="relative z-10">Apply for Trials →</span>
-                <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-4">
+                <button
+                  onClick={() => setIsFormOpen(true)}
+                  className="group relative bg-gradient-to-r from-gold to-yellow-500 text-black font-black text-lg px-10 py-4 rounded-full hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] transition-all transform hover:scale-105 uppercase tracking-wide"
+                >
+                  <span className="relative z-10">Apply for Trials →</span>
+                  <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
 
-              <p className="text-gray-500 text-sm mt-4">
+                <Link
+                  href="/trials/madrid-spain"
+                  className="group inline-flex items-center justify-center gap-2 border-2 border-white text-white font-bold text-lg px-10 py-4 rounded-full hover:bg-white hover:text-black transition-all uppercase tracking-wide"
+                >
+                  Full Details
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+
+              <p className="text-gray-500 text-sm">
                 Registration Fee: <span className="text-gold font-bold">₹299</span>
               </p>
             </div>
