@@ -29,6 +29,7 @@ export default function Navigation() {
   const menu = [
     { href: '/tournaments', label: 'TOURNAMENTS' },
     { href: '/gallery', label: 'GALLERIES' },
+    { href: '/news', label: 'NEWS' },
     { href: '/contact', label: 'CONTACT' },
   ]
 
