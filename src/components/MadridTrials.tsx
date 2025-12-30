@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { X, MapPin, Calendar, Users, Trophy, Check, AlertCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { X, MapPin, Calendar, Users, Trophy, Check, AlertCircle, CheckCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface MadridTrialsProps {
@@ -9,7 +10,45 @@ interface MadridTrialsProps {
 }
 
 export default function MadridTrials({ zohoFormUrl = '' }: MadridTrialsProps) {
+  const router = useRouter()
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [redirectCountdown, setRedirectCountdown] = useState(5)
+
+  // Listen for form submission from Zoho iframe
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Check if message is from Zoho Forms
+      if (event.data && typeof event.data === 'string') {
+        if (event.data.includes('zf_OnComplete') || event.data.includes('submitted')) {
+          setIsSubmitted(true)
+        }
+      }
+    }
+
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [])
+
+  // Countdown and redirect after successful submission
+  useEffect(() => {
+    if (isSubmitted && redirectCountdown > 0) {
+      const timer = setTimeout(() => {
+        setRedirectCountdown(redirectCountdown - 1)
+      }, 1000)
+      return () => clearTimeout(timer)
+    } else if (isSubmitted && redirectCountdown === 0) {
+      router.push('/')
+    }
+  }, [isSubmitted, redirectCountdown, router])
+
+  // Reset states when modal closes
+  useEffect(() => {
+    if (!isFormOpen) {
+      setIsSubmitted(false)
+      setRedirectCountdown(5)
+    }
+  }, [isFormOpen])
 
   return (
     <>
@@ -170,8 +209,12 @@ export default function MadridTrials({ zohoFormUrl = '' }: MadridTrialsProps) {
               {/* Modal Header */}
               <div className="flex items-center justify-between p-6 border-b border-white/10">
                 <div>
-                  <h3 className="text-2xl font-bold text-white">Madrid Trials Application</h3>
-                  <p className="text-gray-400 text-sm">Complete the form below to apply</p>
+                  <h3 className="text-2xl font-bold text-white">
+                    {isSubmitted ? 'Registration Successful!' : 'Madrid Trials Application'}
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    {isSubmitted ? 'Thank you for registering' : 'Complete the form below to apply'}
+                  </p>
                 </div>
                 <button
                   onClick={() => setIsFormOpen(false)}
@@ -181,15 +224,82 @@ export default function MadridTrials({ zohoFormUrl = '' }: MadridTrialsProps) {
                 </button>
               </div>
 
-              {/* Zoho Form Iframe */}
+              {/* Content - Success or Form */}
               <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 100px)' }}>
-                {zohoFormUrl ? (
-                  <iframe
-                    src={zohoFormUrl}
-                    className="w-full h-[600px] border-0 rounded-lg"
-                    title="Madrid Trials Application Form"
-                  />
+                {isSubmitted ? (
+                  // Success Message
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="text-center py-16"
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                      className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center"
+                    >
+                      <CheckCircle className="w-12 h-12 text-white" />
+                    </motion.div>
+
+                    <motion.h2
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                      className="text-3xl font-black text-white mb-4"
+                    >
+                      Registration Successful!
+                    </motion.h2>
+
+                    <motion.p
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.4 }}
+                      className="text-gray-300 mb-8 max-w-md mx-auto"
+                    >
+                      Thank you for applying for the Madrid Spain International Trials. We've received your application and will contact you soon with further details.
+                    </motion.p>
+
+                    <motion.div
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className="space-y-4"
+                    >
+                      <p className="text-gray-400 text-sm">
+                        Redirecting to homepage in{' '}
+                        <span className="text-gold font-bold text-lg">{redirectCountdown}</span>{' '}
+                        seconds...
+                      </p>
+
+                      <button
+                        onClick={() => router.push('/')}
+                        className="inline-flex items-center gap-2 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold px-8 py-3 rounded-full hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] transition-all transform hover:scale-105"
+                      >
+                        Back to Home
+                      </button>
+                    </motion.div>
+                  </motion.div>
+                ) : zohoFormUrl ? (
+                  // Zoho Form Iframe
+                  <div>
+                    <iframe
+                      src={zohoFormUrl}
+                      className="w-full h-[600px] border-0 rounded-lg"
+                      title="Madrid Trials Application Form"
+                    />
+                    {/* Manual Submit Button (fallback if auto-detection doesn't work) */}
+                    <div className="mt-4 text-center">
+                      <button
+                        onClick={() => setIsSubmitted(true)}
+                        className="text-sm text-gray-400 hover:text-gold transition-colors underline"
+                      >
+                        I've submitted the form
+                      </button>
+                    </div>
+                  </div>
                 ) : (
+                  // No URL Provided
                   <div className="text-center py-12">
                     <p className="text-gray-400 mb-4">
                       Please provide the Zoho form URL to embed the application form.
