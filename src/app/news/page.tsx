@@ -1,104 +1,150 @@
-import { Newspaper, Calendar, ArrowRight } from 'lucide-react'
+'use client'
 
-export const metadata = {
-  title: 'News & Updates | Veeran Youth League',
-  description: 'Latest news, announcements, and updates from Veeran Youth League.'
-}
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Newspaper, Megaphone, BookOpen, Bell, Loader2 } from 'lucide-react'
+import BlogCard from '@/components/BlogCard'
+import { BlogPost } from '@/lib/types'
+import { getPosts } from '@/lib/posts'
+
+const categories = [
+    { id: 'all', label: 'All', icon: Newspaper },
+    { id: 'news', label: 'News', icon: Newspaper },
+    { id: 'announcement', label: 'Announcements', icon: Megaphone },
+    { id: 'story', label: 'Stories', icon: BookOpen },
+    { id: 'update', label: 'Updates', icon: Bell },
+]
 
 export default function NewsPage() {
-  const newsItems = [
-    {
-      id: 1,
-      title: 'Madrid Spain International Trials Announced',
-      date: 'December 2024',
-      category: 'Announcements',
-      excerpt: 'Veeran Youth League announces international trials in Madrid, Spain for U12, U14, and U16 age categories. Limited slots available.',
-      link: '/#madrid-trials'
-    },
-    {
-      id: 2,
-      title: 'Veeran Winter Cup 2025 Registration Opens',
-      date: 'December 2024',
-      category: 'Tournaments',
-      excerpt: 'Two days of endless energy and pure football. Register your team now for the biggest youth football event of the winter.',
-      link: '/tournaments/veeran-winter-cup'
-    },
-    {
-      id: 3,
-      title: 'Face Recognition Gallery Feature Launched',
-      date: 'December 2024',
-      category: 'Features',
-      excerpt: 'Find your photos instantly using our new AI-powered face recognition technology in tournament galleries.',
-      link: '/gallery'
-    },
-  ]
+    const [posts, setPosts] = useState<BlogPost[]>([])
+    const [loading, setLoading] = useState(true)
+    const [activeCategory, setActiveCategory] = useState('all')
 
-  return (
-    <div className="min-h-screen bg-black text-white selection:bg-gold selection:text-black">
-      {/* Background Gradients */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,160,0,0.1),transparent_50%)] z-0 pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(25,118,210,0.1),transparent_50%)] z-0 pointer-events-none" />
+    useEffect(() => {
+        const fetchPosts = async () => {
+            setLoading(true)
+            const data = await getPosts()
+            setPosts(data)
+            setLoading(false)
+        }
+        fetchPosts()
+    }, [])
 
-      {/* Hero Section */}
-      <div className="relative z-10 pt-32 pb-12 px-4 border-b border-white/10 bg-gradient-to-b from-gray-900/50 to-black/50 backdrop-blur-sm">
-        <div className="container mx-auto max-w-4xl text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-gold text-xs font-bold uppercase tracking-wider mb-6">
-            <Newspaper className="w-4 h-4" />
-            Latest Updates
-          </div>
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 bg-gradient-to-br from-white via-gray-200 to-gray-500 bg-clip-text text-transparent">
-            News & Updates
-          </h1>
-          <p className="text-lg text-gray-400 max-w-2xl leading-relaxed">
-            Stay updated with the latest announcements, tournaments, and developments from Veeran Youth League.
-          </p>
-        </div>
-      </div>
+    const filteredPosts = activeCategory === 'all'
+        ? posts
+        : posts.filter(post => post.category === activeCategory)
 
-      {/* News Grid */}
-      <div className="relative z-10 container mx-auto max-w-6xl px-4 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {newsItems.map((item) => (
-            <div
-              key={item.id}
-              className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:border-gold/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,215,0,0.2)]"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-xs font-bold uppercase tracking-wider text-gold bg-gold/20 px-2 py-1 rounded">
-                  {item.category}
-                </span>
-                <div className="flex items-center gap-1 text-gray-400 text-xs">
-                  <Calendar className="w-3 h-3" />
-                  {item.date}
+    const featuredPost = filteredPosts.find(post => post.isFeatured) || filteredPosts[0]
+    const regularPosts = filteredPosts.filter(post => post._id !== featuredPost?._id)
+
+    return (
+        <div className="min-h-screen bg-black text-white">
+            {/* Hero Section */}
+            <div className="relative h-[45vh] bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center overflow-hidden">
+                {/* Animated Background Elements */}
+                <div className="absolute inset-0">
+                    <div className="absolute top-20 left-10 w-72 h-72 bg-gold/10 rounded-full blur-3xl animate-pulse" />
+                    <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
                 </div>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-gold transition-colors">
-                {item.title}
-              </h3>
-              <p className="text-gray-400 text-sm mb-4 leading-relaxed">
-                {item.excerpt}
-              </p>
-              <a
-                href={item.link}
-                className="inline-flex items-center gap-2 text-gold font-semibold text-sm hover:gap-3 transition-all"
-              >
-                Read More <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          ))}
-        </div>
 
-        {/* Coming Soon Message */}
-        <div className="mt-16 text-center">
-          <div className="inline-block bg-white/5 border border-white/10 rounded-2xl p-8">
-            <Newspaper className="w-12 h-12 mx-auto text-gray-600 mb-4" />
-            <p className="text-gray-400 mb-2">More news and updates coming soon</p>
-            <p className="text-gray-500 text-sm">
-              Follow us on social media to stay updated with the latest announcements
-            </p>
-          </div>
+                {/* Pattern Overlay */}
+                <div className="absolute inset-0 bg-[url('/bg-pattern.svg')] opacity-5" />
+
+                <div className="relative z-10 text-center px-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <div className="flex items-center justify-center gap-3 mb-4">
+                            <Newspaper className="w-8 h-8 text-gold" />
+                            <span className="text-gold font-bold uppercase tracking-widest text-sm">Latest Updates</span>
+                        </div>
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-4">
+                            News & Stories
+                        </h1>
+                        <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+                            Stay updated with tournament announcements, player stories, and all the latest from Veeran Youth League.
+                        </p>
+                    </motion.div>
+                </div>
+            </div>
+
+            {/* Category Filter */}
+            <div className="sticky top-16 md:top-24 z-30 bg-black/95 backdrop-blur-lg border-b border-white/10">
+                <div className="container mx-auto px-4 py-4">
+                    <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-2">
+                        {categories.map((category) => {
+                            const Icon = category.icon
+                            const isActive = activeCategory === category.id
+                            return (
+                                <button
+                                    key={category.id}
+                                    onClick={() => setActiveCategory(category.id)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm uppercase tracking-wider whitespace-nowrap transition-all duration-300 ${isActive
+                                            ? 'bg-gold text-black'
+                                            : 'bg-white/10 text-white hover:bg-white/20'
+                                        }`}
+                                >
+                                    <Icon className="w-4 h-4" />
+                                    {category.label}
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
+            </div>
+
+            {/* Content */}
+            <div className="container mx-auto px-4 py-12">
+                {loading ? (
+                    <div className="flex items-center justify-center py-20">
+                        <Loader2 className="w-8 h-8 text-gold animate-spin" />
+                    </div>
+                ) : filteredPosts.length === 0 ? (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center py-20"
+                    >
+                        <Newspaper className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                        <h2 className="text-2xl font-bold text-gray-400 mb-2">No posts found</h2>
+                        <p className="text-gray-500">Check back later for updates!</p>
+                    </motion.div>
+                ) : (
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={activeCategory}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            {/* Featured Post */}
+                            {featuredPost && (
+                                <div className="mb-12">
+                                    <BlogCard post={featuredPost} featured />
+                                </div>
+                            )}
+
+                            {/* Regular Posts Grid */}
+                            {regularPosts.length > 0 && (
+                                <>
+                                    <h2 className="text-2xl font-black uppercase tracking-tight mb-6 flex items-center gap-2">
+                                        <span className="w-1 h-6 bg-gold rounded-full" />
+                                        More Articles
+                                    </h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {regularPosts.map((post, index) => (
+                                            <BlogCard key={post._id} post={post} index={index} />
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                        </motion.div>
+                    </AnimatePresence>
+                )}
+            </div>
         </div>
-      </div>
-    </div>
-  )
+    )
 }

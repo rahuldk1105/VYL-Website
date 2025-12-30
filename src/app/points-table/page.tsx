@@ -1,78 +1,54 @@
 'use client'
 
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, RefreshCw, Trophy, Calendar } from 'lucide-react'
+import { Standing, Match } from '@/lib/types'
+import { getStandings, getMatches } from '@/lib/league'
+import MatchCard from '@/components/MatchCard'
 
-// Points table data - Veeran Winter Cup
-const leagueData = {
-    'U-7': [
-        { pos: 1, club: 'CP Sports', pl: 3, w: 3, d: 0, l: 0, pts: 6 },
-        { pos: 2, club: 'Blue Panthers', pl: 3, w: 2, d: 1, l: 0, pts: 5 },
-        { pos: 3, club: 'Tron Sports Academy', pl: 4, w: 1, d: 2, l: 1, pts: 4 },
-        { pos: 4, club: 'Shadows FC', pl: 3, w: 1, d: 0, l: 2, pts: 2 },
-        { pos: 5, club: 'Just Play', pl: 4, w: 1, d: 0, l: 3, pts: 2 },
-        { pos: 6, club: 'Ten X United', pl: 3, w: 0, d: 1, l: 2, pts: 1 },
-    ],
-    'U-9': [
-        { pos: 1, club: 'BKFC', pl: 4, w: 4, d: 0, l: 0, pts: 8 },
-        { pos: 2, club: 'FC Marina', pl: 4, w: 2, d: 1, l: 1, pts: 5 },
-        { pos: 3, club: 'Just Play - A', pl: 3, w: 2, d: 0, l: 1, pts: 4 },
-        { pos: 4, club: 'MFC', pl: 3, w: 1, d: 1, l: 1, pts: 3 },
-        { pos: 5, club: 'CP Sports', pl: 4, w: 1, d: 1, l: 2, pts: 3 },
-        { pos: 6, club: 'Austin FC', pl: 4, w: 1, d: 0, l: 3, pts: 2 },
-        { pos: 7, club: 'Bhavans', pl: 3, w: 1, d: 0, l: 2, pts: 2 },
-        { pos: 8, club: 'Just Play - B', pl: 4, w: 0, d: 0, l: 4, pts: 0 },
-    ],
-    'U-11': [
-        { pos: 1, club: 'Dream Chasers', pl: 3, w: 2, d: 1, l: 0, pts: 5 },
-        { pos: 2, club: 'CP Sports', pl: 3, w: 2, d: 0, l: 1, pts: 4 },
-        { pos: 3, club: "Beck'z FC", pl: 3, w: 2, d: 0, l: 1, pts: 4 },
-        { pos: 4, club: 'Ziel United FC', pl: 2, w: 2, d: 0, l: 0, pts: 4 },
-        { pos: 5, club: 'JDFC', pl: 3, w: 2, d: 0, l: 1, pts: 4 },
-        { pos: 6, club: 'Bhavans', pl: 2, w: 1, d: 0, l: 1, pts: 2 },
-        { pos: 7, club: 'Tron Sports Academy', pl: 3, w: 1, d: 0, l: 2, pts: 2 },
-        { pos: 8, club: 'Just Play', pl: 2, w: 0, d: 1, l: 1, pts: 1 },
-        { pos: 9, club: 'VPS', pl: 2, w: 0, d: 0, l: 2, pts: 0 },
-        { pos: 10, club: 'Tiny Boots', pl: 1, w: 0, d: 0, l: 1, pts: 0 },
-    ],
-    'U-13': [
-        { pos: 1, club: 'Just Play', pl: 3, w: 3, d: 0, l: 0, pts: 6, eliminated: false },
-        { pos: 2, club: 'Sana Model School', pl: 3, w: 3, d: 0, l: 0, pts: 6, eliminated: false },
-        { pos: 3, club: 'HAL Jr. Boys', pl: 3, w: 2, d: 0, l: 1, pts: 4, eliminated: false },
-        { pos: 4, club: "Beck'z FC", pl: 2, w: 1, d: 0, l: 1, pts: 2, eliminated: false },
-        { pos: 5, club: 'Bhavans - A', pl: 3, w: 0, d: 0, l: 3, pts: 0, eliminated: false },
-        { pos: 6, club: 'Bhavans - B', pl: 1, w: 0, d: 0, l: 1, pts: 0, eliminated: false },
-        { pos: '-', club: 'VPS', pl: 0, w: 0, d: 0, l: 0, pts: 0, eliminated: true },
-    ],
-    'U-15 Boys': [
-        { pos: 1, club: 'Just Play', pl: 4, w: 4, d: 0, l: 0, pts: 8 },
-        { pos: 2, club: 'VPS', pl: 3, w: 1, d: 1, l: 1, pts: 3 },
-        { pos: 3, club: 'HAL Jr. Boys', pl: 2, w: 1, d: 1, l: 0, pts: 3 },
-        { pos: 4, club: 'Bhavans', pl: 3, w: 1, d: 0, l: 2, pts: 2 },
-        { pos: 5, club: 'CP Sports', pl: 3, w: 0, d: 0, l: 3, pts: 0 },
-    ],
-    'U-15 Girls': [
-        { pos: 1, club: 'Just Play', pl: 3, w: 3, d: 0, l: 0, pts: 6 },
-        { pos: 2, club: 'Christel House', pl: 2, w: 1, d: 0, l: 1, pts: 2 },
-        { pos: 3, club: "Beck'z FC", pl: 3, w: 1, d: 0, l: 2, pts: 2 },
-        { pos: 4, club: 'LMS', pl: 2, w: 0, d: 0, l: 2, pts: 0 },
-    ],
-}
-
-const ageGroups = Object.keys(leagueData)
+const ageGroups = ['U-7', 'U-9', 'U-11', 'U-13', 'U-15 Boys', 'U-15 Girls']
 
 export default function PointsTablePage() {
     const [selectedGroup, setSelectedGroup] = useState<string>('U-7')
+    const [activeTab, setActiveTab] = useState<'standings' | 'matches'>('standings')
 
-    const tableData = leagueData[selectedGroup as keyof typeof leagueData]
+    const [standings, setStandings] = useState<Standing[]>([])
+    const [matches, setMatches] = useState<Match[]>([])
+    const [loading, setLoading] = useState(true)
+    const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
+
+    const fetchData = async () => {
+        setLoading(true)
+        try {
+            const [standingsData, matchesData] = await Promise.all([
+                getStandings(selectedGroup),
+                getMatches(selectedGroup)
+            ])
+            setStandings(standingsData)
+            setMatches(matchesData)
+            setLastUpdated(new Date())
+        } catch (error) {
+            console.error('Failed to fetch data', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchData()
+
+        // Auto refresh live data every minute
+        const interval = setInterval(fetchData, 60000)
+        return () => clearInterval(interval)
+    }, [selectedGroup])
 
     return (
         <div className="min-h-screen bg-black text-white">
             {/* Header */}
-            <header className="py-8 px-4">
+            <header className="py-8 px-4 bg-gradient-to-b from-gray-900 to-black">
                 <div className="max-w-5xl mx-auto">
                     <Link
                         href="/"
@@ -98,158 +74,176 @@ export default function PointsTablePage() {
                             <h1 className="text-2xl md:text-4xl font-black text-yellow-400 tracking-tight">
                                 VEERAN WINTER CUP
                             </h1>
-                            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight mt-1">
-                                LEAGUE TABLE
-                            </h2>
+                            <div className="flex items-center gap-4 mt-2">
+                                <h2 className="text-xl md:text-3xl font-black text-white tracking-tight">
+                                    SEASON 2025
+                                </h2>
+                                {/* Live Indicator */}
+                                <div className="flex items-center gap-2 px-3 py-1 bg-red-600/20 rounded-full border border-red-600/30">
+                                    <span className="relative flex h-2 w-2">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                    </span>
+                                    <span className="text-xs font-bold text-red-500 uppercase tracking-wider">Updates Live</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </header>
 
-            {/* Age Group Buttons */}
-            <div className="max-w-5xl mx-auto px-4 mb-8">
-                <div className="flex flex-wrap gap-2 md:gap-3">
-                    {ageGroups.map((group) => (
-                        <button
-                            key={group}
-                            onClick={() => setSelectedGroup(group)}
-                            className={`px-4 md:px-6 py-2 md:py-3 font-bold text-sm md:text-base transition-all ${selectedGroup === group
-                                ? 'bg-yellow-400 text-black'
-                                : 'bg-white/10 text-white hover:bg-white/20'
-                                }`}
-                        >
-                            {group}
-                        </button>
-                    ))}
+            {/* Controls Section */}
+            <div className="sticky top-0 z-30 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-xl">
+                <div className="max-w-5xl mx-auto px-4 py-4">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        {/* Age Groups */}
+                        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
+                            {ageGroups.map((group) => (
+                                <button
+                                    key={group}
+                                    onClick={() => setSelectedGroup(group)}
+                                    className={`px-4 py-2 font-bold text-sm whitespace-nowrap rounded-full transition-all ${selectedGroup === group
+                                            ? 'bg-yellow-400 text-black'
+                                            : 'bg-white/10 text-white hover:bg-white/20'
+                                        }`}
+                                >
+                                    {group}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Tabs */}
+                        <div className="flex bg-white/10 p-1 rounded-lg self-start md:self-auto">
+                            <button
+                                onClick={() => setActiveTab('standings')}
+                                className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-bold transition-all ${activeTab === 'standings' ? 'bg-white text-black shadow' : 'text-gray-400 hover:text-white'
+                                    }`}
+                            >
+                                <Trophy className="w-4 h-4" />
+                                Standings
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('matches')}
+                                className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-bold transition-all ${activeTab === 'matches' ? 'bg-white text-black shadow' : 'text-gray-400 hover:text-white'
+                                    }`}
+                            >
+                                <Calendar className="w-4 h-4" />
+                                Matches
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* Age Group Title */}
-            <motion.div
-                key={selectedGroup}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-5xl mx-auto px-4 mb-6"
-            >
-                <h3 className="text-5xl md:text-7xl font-black text-yellow-400 text-center">
-                    {selectedGroup}
-                </h3>
-            </motion.div>
-
-            {/* Points Table */}
-            <div className="max-w-5xl mx-auto px-4 pb-12">
-                <motion.div
-                    key={selectedGroup}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="overflow-x-auto"
-                >
-                    {/* Table Header */}
-                    <div className="bg-yellow-400 text-black">
-                        <div className="grid grid-cols-[50px_1fr_50px_50px_50px_50px_70px] md:grid-cols-[70px_1fr_70px_70px_70px_70px_90px] items-center py-3 md:py-4 px-3 md:px-4 font-bold text-xs md:text-base">
-                            <div className="text-center">POS</div>
-                            <div>CLUB</div>
-                            <div className="text-center">PL</div>
-                            <div className="text-center">W</div>
-                            <div className="text-center">D</div>
-                            <div className="text-center">L</div>
-                            <div className="text-center">PTS</div>
-                        </div>
-                    </div>
-
-                    {/* Table Body */}
-                    <div className="bg-white text-black">
-                        {tableData.map((team, index) => {
-                            const isEliminated = 'eliminated' in team && team.eliminated
-                            return (
-                                <motion.div
-                                    key={team.club}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: index * 0.05 }}
-                                    className={`grid grid-cols-[50px_1fr_50px_50px_50px_50px_70px] md:grid-cols-[70px_1fr_70px_70px_70px_70px_90px] items-center py-4 md:py-5 px-3 md:px-4 border-b-2 border-black/10 last:border-b-0 ${isEliminated ? 'bg-red-50' : index === 0 ? 'bg-yellow-50' : index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                                        }`}
-                                >
-                                    <div className="text-center text-xl md:text-2xl font-black">
-                                        {isEliminated ? '-' : team.pos}
-                                    </div>
-                                    <div className="font-bold text-xs md:text-base uppercase tracking-wide">
-                                        {team.club}
-                                        {isEliminated && (
-                                            <span className="ml-2 text-red-600 text-xs font-bold">ELIMINATED</span>
-                                        )}
-                                    </div>
-                                    {isEliminated ? (
-                                        <>
-                                            <div className="text-center text-base md:text-lg font-medium text-gray-400">-</div>
-                                            <div className="text-center text-base md:text-lg font-medium text-gray-400">-</div>
-                                            <div className="text-center text-base md:text-lg font-medium text-gray-400">-</div>
-                                            <div className="text-center text-base md:text-lg font-medium text-gray-400">-</div>
-                                            <div className="text-center text-xl md:text-2xl font-black text-gray-400">-</div>
-                                        </>
+            {/* Main Content */}
+            <div className="max-w-5xl mx-auto px-4 py-8 min-h-[50vh]">
+                <AnimatePresence mode="wait">
+                    {loading ? (
+                        <motion.div
+                            key="loader"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="flex flex-col items-center justify-center py-20"
+                        >
+                            <RefreshCw className="w-8 h-8 text-yellow-400 animate-spin mb-4" />
+                            <p className="text-gray-400 text-sm uppercase tracking-widest">Loading Data</p>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key={`${selectedGroup}-${activeTab}`}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            {/* Standings View */}
+                            {activeTab === 'standings' && (
+                                <>
+                                    {standings.length === 0 ? (
+                                        <div className="text-center py-20 text-gray-500">
+                                            No standings data available yet for {selectedGroup}
+                                        </div>
                                     ) : (
-                                        <>
-                                            <div className="text-center text-base md:text-lg font-medium">{team.pl}</div>
-                                            <div className="text-center text-base md:text-lg font-medium">{team.w}</div>
-                                            <div className="text-center text-base md:text-lg font-medium">{team.d}</div>
-                                            <div className="text-center text-base md:text-lg font-medium">{team.l}</div>
-                                            <div className="text-center text-xl md:text-2xl font-black text-yellow-600">{team.pts}</div>
-                                        </>
+                                        <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+                                            {/* Table Header */}
+                                            <div className="bg-yellow-400 text-black">
+                                                <div className="grid grid-cols-[50px_1fr_40px_40px_40px_40px_40px_40px_60px] md:grid-cols-[70px_1fr_60px_60px_60px_60px_60px_60px_80px] items-center py-3 md:py-4 px-3 md:px-4 font-bold text-xs md:text-sm uppercase tracking-tight">
+                                                    <div className="text-center">Pos</div>
+                                                    <div>Team</div>
+                                                    <div className="text-center hidden md:block">P</div>
+                                                    <div className="text-center">P</div>
+                                                    <div className="text-center">W</div>
+                                                    <div className="text-center">D</div>
+                                                    <div className="text-center">L</div>
+                                                    <div className="text-center hidden md:block">GD</div>
+                                                    <div className="text-center text-base">Pts</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Table Body */}
+                                            <div className="divide-y divide-white/5 bg-gray-900/50">
+                                                {standings.map((team, index) => (
+                                                    <div
+                                                        key={team.teamId}
+                                                        className={`grid grid-cols-[50px_1fr_40px_40px_40px_40px_40px_40px_60px] md:grid-cols-[70px_1fr_60px_60px_60px_60px_60px_60px_80px] items-center py-3 md:py-4 px-3 md:px-4 hover:bg-white/5 transition-colors ${team.isEliminated ? 'opacity-50 grayscale' : ''
+                                                            }`}
+                                                    >
+                                                        <div className="text-center font-bold text-gray-400">{index + 1}</div>
+                                                        <div className="font-bold text-sm md:text-base flex items-center gap-3">
+                                                            {team.teamName}
+                                                            {team.isEliminated && <span className="bg-red-500/20 text-red-500 text-[10px] px-1.5 py-0.5 rounded uppercase font-bold">OUT</span>}
+                                                        </div>
+                                                        <div className="text-center text-gray-400 hidden md:block">{team.played}</div>
+                                                        <div className="text-center font-medium md:hidden">{team.played}</div>
+                                                        <div className="text-center text-gray-300">{team.won}</div>
+                                                        <div className="text-center text-gray-300">{team.drawn}</div>
+                                                        <div className="text-center text-gray-300">{team.lost}</div>
+                                                        <div className="text-center text-gray-400 hidden md:block">{team.goalDifference > 0 ? `+${team.goalDifference}` : team.goalDifference}</div>
+                                                        <div className="text-center text-lg md:text-xl font-black text-yellow-400">{team.points}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
                                     )}
-                                </motion.div>
-                            )
-                        })}
-                    </div>
-                </motion.div>
 
-                {/* Legend */}
-                <div className="mt-8 flex flex-wrap gap-4 justify-center text-sm text-white/60">
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-yellow-400">POS</span>
-                        <span>Position</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-yellow-400">PL</span>
-                        <span>Played</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-yellow-400">W</span>
-                        <span>Won</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-yellow-400">D</span>
-                        <span>Draw</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-yellow-400">L</span>
-                        <span>Lost</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-yellow-400">PTS</span>
-                        <span>Points</span>
-                    </div>
-                </div>
+                                    {/* Legend */}
+                                    <div className="mt-6 flex flex-wrap gap-4 justify-center text-xs text-gray-500 uppercase tracking-wider font-medium">
+                                        <span>P - Played</span>
+                                        <span>W - Won</span>
+                                        <span>D - Drawn</span>
+                                        <span>L - Lost</span>
+                                        <span>GD - Goal Diff</span>
+                                        <span>Pts - Points</span>
+                                    </div>
+                                </>
+                            )}
 
-                {/* Footer */}
-                <div className="mt-12 text-center">
-                    <div className="inline-block bg-white/5 border border-white/10 px-6 py-3 mb-4">
-                        <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Last Updated</p>
-                        <p className="text-yellow-400 font-bold text-lg">
-                            28 December 2024, 9:43 AM IST
-                        </p>
-                    </div>
+                            {/* Matches View */}
+                            {activeTab === 'matches' && (
+                                <div className="space-y-4">
+                                    {matches.length === 0 ? (
+                                        <div className="bg-white/5 border border-white/10 rounded-xl p-12 text-center">
+                                            <Calendar className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                                            <h3 className="text-xl font-bold text-gray-400">No matches found</h3>
+                                            <p className="text-gray-500 mt-2">No fixtures scheduled for this group yet.</p>
+                                        </div>
+                                    ) : (
+                                        matches.map((match) => (
+                                            <MatchCard key={match.id} match={match} />
+                                        ))
+                                    )}
+                                </div>
+                            )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
-                    {/* Contact Notice */}
-                    <div className="max-w-xl mx-auto bg-yellow-400/10 border border-yellow-400/30 px-6 py-4 mb-6">
-                        <p className="text-white/80 text-sm leading-relaxed">
-                            If coaches or parents have any concerns or conflict of interests,
-                            kindly contact the organizers at the phone number given in the footer below.
-                            We will try our best to resolve the conflicts.
-                        </p>
-                    </div>
-
-                    <p className="text-yellow-400 font-bold">
-                        #VeeranWinterCup #YouthFootball
+                {/* Footer Info */}
+                <div className="mt-12 text-center border-t border-white/10 pt-8">
+                    <p className="text-gray-500 text-xs uppercase tracking-widest mb-2">Last Updated</p>
+                    <p className="text-white font-mono text-sm opacity-60">
+                        {lastUpdated.toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'medium' })}
                     </p>
                 </div>
             </div>
