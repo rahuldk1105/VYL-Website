@@ -1,6 +1,7 @@
 import HeroCarousel from '@/components/HeroCarousel'
 import MissionSection from '@/components/MissionSection'
 import EventsCarousel from '@/components/EventsCarousel'
+import MadridTrials from '@/components/MadridTrials'
 
 import { getEvents } from '@/lib/events'
 
@@ -68,6 +69,9 @@ These are our roots. This is Veeran Football.`
   return (
     <div className="min-h-screen">
       <HeroCarousel slides={mockSlides} />
+
+      {/* Featured Madrid Trials */}
+      <MadridTrials zohoFormUrl="PASTE_YOUR_ZOHO_FORM_URL_HERE" />
 
       {/* <MissionSection
         missionText={mockMissionText}
