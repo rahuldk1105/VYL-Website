@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="bg-black text-white">
       <div className="container py-10 sm:py-12 md:py-14 px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10">
           {/* Brand & description */}
           <div>
             <div className="flex items-center gap-3 mb-6">
@@ -16,7 +16,7 @@ const Footer = () => {
               <h3 className="text-2xl font-black uppercase">Veeran Youth League</h3>
             </div>
             <p className="text-white/80 max-w-sm">
-              India’s biggest youth football events with grassroots leagues, tournaments and competitions for 5 to 18 year olds across the country.
+              India's biggest youth football events with grassroots leagues, tournaments and competitions for 5 to 18 year olds across the country.
             </p>
           </div>
 
@@ -29,6 +29,17 @@ const Footer = () => {
               <li><span>VYL Season 1</span></li>
               <li><span>VYL Season 2</span></li>
               <li><span>VYL Junior League</span></li>
+            </ul>
+          </div>
+
+          {/* News */}
+          <div>
+            <h4 className="font-black uppercase mb-4">News</h4>
+            <ul className="space-y-2">
+              <li><Link href="/news" className="hover:text-gold transition-colors">Latest Updates</Link></li>
+              <li><Link href="/news" className="hover:text-gold transition-colors">Announcements</Link></li>
+              <li><Link href="/news" className="hover:text-gold transition-colors">Press Releases</Link></li>
+              <li><Link href="/news" className="hover:text-gold transition-colors">Media Coverage</Link></li>
             </ul>
           </div>
 
