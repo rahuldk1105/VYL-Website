@@ -71,7 +71,7 @@ These are our roots. This is Veeran Football.`
       <HeroCarousel slides={mockSlides} />
 
       {/* Featured Madrid Trials */}
-      <MadridTrials zohoFormUrl="https://forms.zohopublic.in/trackmyacademy/form/InternationalYouthFootballTrialsRegistrationForm/formperma/qMTYCyvLig8nTS7xKw5FETuN0N9I1JBCG1aahovBaH4" />
+      <MadridTrials />
 
       {/* <MissionSection
         missionText={mockMissionText}
