@@ -1,36 +1,43 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Calendar, MapPin, Users, Trophy, CheckCircle, Shield, AlertTriangle, Plane, Star, Info } from 'lucide-react'
 import Link from 'next/link'
-import { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Madrid Spain International Youth Football Trials | Veeran Youth League',
-  description: 'International Youth Football Trials in Madrid, Spain. Play against European academy teams, gain international exposure, and showcase your talent on a global stage.',
-  openGraph: {
-    title: 'Madrid Spain International Trials | Veeran Youth League',
-    description: 'Play in Spain. Gain International Exposure. An International Youth Football Exposure Tournament in Madrid.',
-    url: 'https://www.veerancup.in/trials/madrid-spain',
-    siteName: 'Veeran Youth League',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80',
-        width: 1200,
-        height: 630,
-        alt: 'Madrid Spain International Football Trials',
-      }
-    ],
-    locale: 'en_IN',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Madrid Spain International Trials',
-    description: 'Play in Spain. Gain International Exposure.',
-    images: ['https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80'],
-  }
-}
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function MadridTrialsPage() {
+  const router = useRouter()
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [redirectCountdown, setRedirectCountdown] = useState(5)
+
   const registrationUrl = 'https://forms.zohopublic.in/trackmyacademy/form/InternationalYouthFootballTrialsRegistrationForm/formperma/qMTYCyvLig8nTS7xKw5FETuN0N9I1JBCG1aahovBaH4'
+
+  // Listen for form submission from Zoho iframe
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && typeof event.data === 'string') {
+        if (event.data.includes('zf_OnComplete') || event.data.includes('submitted')) {
+          setIsSubmitted(true)
+        }
+      }
+    }
+
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [])
+
+  // Countdown and redirect after successful submission
+  useEffect(() => {
+    if (isSubmitted && redirectCountdown > 0) {
+      const timer = setTimeout(() => {
+        setRedirectCountdown(redirectCountdown - 1)
+      }, 1000)
+      return () => clearTimeout(timer)
+    } else if (isSubmitted && redirectCountdown === 0) {
+      router.push('/')
+    }
+  }, [isSubmitted, redirectCountdown, router])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -332,47 +339,117 @@ export default function MadridTrialsPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Registration Card */}
-            <div id="register" className="bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl shadow-2xl p-6 sticky top-6 border border-gold/30">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center">
-                  <Star className="w-6 h-6 text-black" />
+            <div id="register" className="bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl shadow-2xl overflow-hidden sticky top-6 border border-gold/30">
+              <div className="p-6 border-b border-white/10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center">
+                    <Star className="w-6 h-6 text-black" />
+                  </div>
+                  <h3 className="text-xl font-bold">
+                    {isSubmitted ? 'Registration Successful!' : 'Apply Now'}
+                  </h3>
                 </div>
-                <h3 className="text-xl font-bold">Apply Now</h3>
+
+                {!isSubmitted && (
+                  <div className="space-y-4">
+                    <div className="bg-white/10 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-gray-300">Registration Fee:</span>
+                        <span className="text-2xl font-black text-gold">₹299</span>
+                      </div>
+                      <p className="text-xs text-gray-400">One-time registration fee</p>
+                    </div>
+
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-300">Trial Dates:</span>
+                        <span className="font-semibold text-white">10-11 Jan 2025</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-300">Availability:</span>
+                        <span className="font-semibold text-red-400">Limited Slots</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div className="space-y-4 mb-6">
-                <div className="bg-white/10 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-gray-300">Registration Fee:</span>
-                    <span className="text-2xl font-black text-gold">₹299</span>
-                  </div>
-                  <p className="text-xs text-gray-400">One-time registration fee</p>
-                </div>
+              {/* Form or Success Message */}
+              <div className="p-6">
+                <AnimatePresence mode="wait">
+                  {isSubmitted ? (
+                    // Success Message
+                    <motion.div
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      className="text-center py-8"
+                    >
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                        className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center"
+                      >
+                        <CheckCircle className="w-8 h-8 text-white" />
+                      </motion.div>
 
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-300">Trial Dates:</span>
-                    <span className="font-semibold text-white">10-11 Jan 2025</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-300">Availability:</span>
-                    <span className="font-semibold text-red-400">Limited Slots</span>
-                  </div>
-                </div>
+                      <motion.h3
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-xl font-black text-white mb-3"
+                      >
+                        Registration Complete!
+                      </motion.h3>
+
+                      <motion.p
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                        className="text-gray-300 text-sm mb-6"
+                      >
+                        We've received your application. We'll contact you soon with further details.
+                      </motion.p>
+
+                      <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="space-y-3"
+                      >
+                        <p className="text-gray-400 text-xs">
+                          Redirecting in{' '}
+                          <span className="text-gold font-bold text-base">{redirectCountdown}</span>s
+                        </p>
+
+                        <button
+                          onClick={() => router.push('/')}
+                          className="w-full bg-gradient-to-r from-gold to-yellow-500 text-black font-bold px-6 py-3 rounded-full hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] transition-all transform hover:scale-105"
+                        >
+                          Back to Home
+                        </button>
+                      </motion.div>
+                    </motion.div>
+                  ) : (
+                    // Embedded Zoho Form
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <iframe
+                        src={registrationUrl}
+                        className="w-full h-[700px] border-0 rounded-lg"
+                        title="Madrid Trials Registration Form"
+                      />
+                      <p className="text-xs text-gray-400 text-center mt-4">
+                        Limited slots available. Register early!
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-
-              <Link
-                href={registrationUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-center px-6 py-4 bg-gradient-to-r from-gold to-yellow-500 text-black font-black rounded-full hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] transition-all transform hover:scale-105 mb-3 uppercase tracking-wide"
-              >
-                Apply for Trials →
-              </Link>
-
-              <p className="text-xs text-gray-400 text-center">
-                Limited slots available. Register early!
-              </p>
             </div>
 
             {/* Contact Info */}
