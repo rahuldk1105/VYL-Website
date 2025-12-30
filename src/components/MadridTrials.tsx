@@ -82,10 +82,10 @@ export default function MadridTrials() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-4">
               <Link
-                href="/trials/madrid-spain#register"
+                href="/trials/madrid-spain/register"
                 className="group relative bg-gradient-to-r from-gold to-yellow-500 text-black font-black text-lg px-10 py-4 rounded-full hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] transition-all transform hover:scale-105 uppercase tracking-wide text-center"
               >
-                <span className="relative z-10">Apply for Trials →</span>
+                <span className="relative z-10">Register Now →</span>
                 <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
 
@@ -93,7 +93,7 @@ export default function MadridTrials() {
                 href="/trials/madrid-spain"
                 className="group inline-flex items-center justify-center gap-2 border-2 border-white text-white font-bold text-lg px-10 py-4 rounded-full hover:bg-white hover:text-black transition-all uppercase tracking-wide"
               >
-                Full Details
+                View Details
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
