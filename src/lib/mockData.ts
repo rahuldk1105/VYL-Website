@@ -7,11 +7,11 @@ export const mockEvents: Event[] = [
     description: 'The inaugural season of the Veeran Youth League, setting the standard for youth football in Tamil Nadu. A resounding success with top teams competing for the first-ever VYL trophy.',
     sport: 'Football',
 
-    startDate: '2023-08-10',
-    endDate: '2023-08-12',
+    startDate: '2024-08-10',
+    endDate: '2024-08-12',
     location: 'Chennai, Tamil Nadu',
     maxTeams: 16,
-    registrationDeadline: '2023-07-25',
+    registrationDeadline: '2024-07-25',
     image: '/images/tournaments/vyl-season-1.png',
     slug: { current: 'vyl-season-1' },
     features: [
@@ -34,11 +34,11 @@ export const mockEvents: Event[] = [
     description: 'Building on the success of Season 1, VYL Season 2 brought even more intensity and skill. An unforgettable tournament that showcased the rising stars of football.',
     sport: 'Football',
 
-    startDate: '2024-01-20',
-    endDate: '2024-01-22',
+    startDate: '2025-01-20',
+    endDate: '2025-01-22',
     location: 'Chennai, Tamil Nadu',
     maxTeams: 20,
-    registrationDeadline: '2024-01-05',
+    registrationDeadline: '2025-01-05',
     image: '/images/tournaments/vyl-season-2.jpg',
     slug: { current: 'vyl-season-2' },
     features: [
@@ -61,11 +61,11 @@ export const mockEvents: Event[] = [
     description: 'A dedicated league for our younger talents to shine. The Veeran Juniors League focused on grassroots development and the pure joy of the game.',
     sport: 'Football',
 
-    startDate: '2024-05-15',
-    endDate: '2024-05-17',
+    startDate: '2025-05-15',
+    endDate: '2025-05-17',
     location: 'Chennai, Tamil Nadu',
     maxTeams: 12,
-    registrationDeadline: '2024-05-01',
+    registrationDeadline: '2025-05-01',
     image: '/images/tournaments/juniors-league.jpg',
     slug: { current: 'veeran-juniors-league' },
     features: [
