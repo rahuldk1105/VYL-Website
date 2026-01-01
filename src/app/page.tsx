@@ -12,7 +12,7 @@ export default async function Home() {
   const mockSlides = [
     {
       image: '/images/hero/hero-1.jpg',
-      title: 'VEERAN WINTER CUP 2025',
+      title: 'VEERAN WINTER CUP 2026',
       subtitle: 'Two days. Endless energy. Pure football.',
       ctaText: 'Register Team',
       ctaLink: '/tournaments/veeran-winter-cup'
