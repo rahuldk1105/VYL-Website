@@ -17,12 +17,12 @@ SET
   registration_deadline = '2025-01-05'::date
 WHERE slug = 'vyl-season-2';
 
--- Update Veeran Juniors League: Change from 2024 to 2025
+-- Update Veeran Juniors League: Change to September 13-14, 2025
 UPDATE events
 SET
-  start_date = '2025-05-15'::date,
-  end_date = '2025-05-17'::date,
-  registration_deadline = '2025-05-01'::date
+  start_date = '2025-09-13'::date,
+  end_date = '2025-09-14'::date,
+  registration_deadline = '2025-09-01'::date
 WHERE slug = 'veeran-juniors-league';
 
 -- Verify the updates

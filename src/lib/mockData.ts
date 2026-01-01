@@ -61,11 +61,11 @@ export const mockEvents: Event[] = [
     description: 'A dedicated league for our younger talents to shine. The Veeran Juniors League focused on grassroots development and the pure joy of the game.',
     sport: 'Football',
 
-    startDate: '2025-05-15',
-    endDate: '2025-05-17',
+    startDate: '2025-09-13',
+    endDate: '2025-09-14',
     location: 'Chennai, Tamil Nadu',
     maxTeams: 12,
-    registrationDeadline: '2025-05-01',
+    registrationDeadline: '2025-09-01',
     image: '/images/tournaments/juniors-league.jpg',
     slug: { current: 'veeran-juniors-league' },
     features: [
