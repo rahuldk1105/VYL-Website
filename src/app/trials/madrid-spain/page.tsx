@@ -126,7 +126,7 @@ export default function MadridTrialsPage() {
                   <Calendar className="w-6 h-6 text-gold mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Trial Dates</h3>
-                    <p className="text-gray-600">10th & 11th January 2025</p>
+                    <p className="text-gray-600">10th & 11th January 2026</p>
                     <p className="text-sm text-gray-500 mt-1">Selections for tournament representation</p>
                   </div>
                 </div>
@@ -135,8 +135,8 @@ export default function MadridTrialsPage() {
                   <MapPin className="w-6 h-6 text-gold mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Trial Locations</h3>
-                    <p className="text-gray-600">📍 Coimbatore - 10th January</p>
-                    <p className="text-gray-600">📍 Chennai - 11th January</p>
+                    <p className="text-gray-600">📍 Coimbatore - 10th January 2026</p>
+                    <p className="text-gray-600">📍 Chennai - 11th January 2026</p>
                   </div>
                 </div>
 
@@ -323,7 +323,7 @@ export default function MadridTrialsPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-300">Trial Dates:</span>
-                    <span className="font-semibold text-white">10-11 Jan 2025</span>
+                    <span className="font-semibold text-white">10-11 Jan 2026</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-300">Availability:</span>

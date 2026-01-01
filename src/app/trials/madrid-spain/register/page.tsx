@@ -133,6 +133,10 @@ export default function MadridTrialsRegisterPage() {
                     Complete the form below to apply for the International Youth Football Trials
                   </p>
                   <div className="mt-3 md:mt-4 flex items-center justify-center gap-3 md:gap-4 text-sm">
+                    <span className="text-gray-500">Trial Dates:</span>
+                    <span className="text-white font-bold">10-11 Jan 2026</span>
+                  </div>
+                  <div className="mt-3 md:mt-4 flex items-center justify-center gap-3 md:gap-4 text-sm">
                     <span className="text-gray-500">Registration Fee:</span>
                     <span className="text-gold font-black text-xl md:text-2xl">₹299</span>
                   </div>
