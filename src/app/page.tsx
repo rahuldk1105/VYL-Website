@@ -12,35 +12,35 @@ export default async function Home() {
   const mockSlides = [
     {
       image: '/images/hero/hero-1.jpg',
-      title: 'VEERAN WINTER CUP 2026',
-      subtitle: 'Two days. Endless energy. Pure football.',
-      ctaText: 'Register Team',
-      ctaLink: '/tournaments/veeran-winter-cup'
+      title: 'MADRID SPAIN INTERNATIONAL TRIALS',
+      subtitle: 'Play in Spain. Gain International Exposure. Limited slots for U12, U14, U16.',
+      ctaText: 'Register Now',
+      ctaLink: '/trials/madrid-spain/register'
     },
     {
       image: '/images/hero/hero-2.jpg',
-      title: 'COMPETE WITH THE BEST',
-      subtitle: 'Join thousands of young athletes showcasing their talent on the biggest stage',
+      title: 'VEERAN DEVELOPMENT LEAGUES',
+      subtitle: 'Build your skills, compete weekly, and grow with India\'s premier youth football platform',
       ctaText: 'Join a League',
       ctaLink: '/tournaments'
     },
     {
       image: '/images/hero/hero-3.jpg',
-      title: 'PROFESSIONAL TRAINING CAMPS',
-      subtitle: 'Learn from expert coaches and take your game to the next level',
-      ctaText: 'Find a Camp',
+      title: 'PROFESSIONAL YOUTH DEVELOPMENT',
+      subtitle: 'Expert coaching, structured training, and competitive matches for ages 5-18',
+      ctaText: 'Learn More',
       ctaLink: '/tournaments'
     },
     {
       image: '/images/hero/hero-4.jpg',
-      title: 'UNFORGETTABLE EXPERIENCES',
-      subtitle: 'Travel, play, and grow with our exclusive football tours and events',
-      ctaText: 'Explore Tours',
-      ctaLink: '/tournaments'
+      title: 'INTERNATIONAL OPPORTUNITIES',
+      subtitle: 'Showcase your talent on the global stage with our international exposure programs',
+      ctaText: 'Explore Programs',
+      ctaLink: '/trials/madrid-spain'
     }
   ]
 
-  const mockMissionText = `The Veeran Football League was founded to create a strong and competitive platform for young football talent. With multiple successful youth leagues completed, Veeran now presents its next chapter — the Veeran Winter Cup 2025.
+  const mockMissionText = `The Veeran Football League was founded to create a strong and competitive platform for young football talent. With multiple successful youth leagues completed and international opportunities, Veeran continues to shape the future of Indian youth football.
 
 These are our roots. This is Veeran Football.`
 
