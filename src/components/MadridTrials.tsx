@@ -129,11 +129,11 @@ export default function MadridTrials() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between bg-black/30 rounded-lg p-3">
                   <span className="text-white font-semibold">📍 Coimbatore</span>
-                  <span className="text-gray-400">10th January</span>
+                  <span className="text-gray-400">10th January 2026</span>
                 </div>
                 <div className="flex items-center justify-between bg-black/30 rounded-lg p-3">
                   <span className="text-white font-semibold">📍 Chennai</span>
-                  <span className="text-gray-400">11th January</span>
+                  <span className="text-gray-400">11th January 2026</span>
                 </div>
               </div>
             </div>
